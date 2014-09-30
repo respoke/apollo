@@ -8,11 +8,32 @@ router.get('/me', function (req, res, next) {
 });
 
 router.patch('/me', function (req, res, next) {
-    req.db.Account.findByIdAndUpdate(req.user._id, req.body, function (err, account) {
+    var updateFields = {};
+    if (req.body.password) {
+        updateFields.password = req.body.password;
+    }
+    if (req.body.display) {
+        updateFields.display = req.body.display;
+    }
+    if (req.body.email) {
+        updateFields.email = req.body.email;
+    }
+    if (!Object.keys(updateFields).length) {
+        return res.send(req.user);
+    }
+    req.db.Account.findById(req.user._id, function (err, account) {
         if (err) {
             return next(err);
         }
-        res.send(account);
+        for (var f in updateFields) {
+            account[f] = updateFields[f]
+        }
+        account.save(function (err, saved) {
+            if (err) {
+                return next(err);
+            }
+            res.send(saved);
+        });
     });
 });
 
@@ -99,6 +120,23 @@ router.put('/password-reset/:_id/:conf', function (req, res, next) {
 
         });
     });
+});
+
+router.get('/accounts', function (req, res, next) {
+    if (req.query.ids && typeof req.query.ids === 'string') {
+        req.db.Account.find()
+        .where('_id').in(req.query.ids.split(','))
+        .exec(handler);
+    }
+    else {
+        req.db.Account.find().exec(handler);
+    }
+    function handler(err, accounts) {
+        if (err) {
+            return next(err);
+        }
+        res.send(accounts);
+    }
 });
 
 router.get('/accounts/:id', function (req, res, next) {

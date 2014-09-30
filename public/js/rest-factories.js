@@ -43,7 +43,17 @@ exports = module.exports = function (app) {
                     .success(success(callback)).error(fail(callback));
                 },
                 get: function (id, callback) {
-                    $http.get('/api/accounts/' + id)
+                    var reqUrl = '/api/accounts';
+                    if (id instanceof Function) {
+                        callback = id;
+                    }
+                    else if (id.indexOf('?') === -1) {
+                        reqUrl += '/' + id;
+                    }
+                    else {
+                        reqUrl += id;
+                    }
+                    $http.get(reqUrl)
                     .success(success(callback)).error(fail(callback));
                 },
                 getMe: function (callback) {
@@ -52,7 +62,7 @@ exports = module.exports = function (app) {
                 },
                 update: function (params, callback) {
                     $http({
-                        url: '/api/accounts',
+                        url: '/api/me',
                         method: 'PATCH',
                         data: params
                     })
