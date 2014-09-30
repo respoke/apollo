@@ -1,1 +1,2 @@
-var apollo = angular.module('apollo', []);
+var apollo = angular.module('apollo', ['ngRoute']);
+

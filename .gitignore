@@ -1,3 +1,6 @@
+# App local configuration
+config.js
+
 # OS
 .DS_Store
 thumbs.db
