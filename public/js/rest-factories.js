@@ -37,7 +37,7 @@ exports = module.exports = function (app) {
                 },
                 logout: function (callback) {
                     $http({
-                        url: '/api/login',
+                        url: '/auth/session',
                         method: 'DELETE'
                     })
                     .success(success(callback)).error(fail(callback));

@@ -82,7 +82,27 @@ AccountSchema.pre('validate', function (next) {
         this.conf = 'confirm-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4();
         this.admin = false;
     }
-    next();
+
+    if (!this.email) {
+        return next();
+    }
+
+    // Validate that email is unique
+    var doc = this;
+    mongoose.model('Account').findOne({ email: this.email }).exec(function (err, account) {
+        if (err) {
+            return next(err);
+        }
+        if (!account) {
+            return next();
+        }
+        // of course, if this is their email it's ok
+        if (account._id.toString() !== doc._id.toString()) {
+            return next(new Error("That email is already registered."));
+        }
+        next();
+    });
+
 });
 AccountSchema.method('isPasswordInvalid', function (password) {
     if (!password) {
