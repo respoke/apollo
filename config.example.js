@@ -1,6 +1,15 @@
 var config = {};
+config.name = 'Apollo';
+config.port = process.env.PORT || 3000;
 
-config.mongoURI = "mongodb://localhost/apollo";
+// main DB
+config.mongoURI = 'mongodb://localhost/apollo';
+
+// session store
+config.mongoSessions = {
+    db: 'apollosessions',
+    secret: 'change-this-1234'
+};
 
 if (process.env.NODE_ENV === 'production') {
 
