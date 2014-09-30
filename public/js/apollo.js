@@ -7,6 +7,7 @@ restFactories(apollo);
 apollo.factory('respoke', function () {
     return respoke;
 });
+
 apollo.controller('GlobalController', require('./GlobalController'));
 
 apollo.config(['$routeProvider', function ($routeProvider) {

@@ -1,13 +1,19 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var middleware = require('../lib/middleware');
 
 router.delete('/session', function (req, res) {
     req.logout();
     res.send({ message: 'Logged out' });
 });
 
-// Local auth is over JSON
+router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
+    // TODO: get respoke auth token
+    next();
+});
+
+// Local login
 router.post('/local', function (req, res, next) {
     if (typeof req.body.email !== 'string') {
         return res.status(400).send({ message: 'Missing email or username.'});

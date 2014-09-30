@@ -21,6 +21,14 @@ config.email = {
     from: 'Apollo <system@example.com.'
 };
 
+// Respoke settings
+// Get appId and appSecret from the developer console:
+// https://portal.respoke.io
+config.respoke = {
+    appId: "",
+    appSecret: ""
+};
+
 // Email - SMTP transport options for Nodemailer
 // https://github.com/andris9/nodemailer-smtp-transport#usage
 config.smtp = {

@@ -2,12 +2,13 @@ var express = require('express');
 var router = express.Router();
 var config = require('../config');
 var debug = require('debug')('apollo-api');
+var middleware = require('../lib/middleware');
 
 router.get('/me', function (req, res, next) {
     res.send(req.user);
 });
 
-router.patch('/me', function (req, res, next) {
+router.patch('/me', middleware.isAuthorized, function (req, res, next) {
     var updateFields = {};
     if (req.body.password) {
         updateFields.password = req.body.password;
@@ -122,7 +123,7 @@ router.put('/password-reset/:_id/:conf', function (req, res, next) {
     });
 });
 
-router.get('/accounts', function (req, res, next) {
+router.get('/accounts', middleware.isAuthorized, function (req, res, next) {
     if (req.query.ids && typeof req.query.ids === 'string') {
         req.db.Account.find()
         .where('_id').in(req.query.ids.split(','))
@@ -139,7 +140,7 @@ router.get('/accounts', function (req, res, next) {
     }
 });
 
-router.get('/accounts/:id', function (req, res, next) {
+router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
     req.db.Account.findById(req.params.account, function (err, account) {
         if (err) {
             return next(err);
