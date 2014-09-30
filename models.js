@@ -77,6 +77,11 @@ AccountSchema.pre('validate', function (next) {
             return next(new Error(passwordInvalid));
         }
     }
+
+    if (this.isNew) {
+        this.conf = 'confirm-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4();
+        this.admin = false;
+    }
     next();
 });
 AccountSchema.method('isPasswordInvalid', function (password) {
@@ -110,18 +115,14 @@ var GroupSchema = new mongoose.Schema({
     _id: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        default: uuid.v4
     },
     accounts: [{
         type: ObjectId,
         required: true,
         ref: 'Account'
     }],
-    content: {
-        type: String,
-        required: true,
-        default: ''
-    },
     created: {
         type: Date,
         default: Date.now
@@ -145,7 +146,6 @@ var MessageSchema = new mongoose.Schema({
     },
     group: {
         type: ObjectId,
-        required: true,
         ref: 'Group'
     },
     content: {
