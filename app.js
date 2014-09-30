@@ -7,6 +7,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var jadeStatic = require('connect-jade-static');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 
 // local configuration settings
 var config = require('./config');
@@ -26,6 +28,15 @@ app.set('view engine', 'jade');
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
+// sessions
+app.use(session({
+    secret: config.mongoSessions.secret,
+    store: new MongoStore({
+        db: config.mongoSessions.db,
+    }),
+    saveUninitialized: true,
+    resave: true
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
