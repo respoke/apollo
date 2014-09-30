@@ -9,6 +9,8 @@ var bodyParser = require('body-parser');
 var jadeStatic = require('connect-jade-static');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+var passport = require('./auth-strategies')();
+var browserify = require('browserify-middleware');
 
 // local configuration settings
 var config = require('./config');
@@ -18,6 +20,7 @@ var models = require('./models');
 // App routes and controllers
 var routes = require('./routes/index');
 var api = require('./routes/api');
+var auth = require('./routes/auth');
 
 var app = express();
 
@@ -41,6 +44,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
+app.use('/js', browserify('./public/js'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(jadeStatic({
     baseDir: path.join(__dirname, '/views/partials'),
@@ -55,9 +59,21 @@ app.use(function (req, res, next) {
 
     next();
 });
+
+// Passport sessions and user population on req.user
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(function(account, done) {
+    done(null, account.id);
+});
+passport.deserializeUser(function(id, done) {
+    mongoose.model('Account').findById(id, done);
+});
+
 // Bind routes
 app.use('/', routes);
 app.use('/api', api);
+app.use('/auth', auth);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
