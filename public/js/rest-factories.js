@@ -32,7 +32,7 @@ exports = module.exports = function (app) {
                 },
                 login: function (params, callback) {
                     $http
-                    .post('/api/login', params)
+                    .post('/auth/local', params)
                     .success(success(callback)).error(fail(callback));
                 },
                 logout: function (callback) {
@@ -42,15 +42,8 @@ exports = module.exports = function (app) {
                     })
                     .success(success(callback)).error(fail(callback));
                 },
-                get: function (fields, callback) {
-                    var query = "?";
-                    if (fields && callback) {
-                        query += 'select=' + fields;
-                    }
-                    else if (fields && !callback) {
-                        callback = fields;
-                    }
-                    $http.get('/api/account' + query)
+                get: function (id, callback) {
+                    $http.get('/api/accounts/' + id)
                     .success(success(callback)).error(fail(callback));
                 },
                 getMe: function (callback) {
@@ -59,7 +52,7 @@ exports = module.exports = function (app) {
                 },
                 update: function (params, callback) {
                     $http({
-                        url: '/api/account',
+                        url: '/api/accounts',
                         method: 'PATCH',
                         data: params
                     })

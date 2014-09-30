@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    .container
+        h1=title
+        br
+        if (message) 
+            h3= message
+        
+        if (_id && conf)
+            .row: .col-sm-4
+                input.form-control(type="password" placeholder="New password" ng-model="resetPass.password")
+                br
+                input.form-control(type="password" placeholder="Confirm password" ng-model="resetPass.passwordConf")
+                input(type="hidden" ng-init="resetPass._id = '" + _id + "'" ng-model="resetPass._id")
+                input(type="hidden" ng-init="resetPass.conf = '" + conf + "'" ng-model="resetPass.conf")
+                br
+                button.btn.btn-danger(ng-click="doPasswordReset()") Reset Password

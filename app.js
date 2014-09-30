@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var nodemailer = require('nodemailer');
 
 // Express middleware
 var favicon = require('serve-favicon');
@@ -14,6 +15,8 @@ var browserify = require('browserify-middleware');
 
 // local configuration settings
 var config = require('./config');
+// app utilities
+var appUtilities = require('./lib/app-utilities');
 // mongoose ODM models
 var models = require('./models');
 
@@ -52,10 +55,14 @@ app.use(jadeStatic({
     jade: { pretty: true }
 }));
 
+// Attaching app locals and utils to request
 app.use(function (req, res, next) {
-    req.locals = req.locals || {};
-    req.locals.config = config;
+    res.locals = req.locals || {};
+    res.locals.config = config;
+    
     req.db = models;
+    req.email = nodemailer.createTransport(config.smtp);
+    req.utils = appUtilities;
 
     next();
 });
@@ -64,10 +71,10 @@ app.use(function (req, res, next) {
 app.use(passport.initialize());
 app.use(passport.session());
 passport.serializeUser(function(account, done) {
-    done(null, account.id);
+    done(null, account._id);
 });
 passport.deserializeUser(function(id, done) {
-    mongoose.model('Account').findById(id, done);
+    models.Account.findById(id, done);
 });
 
 // Bind routes

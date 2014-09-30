@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var config = require('../config');
+var debug = require('debug')('apollo-api');
 
 router.get('/me', function (req, res, next) {
     res.send(req.user);
@@ -24,24 +26,31 @@ router.put('/forgot/:emailOrId', function (req, res, next) {
         if (err) {
             return next(err);
         }
-        var message = { message: 'If the account was found, a reset will be sent to the email address.' };
+        var message = { message: 'If the account was found with an email on file, a reset will be sent to the email address.' };
         // give no indication if the email was wrong
-        if (!account) {
+        if (!account || !account.email) {
             return res.send(message);
         }
+
         account.passwordReset(function (err, acct) {
             if (err) {
+                debug(err);
                 return next(err);
             }
+            
             // send an e-mail
-            // TODO
-            req.email.send({
-
+            req.email.sendMail({
+                from: config.email.from,
+                to: acct.email,
+                subject: 'Password reset - ' + config.name,
+                text: 'Visit the following link to reset your ' + config.name + ' password.\n\n'
+                    + config.baseURL + '/password-reset/' + acct._id + '/' + acct.conf
             }, function (err) {
                 if (err) {
+                    debug(err);
                     return next(err);
                 }
-                req.send(message);
+                res.send(message);
             });
 
         });
@@ -49,8 +58,9 @@ router.put('/forgot/:emailOrId', function (req, res, next) {
 });
 
 router.put('/password-reset/:_id/:conf', function (req, res, next) {
-    req.Account
+    req.db.Account
     .findOne({ _id: req.params._id, conf: req.params.conf })
+    .select('+conf')
     .exec(function (err, account) {
         if (err) {
             return next(err);
@@ -74,6 +84,19 @@ router.put('/password-reset/:_id/:conf', function (req, res, next) {
                 }
                 res.send(saved);
             });
+
+            // notify people that their password was reset
+            req.email.sendMail({
+                from: config.email.from,
+                to: account.email,
+                subject: 'Your ' + config.name + ' password was reset',
+                text: 'This is a notification that the password has been reset on your ' + config.name + ' account.'
+            }, function (err) {
+                if (err) {
+                    debug(err);
+                }
+            });
+
         });
     });
 });
@@ -91,15 +114,24 @@ router.get('/accounts/:id', function (req, res, next) {
 });
 
 router.post('/accounts', function (req, res, next) {
-    new req.db.Account(req.body).save(function (err, account) {
+    var newAccount = new req.db.Account(req.body);
+    var conf = newAccount.conf;
+    newAccount.save(function (err, account) {
         if (err) {
             return next(err);
         }
-        req.login(account, function (err) {
+        // now send account confirmation email
+        req.email.sendMail({
+            from: config.email.from,
+            to: account.email,
+            subject: 'Account confirmation - ' + config.name,
+            text: 'Visit the following link to confirm your ' + config.name + ' account. '
+                + config.baseURL + '/conf/' + account._id + '/' + newAccount.conf
+        }, function (err) {
             if (err) {
                 return next(err);
             }
-            res.send(req.user);
+            res.send({ message: 'Account created successfully. Check your email to confirm.'});
         });
     });
 });

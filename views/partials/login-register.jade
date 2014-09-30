@@ -1,25 +1,25 @@
 .container
     .row
         .col-sm-6
-            h3 Login
-
-            input.form-control(type="text" placeholder="Username or email" ng-model="login._id")
+            h3 Sign In
+            input.form-control(type="text" placeholder="username or email" ng-model="signin.email")
             br
-            input.form-control(type="password" placeholder="Password" ng-model="login.password")
+            input.form-control(type="password" placeholder="password" ng-model="signin.password")
             br
-
-            button.btn.btn-primary(ng-click="signIn()") Sign In
+            button.btn.btn-primary(ng-click="login()") Sign In
+            a.pull-right(href="javascript:void(0)" ng-click="forgot()") Forgot password
+            
             br
-            .alert.alert-danger(ng-show="errorLogin") {{ errorLogin }}
         .col-sm-6
             h3 Register
-            input.form-control(type="text" placeholder="Username" ng-model="register._id")
+            input.form-control(type="text" placeholder="username" ng-model="signup._id")
             br
-            input.form-control(type="email" placeholder="Email" ng-model="register.email")
+            input.form-control(type="text" placeholder="display name" ng-model="signup.display")
             br
-            input.form-control(type="password" placeholder="Password" ng-model="register.password")
+            input.form-control(type="text" placeholder="email" ng-model="signup.email")
+            br
+            input.form-control(type="password" placeholder="password" ng-model="signup.password")
+            br
+            button.btn.btn-success(ng-click="register()") Create Account
             br
 
-            button.btn.btn-success(ng-click="register()") Register
-            br
-            .alert.alert-danger(ng-show="errorRegister") {{ errorRegister }}

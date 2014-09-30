@@ -8,7 +8,36 @@ html
     script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular-route.min.js")
     script(src="/js/apollo.js")
   body(ng-app="apollo" ng-controller="GlobalController")
+    //- Navigation
+    nav.navbar.navbar-default: .container-fluid
+
+        .navbar-header
+            button.navbar-toggle.collapsed(data-toggle="collapse" data-target="#apollo-nav")
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+            a.navbar-brand(href="/")= config.name
+            p.navbar-text(ng-show="account._id") Signed in as {{ account.display }}
+
+        #apollo-nav.navbar-collapse.collapse
+            ul.nav.navbar-nav.pull-right
+                li(ng-show="!account._id"): a(href="/#/welcome") Sign In / Register
+                li(ng-show="account._id"): a(href="javascript:void(0)" ng-click="logout()") Sign Out
+
+
+    .notifications(ng-cloak)
+        .alert.alert-info(ng-repeat="notif in notifications track by $index" ng-class="{{ notif.class || '' }}")
+            button.close(data-dismiss="alert" ng-click="notifications.splice($index, 1)"): i.fa.fa-remove
+            | {{ notif.message || notif }}
+    
     block content
+
+    br
+    br
+    br
+    br
+    br
+
 
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")

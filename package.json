@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=apollo-app,apollo-db node ./bin/www"
+    "start": "DEBUG=apollo-app,apollo-db,apollo-api node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.8.1",
@@ -19,6 +19,7 @@
     "less-middleware": "1.0.x",
     "mongoose": "^3.8.17",
     "morgan": "~1.3.0",
+    "nodemailer": "^1.3.0",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "serve-favicon": "~2.1.3",

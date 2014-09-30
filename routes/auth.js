@@ -8,10 +8,34 @@ router.delete('/session', function (req, res) {
 });
 
 // Local auth is over JSON
-router.post('/local', passport.authenticate('local'), function (req, res) {
-    // If this function gets called, authentication was successful.
-    // `req.user` contains the authenticated user.
-    res.send(req.user);
+router.post('/local', function (req, res, next) {
+    if (typeof req.body.email !== 'string') {
+        return res.status(400).send({ message: 'Missing email or username.'});
+    }
+    req.db.Account.findOne()
+    .or([{ _id: req.body.email.toLowerCase() }, { email: req.body.email.toLowerCase() }])
+    .select('+password')
+    .exec(function (err, account) {
+        if (err) {
+            return next(err);
+        }
+        if (!account) {
+            return res.status(400).send({ message: 'Incorrect username.' });
+        }
+        var hashedPassword = req.utils.hash(req.body.password);
+        if (hashedPassword !== account.password) {
+            return res.status(401).send({ message: 'Incorrect password.' });
+        }
+        account = account.toObject();
+        console.log(account);
+        delete account.password;
+        req.login(account, function (err) {
+            if (err) {
+                return next(err);
+            }
+            res.send(req.user);
+        });
+    });
 });
 
 module.exports = router;
