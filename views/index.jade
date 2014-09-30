@@ -1,6 +1,5 @@
 extends layout
 
 block content
-    .container
-        h1= title
-        p Welcome to #{title}
+    .container: h1= title
+    .container(ng-view)

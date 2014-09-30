@@ -53,6 +53,10 @@ exports = module.exports = function (app) {
                     $http.get('/api/account' + query)
                     .success(success(callback)).error(fail(callback));
                 },
+                getMe: function (callback) {
+                    $http.get('/api/me')
+                    .success(success(callback)).error(fail(callback));
+                },
                 update: function (params, callback) {
                     $http({
                         url: '/api/account',
