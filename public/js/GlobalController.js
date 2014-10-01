@@ -1,12 +1,15 @@
+var crypto = require('crypto');
+
 exports = module.exports = [
     '$log',
     '$location',
+    '$window',
     '$rootScope',
     '$scope',
     'Account',
     'respoke',
 
-    function ($log, $location, $rootScope, $scope, Account, respoke) {
+    function ($log, $location, $window, $rootScope, $scope, Account, respoke) {
         $rootScope.connected = false;
         $rootScope.notifications = [];
         $rootScope.account = {};
@@ -47,6 +50,11 @@ exports = module.exports = [
             conf: ""
         };
         $scope.resetPass;
+
+        $scope.gravatar = function(email) {
+            return 'https://secure.gravatar.com/avatar/' 
+                + crypto.createHash('md5').update(email).digest("hex");
+        };
 
         $scope.respokeConnect = function () {
             Account.getToken(function (err, respokeAuth) {
@@ -134,15 +142,20 @@ exports = module.exports = [
                 return;
             }
             
-            Account.resetPassword($scope.resetPass._id, $scope.resetPass.conf, $scope.resetPass.password, function (err, account) {
-                if (err) {
-                    $rootScope.notifications.push(err.error);
-                    return;
+            Account.resetPassword(
+                $scope.resetPass._id,
+                $scope.resetPass.conf,
+                $scope.resetPass.password,
+                function (err, account) {
+                    if (err) {
+                        $rootScope.notifications.push(err.error);
+                        return;
+                    }
+                    $rootScope.account = account;
+                    $scope.resetPass = {};
+                    $window.open('/', '_self');
                 }
-                $rootScope.account = account;
-                $scope.resetPass = {};
-                $location.path('/');
-            });
+            );
         };
 
     }

@@ -159,7 +159,10 @@ router.post('/accounts', function (req, res, next) {
         if (err) {
             return next(err);
         }
+        res.send({ message: 'Account created successfully. Check your email to confirm.'});
+
         // now send account confirmation email
+        // this can take a little while, so send the email in the background
         req.email.sendMail({
             from: config.email.from,
             to: account.email,
@@ -168,9 +171,10 @@ router.post('/accounts', function (req, res, next) {
                 + config.baseURL + '/conf/' + account._id + '/' + newAccount.conf
         }, function (err) {
             if (err) {
-                return next(err);
+                debug('ERROR: Account confirmation email failed to send.', err);
+                return;
             }
-            res.send({ message: 'Account created successfully. Check your email to confirm.'});
+            debug('Sent account confirmation email', account.email);
         });
     });
 });
