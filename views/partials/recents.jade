@@ -3,7 +3,7 @@
     button.btn.btn-default.btn-block.btn-sm() Create a new group +
     table.table
         tr(
-            ng-repeat="(id, item) in recents"
+            ng-repeat="(id, item) in recents | orderRecents"
             ng-if="id !== account._id"
             ng-class="{ 'offline': item.presence === 'unavailable' }"
         )

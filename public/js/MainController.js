@@ -30,6 +30,9 @@ exports = module.exports = [
             var listeners = [];
 
             accounts.forEach(function (account) {
+                if (account._id === $rootScope.account._id) {
+                    return;
+                }
                 $rootScope.recents[account._id] = account;
                 $rootScope.recents[account._id].messages = [];
                 $rootScope.recents[account._id].presence = "unavailable";

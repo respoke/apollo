@@ -18,6 +18,28 @@ apollo.factory('marked', function () {
         }
     });
 });
+apollo.filter('orderRecents', function() {
+    return function(items) {
+        var filtered = [];
+        angular.forEach(items, function(item) {
+            filtered.push(item);
+        });
+        filtered.sort(function (a, b) {
+            if (!a.presence) {
+                return -2;
+            }
+            if (a.presence !== 'unavailable' && b.presence === 'unavailable') {
+                return -1;
+            }
+            if (a.presence === 'unavailable' && b.presence !== 'unavailable') {
+                return 1
+            }
+            return 0;
+        });
+        return filtered;
+    };
+});
+
 
 apollo.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
