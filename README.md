@@ -6,7 +6,7 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 
 ## Requirements
 
-* A [Respoke account](https://respoke.io), an app ID and app secret.
+* A [Respoke account](https://respoke.io), an app ID, an app secret, and a role ID.
 * Node.js
 * MongoDB
 

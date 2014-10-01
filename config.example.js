@@ -26,7 +26,8 @@ config.email = {
 // https://portal.respoke.io
 config.respoke = {
     appId: "",
-    appSecret: ""
+    appSecret: "",
+    roleId: ""
 };
 
 // Email - SMTP transport options for Nodemailer

@@ -4,10 +4,21 @@ exports = module.exports = [
     '$rootScope',
     '$scope',
     'Account',
+    'respoke',
 
-    function ($log, $location, $rootScope, $scope, Account) {
+    function ($log, $location, $rootScope, $scope, Account, respoke) {
+        $rootScope.connected = false;
         $rootScope.notifications = [];
         $rootScope.account = {};
+        $rootScope.client = respoke.createClient();
+        $rootScope.client.listen('connect', function () {
+            $log.debug('connected');
+            $rootScope.connected = true;
+            $rootScope.$apply();
+        });
+        $rootScope.client.listen('disconnect', function () {
+            $rootScope.connected = false;
+        });
         
         Account.getMe(function (err, account) {
             if (err) {
@@ -18,7 +29,9 @@ exports = module.exports = [
             $rootScope.account = account;
             if (!account || !account._id) {
                 $location.path('/welcome');
+                return;
             }
+            $scope.respokeConnect();
         });
         
         $scope.signin = {
@@ -34,6 +47,17 @@ exports = module.exports = [
             conf: ""
         };
         $scope.resetPass;
+
+        $scope.respokeConnect = function () {
+            Account.getToken(function (err, respokeAuth) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                $log.debug('respoke auth', respokeAuth);
+                $rootScope.client.connect(respokeAuth);
+            });
+        };
 
         $scope.login = function () {
 
@@ -57,6 +81,7 @@ exports = module.exports = [
                 $scope.signin = {};
                 $rootScope.account = data;
                 $location.path('/');
+                $scope.respokeConnect();
             });
         };
 

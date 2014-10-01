@@ -60,6 +60,10 @@ exports = module.exports = function (app) {
                     $http.get('/api/me')
                     .success(success(callback)).error(fail(callback));
                 },
+                getToken: function (callback) {
+                    $http.get('/auth/tokens')
+                    .success(success(callback)).error(fail(callback));
+                },
                 update: function (params, callback) {
                     $http({
                         url: '/api/me',

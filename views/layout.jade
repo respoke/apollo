@@ -19,17 +19,25 @@ html
                 span.icon-bar
             a.navbar-brand(href="/")= config.name
             p.navbar-text(ng-show="account._id") Signed in as {{ account.display }}
+            p.navbar-text(ng-show="connected")
+                i.fa.fa-check-circle
 
         #apollo-nav.navbar-collapse.collapse
             ul.nav.navbar-nav.pull-right
-                li(ng-show="!account._id"): a(href="/#/welcome") Sign In / Register
-                li(ng-show="account._id"): a(href="javascript:void(0)" ng-click="logout()") Sign Out
+                li(ng-show="!account._id")
+                    a(href="/#/welcome") Sign In / Register
+                li(ng-show="account._id")
+                    a(href="javascript:void(0)" ng-click="logout()") Sign Out
 
 
     .notifications(ng-cloak)
-        .alert.alert-info(ng-repeat="notif in notifications track by $index" ng-class="{{ notif.class || '' }}")
-            button.close(data-dismiss="alert" ng-click="notifications.splice($index, 1)"): i.fa.fa-remove
-            | {{ notif.message || notif }}
+        .alert.alert-info(
+            ng-repeat="notif in notifications track by $index"
+            ng-class="{{ notif.class || '' }}"
+        )
+            button.close(data-dismiss="alert" ng-click="notifications.splice($index, 1)")
+                i.fa.fa-remove
+            | {{ notif.message || notif.error || notif }}
     
     block content
 

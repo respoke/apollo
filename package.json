@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=apollo-app,apollo-db,apollo-api node ./bin/www"
+    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.8.1",

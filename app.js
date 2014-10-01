@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var nodemailer = require('nodemailer');
+var Respoke = require('respoke');
 
 // Express middleware
 var favicon = require('serve-favicon');
@@ -26,6 +27,10 @@ var api = require('./routes/api');
 var auth = require('./routes/auth');
 
 var app = express();
+var respoke = new Respoke({
+    'App-Secret': config.respoke.appSecret,
+    appId: config.respoke.appId
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -63,6 +68,7 @@ app.use(function (req, res, next) {
     req.db = models;
     req.email = nodemailer.createTransport(config.smtp);
     req.utils = appUtilities;
+    req.respoke = respoke;
 
     next();
 });
@@ -96,7 +102,7 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (process.env.NODE_ENV !== 'production') {
     app.use(function(err, req, res, next) {
-        if (req.is('json')) {
+        if (req.accepts('json')) {
             res.send(err.status || 500, {
                 error: err.message,
                 stack: err.stack
@@ -114,7 +120,7 @@ if (process.env.NODE_ENV !== 'production') {
 // no stacktraces leaked to user
 else {
     app.use(function(err, req, res, next) {
-        if (req.is('json')) {
+        if (req.accepts('json')) {
             res.send(err.status || 500, { error: err.message });
             return;
         }

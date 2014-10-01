@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var middleware = require('../lib/middleware');
+var config = require('../config');
+var debug = require('debug')('apollo-auth');
 
 router.delete('/session', function (req, res) {
     req.logout();
@@ -9,8 +11,21 @@ router.delete('/session', function (req, res) {
 });
 
 router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
-    // TODO: get respoke auth token
-    next();
+    var authSettings = {
+        endpointId: req.user._id,
+        roleId: config.respoke.roleId
+    };
+
+    req.respoke.auth.endpoint(authSettings, function (err, authData) {
+        if (err) {
+            debug(err);
+            return next(err);
+        }
+        res.send({
+            token: authData.tokenId,
+            appId: req.respoke.appId
+        });
+    });
 });
 
 // Local login
@@ -33,7 +48,6 @@ router.post('/local', function (req, res, next) {
             return res.status(401).send({ message: 'Incorrect password.' });
         }
         account = account.toObject();
-        console.log(account);
         delete account.password;
         req.login(account, function (err) {
             if (err) {
