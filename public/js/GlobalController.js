@@ -78,6 +78,7 @@ exports = module.exports = [
                     $rootScope.notifications.push(err);
                     return;
                 }
+                $rootScope.notifications = [];
                 $scope.signin = {};
                 $rootScope.account = data;
                 $location.path('/');

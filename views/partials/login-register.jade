@@ -1,7 +1,9 @@
-.container
+.container-fluid
+    h1.center Apollo
+    br
     .row
         .col-sm-6
-            h3 Sign In
+            h3.center Sign In
             input.form-control(type="text" placeholder="username or email" ng-model="signin.email")
             br
             input.form-control(type="password" placeholder="password" ng-model="signin.password")
@@ -11,7 +13,7 @@
             
             br
         .col-sm-6
-            h3 Register
+            h3.center Register
             input.form-control(type="text" placeholder="username" ng-model="signup._id")
             br
             input.form-control(type="text" placeholder="display name" ng-model="signup.display")

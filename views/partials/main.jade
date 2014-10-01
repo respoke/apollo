@@ -1,0 +1,20 @@
+.main(ng-controller="MainController")
+    //- Navigation
+    nav#main-nav.navbar.navbar-default(ng-class="{ 'full': showFullChat }"): .container-fluid
+
+        .navbar-header
+            button.navbar-toggle.collapsed(data-toggle="collapse" data-target="#apollo-nav")
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+            p.navbar-text {{ chatTitle }}
+            p.navbar-text(ng-show="connected")
+                i.fa.fa-check-circle
+
+        #apollo-nav.navbar-collapse.collapse
+            ul.nav.navbar-nav.pull-right
+                li(ng-show="account._id")
+                    a(href="javascript:void(0)" ng-click="logout()") Sign Out
+
+    include recents.jade
+    include chat.jade

@@ -9,9 +9,13 @@ apollo.factory('respoke', function () {
 });
 
 apollo.controller('GlobalController', require('./GlobalController'));
+apollo.controller('MainController', require('./MainController'));
 
 apollo.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
+        .when('/', {
+            templateUrl: 'partials/main.html'
+        })
         .when('/welcome', {
             templateUrl: 'partials/login-register.html'
         })
