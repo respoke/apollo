@@ -21,6 +21,7 @@
             ng-repeat="(id, item) in recents | orderRecents"
             ng-if="id !== account._id"
             ng-class="{ 'offline': item.presence === 'unavailable' }"
+            ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
             td.col-xs-3.center
                 i.fa.fa-group.fa-3x(ng-if="!item.email")
