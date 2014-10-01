@@ -10,6 +10,14 @@ apollo.factory('respoke', function () {
 
 apollo.controller('GlobalController', require('./GlobalController'));
 apollo.controller('MainController', require('./MainController'));
+apollo.factory('marked', function () {
+    var marked = require('marked');
+    marked.setOptions({
+        highlight: function (code) {
+            return require('highlight.js').highlightAuto(code).value;
+        }
+    });
+});
 
 apollo.config(['$routeProvider', function ($routeProvider) {
     $routeProvider

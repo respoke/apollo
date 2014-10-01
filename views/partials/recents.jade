@@ -2,9 +2,14 @@
     input.form-control(type="text" placeholder="Search for friends and conversations")
     button.btn.btn-default.btn-block.btn-sm() Create a new group +
     table.table
-        tr(ng-repeat="(id, item) in recents" ng-if="id !== account._id")
+        tr(
+            ng-repeat="(id, item) in recents"
+            ng-if="id !== account._id"
+            ng-class="{ 'offline': item.presence === 'unavailable' }"
+        )
             td.col-xs-3
                 i.fa.fa-group.fa-3x(ng-if="!item.email")
-                img.img-responsive(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
+                img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
             td
                 h6 {{ item.display || item._id }}
+                p(ng-if="item.presence") {{ item.presence }}

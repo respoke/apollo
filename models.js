@@ -158,6 +158,7 @@ models.Account = mongoose.model('Account', AccountSchema);
 
 /**
  * Group Model
+ * Types of groups: public, private, conversation
  */
 var GroupSchema = new mongoose.Schema({
     _id: {
@@ -166,34 +167,64 @@ var GroupSchema = new mongoose.Schema({
         unique: true,
         default: uuid.v4
     },
-    accounts: [{
-        type: ObjectId,
+    owner: {
+        type: String,
         required: true,
         ref: 'Account'
-    }],
+    },
+    accounts: {
+        type: [{
+            type: String,
+            ref: 'Account'
+        }],
+        required: true,
+        default: []
+    },
     created: {
         type: Date,
         default: Date.now
     }
+});
+function isUUID(input) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(input);
+}
+GroupSchema.virtual('isPrivate').get(function () {
+    return isUUID(this._id) && this.accounts.length;
+});
+GroupSchema.virtual('isPublic').get(function () {
+    return !isUUID(this._id) && !this.accounts.length;
+});
+GroupSchema.virtual('isConversation').get(function () {
+    return !isUUID(this._id) && this.accounts.length;
+});
+GroupSchema.pre('validate', function (next) {
+    if (/[^a-z0-9]/gi.test(this._id)) {
+        return next(new Error("Group name must be alphanumeric."));
+    }
+    if (!this.owner) {
+        return next(new Error("A group must have an owner."));
+    }
+    next();
 });
 models.Group = mongoose.model('Group', GroupSchema);
 
 
 /**
  * Message model
+ * These are group and 1+1 messages.
  */
 var MessageSchema = new mongoose.Schema({
     from: {
-        type: ObjectId,
+        type: String,
         ref: 'Account',
         required: true
     },
     to: {
-        type: ObjectId,
+        type: String,
         ref: 'Account'
     },
     group: {
-        type: ObjectId,
+        type: String,
         ref: 'Group'
     },
     content: {
@@ -201,10 +232,23 @@ var MessageSchema = new mongoose.Schema({
         required: true,
         default: ''
     },
+    raw: {},
     created: {
         type: Date,
         default: Date.now
     }
+});
+MessageSchema.pre('validate', function (next) {
+    if (!this.from) {
+        return next(new Error("The 'from' field is required."));
+    }
+    if (!this.to && !this.group) {
+        return next(new Error("Either 'group' or 'to' is required."));
+    }
+    if (!this.content) {
+        return next(new Error("The 'content' field is required."));
+    }
+    next();
 });
 models.Message = mongoose.model('Message', MessageSchema);
 

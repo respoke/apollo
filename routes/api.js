@@ -141,7 +141,7 @@ router.get('/accounts', middleware.isAuthorized, function (req, res, next) {
 });
 
 router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
-    req.db.Account.findById(req.params.account, function (err, account) {
+    req.db.Account.findById(req.params.id, function (err, account) {
         if (err) {
             return next(err);
         }
@@ -176,6 +176,142 @@ router.post('/accounts', function (req, res, next) {
             }
             debug('Sent account confirmation email', account.email);
         });
+    });
+});
+
+router.get('/groups', middleware.isAuthorized, function (req, res, next) {
+    if (req.query.ids && typeof req.query.ids === 'string') {
+        req.db.Group.find()
+        .where('_id').in(req.query.ids.split(','))
+        .exec(handler);
+    }
+    else {
+        req.db.Group.find().exec(handler);
+    }
+    function handler(err, groups) {
+        if (err) {
+            return next(err);
+        }
+        res.send(groups);
+    }
+});
+
+router.get('/groups/:id', middleware.isAuthorized, function (req, res, next) {
+    req.db.Group.findById(req.params.id, function (err, group) {
+        if (err) {
+            return next(err);
+        }
+        if (!group) {
+            return res.status(404).send({ error: 'Group not found by id ' + req.params.id });
+        }
+        res.send(group);
+    });
+});
+
+router.post('/groups', middleware.isAuthorized, function (req, res, next) {
+    new req.db.Group({
+        _id: req.body._id,
+        owner: req.user._id
+    }).save(function (err, group) {
+        if (err) {
+            return next(err);
+        }
+        res.send(group);
+    });
+});
+
+// change ownership of a group
+router.patch('/groups/:id/:account', middleware.isAuthorized, function (req, res, next) {
+    req.db.Group
+    .findById(req.params.id)
+    .populate('owner')
+    .exec(function (err, group) {
+        if (err) {
+            return next(err);
+        }
+        if (!group) {
+            return res.status(404).send({ error: 'Group ' + req.params.id + ' was not found.' });
+        }
+        if (group.owner._id.toString() !== req.user._id.toString()) {
+            return res.status(401).send({ 
+                error: 'Group ' + req.params.id + ' is owned by ' + group.owner.display + '.'
+            });
+        }
+        req.db.Account.findById(req.params.account, function (err, account) {
+            if (err) {
+                return next(err);
+            }
+            if (!account) {
+                return res.status(404).send({ error: "Account " + req.params.account + " does not exist."});
+            }
+            group.owner = req.params.account;
+            group.save(function (err, group) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(group);
+            });
+        });
+    });
+});
+
+router.get('/messages', middleware.isAuthorized, function (req, res, next) {
+
+    // Build a message query.
+    // Always sorted descending by created.
+
+    var query = req.db.Message.find();
+
+    // specific message _id list
+    if (req.query.ids) {
+        query = query.where('_id').in(req.query.ids.split(','));
+    }
+
+    // messages for a group
+    if (req.query.group) {
+        query = query.where('group', req.query.group);
+    }
+
+    // messages between two accounts
+    if (req.query.accounts) {
+        var acctArray = req.query.accounts.split(',');
+        query = query.or([
+            { to: {$in: acctArray} },
+            { from: { $in: acctArray} }
+        ]);
+    }
+
+    // limit
+    if (req.params.limit) {
+        query = query.limit(req.params.limit);
+    }
+    else {
+        query = query.limit(200);
+    }
+
+    // skip
+    if (req.params.skip) {
+        query = query.skip(req.params.skip);
+    }
+
+
+    query
+    .sort('-created')
+    .exec(function (err, messages) {
+        if (err) {
+            return next(err);
+        }
+        res.send(messages);
+    });
+    
+});
+
+router.post('/messages', middleware.isAuthorized, function (req, res, next) {
+    new req.db.Message(req.body).save(function (err, message) {
+        if (err) {
+            return next(err);
+        }
+        res.send(message);
     });
 });
 

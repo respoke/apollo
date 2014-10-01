@@ -1,8 +1,10 @@
 exports = module.exports = function (app) {
     var success = function (callback) {
+        callback = callback || function () { };
         return function (data) { callback(null, data); };
     };
     var fail = function (callback) {
+        callback = callback || function () { };
         return function (err) { callback(err || { error: "Error. No response from the server." }); };
     };
     
@@ -70,6 +72,75 @@ exports = module.exports = function (app) {
                         method: 'PATCH',
                         data: params
                     })
+                    .success(success(callback)).error(fail(callback));
+                }
+            };
+        }
+    ]);
+
+    // Message
+    app.factory('Message', ['$http', '$rootScope',
+        function ($http, $rootScope) {
+            return {
+                create: function (message, callback) {
+
+                    if (message.group) {
+
+                    }
+                    else {
+                        $rootScope.client.sendMessage({
+                            endpointId: message.endpointId,
+                            onSuccess: success(callback),
+                            onError: fail(callback)
+                        });
+                    }
+
+                    if (!message.offRecord) {
+                        $http
+                        .post('/api/messages', message)
+                        .success(success()).error(fail());
+                    }
+
+                },
+                get: function (id, callback) {
+                    var reqUrl = '/api/messages';
+                    if (id instanceof Function) {
+                        callback = id;
+                    }
+                    else if (id.indexOf('?') === -1) {
+                        reqUrl += '/' + id;
+                    }
+                    else {
+                        reqUrl += id;
+                    }
+                    $http.get(reqUrl)
+                    .success(success(callback)).error(fail(callback));
+                }
+            };
+        }
+    ]);
+
+    // Group
+    app.factory('Group', ['$http', '$rootScope',
+        function ($http, $rootScope) {
+            return {
+                create: function (group, callback) {
+                    $http
+                    .post('/api/groups', group)
+                    .success(success(callback)).error(fail(callback));
+                },
+                get: function (id, callback) {
+                    var reqUrl = '/api/groups';
+                    if (id instanceof Function) {
+                        callback = id;
+                    }
+                    else if (id.indexOf('?') === -1) {
+                        reqUrl += '/' + id;
+                    }
+                    else {
+                        reqUrl += id;
+                    }
+                    $http.get(reqUrl)
                     .success(success(callback)).error(fail(callback));
                 }
             };

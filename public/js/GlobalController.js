@@ -10,6 +10,8 @@ exports = module.exports = [
     'respoke',
 
     function ($log, $location, $window, $rootScope, $scope, Account, respoke) {
+        respoke.log.setLevel('debug');
+        $rootScope.recents = {};
         $rootScope.connected = false;
         $rootScope.notifications = [];
         $rootScope.account = {};
@@ -17,6 +19,7 @@ exports = module.exports = [
         $rootScope.client.listen('connect', function () {
             $log.debug('connected');
             $rootScope.connected = true;
+            $rootScope.client.setPresence({ presence: 'Online' });
             $rootScope.$apply();
         });
         $rootScope.client.listen('disconnect', function () {
@@ -63,7 +66,22 @@ exports = module.exports = [
                     return;
                 }
                 $log.debug('respoke auth', respokeAuth);
-                $rootScope.client.connect(respokeAuth);
+
+                $rootScope.client.connect({
+                    token: respokeAuth.token,
+                    appId: respokeAuth.appId,
+                    resolveEndpointPresence: function (presenceList) {
+                        var nonOffline = presenceList.filter(function (presence) {
+                            return presence !== 'unavailable';
+                        });
+                        if (nonOffline.length) {
+                            return nonOffline.join(', ');
+                        }
+                        else {
+                            return 'unavailable';
+                        }
+                    }
+                });
             });
         };
 
@@ -101,7 +119,7 @@ exports = module.exports = [
                     return;
                 }
                 $rootScope.account = null;
-                $location.path('/welcome');
+                $window.open('/', '_self');
             });
         };
 

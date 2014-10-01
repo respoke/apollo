@@ -22,5 +22,3 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
     * `npm start`
 
 3. Apollo will be running at [http://localhost:3000/](http://localhost:3000/).
-
-
