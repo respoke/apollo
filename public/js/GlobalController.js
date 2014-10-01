@@ -66,7 +66,9 @@ exports = module.exports = [
                     return;
                 }
                 $log.debug('respoke auth', respokeAuth);
-
+                $rootScope.client.listen('disconnect', function () {
+                    $scope.respokeConnect();
+                });
                 $rootScope.client.connect({
                     token: respokeAuth.token,
                     appId: respokeAuth.appId,

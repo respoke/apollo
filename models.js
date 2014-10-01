@@ -177,7 +177,6 @@ var GroupSchema = new mongoose.Schema({
             type: String,
             ref: 'Account'
         }],
-        required: true,
         default: []
     },
     created: {

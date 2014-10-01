@@ -51,24 +51,26 @@ exports = module.exports = [
                 });
             }
         });
+    
+        function bindGroup(group) {
+            $rootScope.recents['group-' + group._id] = group;
+            $rootScope.recents['group-' + group._id].messages = [];
+            $rootScope.client.join({
+                onSuccess: function (evt) {
+                    $log.debug('joined ' + evt.group.id);
+                },
+                onError: function (evt) {
+                    $log.debug('FAIL joining ' + evt.group.id);
+                }
+            });
+        }
 
         Group.get(function (err, groups) {
             if (err) {
                 $rootScope.notifications.push(err);
                 return;
             }
-            groups.forEach(function (group) {
-                $rootScope.recents['group-' + group._id] = group;
-                $rootScope.recents['group-' + group._id].messages = [];
-                $rootScope.client.join({
-                    onSuccess: function (evt) {
-                        $log.debug('joined ' + evt.group.id);
-                    },
-                    onError: function (evt) {
-                        $log.debug('FAIL joining ' + evt.group.id);
-                    }
-                });
-            });
+            groups.forEach(bindGroup);
         });
 
         $rootScope.client.ignore('message');
@@ -80,6 +82,12 @@ exports = module.exports = [
         $scope.createGroup = function (groupName) {
             Group.create({
                 _id: groupName
+            }, function (err, group) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                bindGroup(group);
             });
         };
     }

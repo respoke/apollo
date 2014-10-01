@@ -1,13 +1,28 @@
 .panel.left(ng-class="{ 'full': showFullChat }")
     input.form-control(type="text" placeholder="Search for friends and conversations")
-    button.btn.btn-default.btn-block.btn-sm() Create a new group +
+    
+    //- Adding a group
+    button.btn.btn-default.btn-block.btn-sm(
+        ng-show="!showCreateGroup"
+        ng-click="showCreateGroup = true"
+    ) Create a new group +
+
+    .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
+        input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+        button.btn.btn-primary.btn-block.btn-sm(
+            ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
+        ) Create
+        button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+            | Cancel
+
+    //- Display group and buddy list
     table.table
-        tr(
+        tr.animated.pulse(
             ng-repeat="(id, item) in recents | orderRecents"
             ng-if="id !== account._id"
             ng-class="{ 'offline': item.presence === 'unavailable' }"
         )
-            td.col-xs-3
+            td.col-xs-3.center
                 i.fa.fa-group.fa-3x(ng-if="!item.email")
                 img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
             td

@@ -25,8 +25,11 @@ apollo.filter('orderRecents', function() {
             filtered.push(item);
         });
         filtered.sort(function (a, b) {
-            if (!a.presence) {
-                return -2;
+            if (a.presence && !b.presence) {
+                return 1;
+            }
+            if (!a.presence && b.presence) {
+                return -1;
             }
             if (a.presence !== 'unavailable' && b.presence === 'unavailable') {
                 return -1;
