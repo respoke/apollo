@@ -1,2 +1,15 @@
 .panel.right(ng-class="{ 'full': showFullChat }")
-    input.form-control(type="text" placeholder="Text input")
+    #chat
+        table.table
+            tr(ng-repeat="message in selectedChat.messages")
+                td.col-xs-2 {{ message.from.display }}
+                td.col-xs-10: div(ng-bind-html="trustAsHtml(marked(message.content))")
+
+    input.form-control(
+        type="text"
+        ng-model="textInput"
+        placeholder="Text input"
+        ap-enter="sendMessage(textInput); textInput = '';"
+        ng-show="selectedChat"
+    )
+

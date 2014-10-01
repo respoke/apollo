@@ -231,7 +231,6 @@ var MessageSchema = new mongoose.Schema({
         required: true,
         default: ''
     },
-    raw: {},
     created: {
         type: Date,
         default: Date.now

@@ -273,11 +273,10 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
     }
 
     // messages between two accounts
-    if (req.query.accounts) {
-        var acctArray = req.query.accounts.split(',');
+    if (req.query.account) {
         query = query.or([
-            { to: {$in: acctArray} },
-            { from: { $in: acctArray} }
+            { to: req.query.account,   from: req.user._id },
+            { from: req.query.account, to: req.user._id }
         ]);
     }
 
@@ -296,7 +295,8 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 
 
     query
-    .sort('-created')
+    .sort('created')
+    .populate('from to group')
     .exec(function (err, messages) {
         if (err) {
             return next(err);
@@ -307,7 +307,12 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 });
 
 router.post('/messages', middleware.isAuthorized, function (req, res, next) {
-    new req.db.Message(req.body).save(function (err, message) {
+    new req.db.Message({
+        from: req.user._id,
+        to: req.body.to,
+        group: req.body.group,
+        content: req.body.content
+    }).save(function (err, message) {
         if (err) {
             return next(err);
         }

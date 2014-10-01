@@ -62,7 +62,24 @@ html, body {
         }
         &.full {
             background: transparent;
-            left: 360px;
+            left: 362px;
+            #chat {
+                left: 360px;
+            }
+        }
+
+        #chat {
+            position: fixed;
+            display: block;
+            width: 100%;
+            top: 60px;
+            right: 2px;
+            bottom: 40px;
+            left: 0;
+            overflow-y: auto;
+            table.table {
+                background: rgba(0,0,0,0,.3);
+            }
         }
     }
 }

@@ -7,8 +7,11 @@ exports = module.exports = [
     'Group',
     'Message',
     'marked',
+    '$sce',
 
-    function ($log, $location, $rootScope, $scope, Account, Group, Message, marked) {
+    function ($log, $location, $rootScope, $scope, Account, Group, Message, marked, $sce) {
+        $scope.trustAsHtml = $sce.trustAsHtml;
+        $scope.marked = marked;
         $scope.showFullChat = true;
         $scope.selectedChat = null;
 
@@ -82,10 +85,27 @@ exports = module.exports = [
             }
         });
 
+        // receiving messages
         $rootScope.client.ignore('message');
         $rootScope.client.listen('message', function (evt) {
             $log.debug('message event', evt);
-            $log.debug('marked message', marked(evt.message.message));
+            // group message
+            if (evt.group) {
+                $rootScope.recents['group-' + evt.group.id].messages.push({
+                    group: evt.group.id,
+                    from: $rootScope.recents[evt.message.endpointId],
+                    content: evt.message.message
+                });
+            }
+            // private message
+            else {
+                $rootScope.recents[evt.message.endpointId].messages.push({
+                    from: $rootScope.recents[evt.message.endpointId],
+                    to: $rootScope.account,
+                    content: evt.message.message
+                });
+            }
+            $rootScope.$apply();
         });
 
         $scope.createGroup = function (groupName) {
@@ -107,7 +127,7 @@ exports = module.exports = [
             if ($scope.selectedChat.messages.length < 200) {
                 var qs;
                 if ($scope.selectedChat.display) {
-                    qs = '?accounts=' + $rootScope.account._id + ',' + $scope.selectedChat._id;
+                    qs = '?account=' + $scope.selectedChat._id;
                 }
                 else {
                     qs = '?group=' + $scope.selectedChat._id;
@@ -117,9 +137,34 @@ exports = module.exports = [
                         $rootScope.notifications.push(err);
                         return;
                     }
-                    $scope.selectedChat.messages = $scope.selectedChat.messages.concat(messages);
+                    $scope.selectedChat.messages = messages;
                 });
             }
+        };
+
+        $scope.sendMessage = function (txt) {
+            $log.debug('sendMessage', txt);
+            var msg = {
+                content: txt
+            };
+            if ($scope.selectedChat.display) {
+                msg.to = $scope.selectedChat._id;
+            }
+            else {
+                msg.group = $scope.selectedChat._id;
+            }
+            $scope.selectedChat.messages.push({
+                content: txt,
+                from: $rootScope.account
+            });
+            Message.create(msg, function (err, sentMessage) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    $scope.selectedChat.messages.pop();
+                    return;
+                }
+
+            });
         };
     }
 

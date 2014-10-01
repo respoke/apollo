@@ -85,11 +85,16 @@ exports = module.exports = function (app) {
                 create: function (message, callback) {
 
                     if (message.group) {
-
+                        $rootScope.client.getGroup({ id: message.group }).sendMessage({
+                            message: message.content,
+                            onSuccess: success(callback),
+                            onError: fail(callback)
+                        });
                     }
                     else {
                         $rootScope.client.sendMessage({
-                            endpointId: message.endpointId,
+                            endpointId: message.to,
+                            message: message.content,
                             onSuccess: success(callback),
                             onError: fail(callback)
                         });

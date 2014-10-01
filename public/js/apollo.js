@@ -1,4 +1,5 @@
 /* global respoke */
+/* global marked */
 var apollo = angular.module('apollo', ['ngRoute']);
 
 var restFactories = require('./rest-factories.js');
@@ -11,12 +12,7 @@ apollo.factory('respoke', function () {
 apollo.controller('GlobalController', require('./GlobalController'));
 apollo.controller('MainController', require('./MainController'));
 apollo.factory('marked', function () {
-    var marked = require('marked');
-    marked.setOptions({
-        highlight: function (code) {
-            return require('highlight.js').highlightAuto(code).value;
-        }
-    });
+    return marked;
 });
 apollo.filter('orderRecents', function() {
     return function(items) {
@@ -40,6 +36,20 @@ apollo.filter('orderRecents', function() {
             return 0;
         });
         return filtered;
+    };
+});
+apollo.directive('apEnter', function () {
+    return {
+        link: function (scope, element, attrs) {
+            element.bind("keypress", function (event) {
+                if (event.which === 13) {
+                    scope.$apply(function () {
+                        scope.$eval(attrs.apEnter);
+                    });
+                    event.preventDefault();
+                }
+            });
+        }
     };
 });
 
