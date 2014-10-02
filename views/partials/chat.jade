@@ -1,7 +1,7 @@
 .panel.right(ng-class="{ 'full': showFullChat }")
     #chat
         table.table
-            tr(ng-repeat="message in selectedChat.messages")
+            tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 td(style="width: 40px")
                     img.img-responsive.img-circle(
                         style="width: 30px"

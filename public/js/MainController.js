@@ -1,3 +1,12 @@
+var chat;
+function scrollChatToBottom() {
+    if (!chat) {
+        chat = document.getElementById('chat');
+    }
+    setTimeout(function () {
+        chat.scrollTop = chat.scrollHeight;
+    });
+}
 exports = module.exports = [
     '$log',
     '$rootScope',
@@ -93,31 +102,39 @@ exports = module.exports = [
         $rootScope.client.ignore('message');
         $rootScope.client.listen('message', function (evt) {
             $log.debug('message event', evt);
+            var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
+
             // group message
             if (evt.group) {
-                $rootScope.recents['group-' + evt.group.id].messages.push({
+                $rootScope.recents[itemId].messages.push({
                     group: evt.group.id,
                     from: $rootScope.recents[evt.message.endpointId],
                     content: evt.message.message
                 });
-                if (!$rootScope.recents['group-' + evt.group.id].unread) {
-                    $rootScope.recents['group-' + evt.group.id].unread = 0;
+                if (!$rootScope.recents[itemId].unread) {
+                    $rootScope.recents[itemId].unread = 0;
                 }
-                $rootScope.recents['group-' + evt.group.id].unread++;
+                $rootScope.recents[itemId].unread++;
             }
             // private message
             else {
-                $rootScope.recents[evt.message.endpointId].messages.push({
-                    from: $rootScope.recents[evt.message.endpointId],
+                $rootScope.recents[itemId].messages.push({
+                    from: $rootScope.recents[itemId],
                     to: $rootScope.account,
                     content: evt.message.message
                 });
-                if (!$rootScope.recents[evt.message.endpointId].unread) {
-                    $rootScope.recents[evt.message.endpointId].unread = 0;
+                if (!$rootScope.recents[itemId].unread) {
+                    $rootScope.recents[itemId].unread = 0;
                 }
-                $rootScope.recents[evt.message.endpointId].unread++;
+                $rootScope.recents[itemId].unread++;
             }
             $rootScope.$apply();
+
+            // TODO: implement this in a directive
+            // scrolling the chat window
+            if ($scope.selectedChat && itemId.indexOf($scope.selectedChat._id) !== -1) {
+                scrollChatToBottom();
+            }
         });
 
         $scope.createGroup = function (groupName) {
@@ -158,6 +175,7 @@ exports = module.exports = [
                         return;
                     }
                     $scope.selectedChat.messages = messages;
+                    scrollChatToBottom();
                 });
             }
         };
@@ -183,8 +201,8 @@ exports = module.exports = [
                     $scope.selectedChat.messages.pop();
                     return;
                 }
-
             });
+            scrollChatToBottom();
         };
     }
 
