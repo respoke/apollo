@@ -19,7 +19,7 @@ exports = module.exports = [
         $rootScope.client.listen('connect', function () {
             $log.debug('connected');
             $rootScope.connected = true;
-            $rootScope.client.setPresence({ presence: 'Online' });
+            $rootScope.client.setPresence({ presence: 'online' });
             $rootScope.$apply();
         });
         $rootScope.client.listen('disconnect', function () {

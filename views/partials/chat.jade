@@ -2,8 +2,13 @@
     #chat
         table.table
             tr(ng-repeat="message in selectedChat.messages")
-                td.col-xs-2 {{ message.from.display }}
-                td.col-xs-10: div(ng-bind-html="trustAsHtml(marked(emo(message.content)))")
+                td(style="width: 40px")
+                    img.img-responsive.img-circle(
+                        style="width: 30px"
+                        ng-src="{{ gravatar(message.from.email) }}"
+                    )
+                td(style="width: 90px"): small {{ message.from.display }}
+                td(ng-bind-html="trustAsHtml(marked(emo(message.content)))")
 
     input.form-control(
         type="text"

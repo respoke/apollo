@@ -2,7 +2,7 @@
     input.form-control(type="text" placeholder="Search for friends and conversations")
     
     //- Adding a group
-    button.btn.btn-default.btn-block.btn-sm(
+    button.btn.btn-primary.btn-block.btn-sm(
         ng-show="!showCreateGroup"
         ng-click="showCreateGroup = true"
     ) Create a new group +
@@ -17,10 +17,10 @@
 
     //- Display group and buddy list
     table.table
-        tr.animated.pulse(
+        tr.clickable(
             ng-repeat="(id, item) in recents | orderRecents"
             ng-if="id !== account._id"
-            ng-class="{ 'offline': item.presence === 'unavailable' }"
+            ng-class="{ 'offline': item.presence === 'unavailable', 'selectedRecent': selectedChat._id === item._id }"
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
             td.col-xs-3.center
@@ -29,3 +29,5 @@
             td
                 h6 {{ item.display || item._id }}
                 p(ng-if="item.presence") {{ item.presence }}
+            td
+                span.badge(ng-if="item.unread && selectedChat._id !== item._id") {{ item.unread }}

@@ -14,7 +14,7 @@ exports = module.exports = [
         $scope.trustAsHtml = $sce.trustAsHtml;
         $scope.marked = marked;
         $scope.emo = emo;
-        
+
         $scope.showFullChat = true;
         $scope.selectedChat = null;
 
@@ -25,12 +25,13 @@ exports = module.exports = [
             }
             var setPresenceListener = function (endpt) {
                 return function () {
-                    var endpoint = $rootScope.client.getEndpoint({ id: endpt });
-                    endpoint.listen('presence', function (evt) {
-                        $log.debug('presence for endpoint', evt);
-                        $rootScope.recents[endpt].presence = evt.presence;
-                        $scope.$apply();
-                    });
+                    $rootScope.client
+                        .getEndpoint({ id: endpt })
+                        .listen('presence', function (evt) {
+                            $log.debug('presence for endpoint', evt);
+                            $rootScope.recents[endpt].presence = evt.presence;
+                            $scope.$apply();
+                        });
                 };
             };
             var listeners = [];
@@ -99,6 +100,10 @@ exports = module.exports = [
                     from: $rootScope.recents[evt.message.endpointId],
                     content: evt.message.message
                 });
+                if (!$rootScope.recents['group-' + evt.group.id].unread) {
+                    $rootScope.recents['group-' + evt.group.id].unread = 0;
+                }
+                $rootScope.recents['group-' + evt.group.id].unread++;
             }
             // private message
             else {
@@ -107,6 +112,10 @@ exports = module.exports = [
                     to: $rootScope.account,
                     content: evt.message.message
                 });
+                if (!$rootScope.recents[evt.message.endpointId].unread) {
+                    $rootScope.recents[evt.message.endpointId].unread = 0;
+                }
+                $rootScope.recents[evt.message.endpointId].unread++;
             }
             $rootScope.$apply();
         });
@@ -125,7 +134,15 @@ exports = module.exports = [
 
         $scope.switchChat = function (id) {
             $log.debug('switchChat', id);
+            // reset the current chat unreads to zero
+            if ($scope.selectedChat) {
+                $scope.selectedChat.unread = 0;
+            }
+            
+            // switch the chat
             $scope.selectedChat = $rootScope.recents[id];
+            // reset the NEW chat unreads to zero
+            $scope.selectedChat.unread = 0;
 
             if ($scope.selectedChat.messages.length < 200) {
                 var qs;

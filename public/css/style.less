@@ -79,6 +79,10 @@ html, body {
             overflow-y: auto;
             table.table {
                 background: rgba(0,0,0,0,.3);
+                
+                tr, td {
+                    border: none;
+                }
             }
         }
     }
@@ -86,4 +90,12 @@ html, body {
 
 .offline {
     opacity: .2;
+}
+
+.selectedRecent {
+    background: @medLterBase;
+}
+
+.clickable {
+    cursor: pointer;
 }

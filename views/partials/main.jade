@@ -7,10 +7,10 @@
                 span.icon-bar
                 span.icon-bar
                 span.icon-bar
-            p.navbar-text
-                | {{ selectedChat.display || selectedChat._id || "Select a person or group to join the conversation" }}
-            p.navbar-text(ng-show="connected")
-                i.fa.fa-check-circle
+            h5.navbar-text(ng-show="selectedChat") {{ selectedChat.display || selectedChat._id }}
+            p.navbar-text(ng-show="!selectedChat") Select a person or group to join the conversation
+            //- p.navbar-text(ng-show="connected")
+            //-     i.fa.fa-check-circle
 
         #apollo-nav.navbar-collapse.collapse
             ul.nav.navbar-nav.pull-right

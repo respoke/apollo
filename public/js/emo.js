@@ -8,5 +8,6 @@ exports = module.exports = function (input) {
     return input
         .replace(/\:\)|\:\-\)/g, '<i class="fa fa-smile-o"></i>')
         .replace(/\:\(|\:\-\(/g, '<i class="fa fa-frown-o"></i>')
-        .replace(/\:([a-z]+)\b/g, '<i class="fa fa-$1"></i>');
+        // font awesome icons
+        .replace(/\:([a-z]+)\:\b/g, '<i class="fa fa-$1"></i>');
 };
