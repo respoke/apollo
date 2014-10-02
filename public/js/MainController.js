@@ -3,9 +3,13 @@ function scrollChatToBottom() {
     if (!chat) {
         chat = document.getElementById('chat');
     }
-    setTimeout(function () {
-        chat.scrollTop = chat.scrollHeight;
-    });
+    var nearBottomOfChat = chat.scrollHeight - chat.scrollTop < 320;
+    if (nearBottomOfChat) {
+        setTimeout(function () {
+            chat.scrollTop = chat.scrollHeight;
+        });
+    }
+   
 }
 exports = module.exports = [
     '$log',
