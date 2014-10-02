@@ -3,7 +3,7 @@
         table.table
             tr(ng-repeat="message in selectedChat.messages")
                 td.col-xs-2 {{ message.from.display }}
-                td.col-xs-10: div(ng-bind-html="trustAsHtml(marked(message.content))")
+                td.col-xs-10: div(ng-bind-html="trustAsHtml(marked(emo(message.content)))")
 
     input.form-control(
         type="text"

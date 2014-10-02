@@ -1,17 +1,20 @@
 exports = module.exports = [
     '$log',
-    '$location',
     '$rootScope',
     '$scope',
     'Account',
     'Group',
     'Message',
     'marked',
+    'emo',
     '$sce',
 
-    function ($log, $location, $rootScope, $scope, Account, Group, Message, marked, $sce) {
+    function ($log, $rootScope, $scope, Account, Group, Message, marked, emo, $sce) {
+        // make available to the view
         $scope.trustAsHtml = $sce.trustAsHtml;
         $scope.marked = marked;
+        $scope.emo = emo;
+        
         $scope.showFullChat = true;
         $scope.selectedChat = null;
 

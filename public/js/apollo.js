@@ -14,6 +14,9 @@ apollo.controller('MainController', require('./MainController'));
 apollo.factory('marked', function () {
     return marked;
 });
+apollo.factory('emo', function () {
+    return require('./emo');
+});
 apollo.filter('orderRecents', function() {
     return function(items) {
         var filtered = [];
