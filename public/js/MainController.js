@@ -27,6 +27,21 @@ exports = module.exports = [
         $scope.showFullChat = true;
         $scope.selectedChat = null;
 
+        $scope.recentQuery = "";
+        $scope.filterRecents = function (val) {
+            if (!$scope.recentQuery) {
+                return true;
+            }
+            var re = new RegExp($scope.recentQuery, 'i');
+            if (re.test(val._id)) {
+                return true;
+            }
+            if (val.display && re.test(val.display)) {
+                return true
+            }
+            return false;
+        };
+
         Account.get(function (err, accounts) {
             if (err) {
                 $rootScope.notifications.push(err);

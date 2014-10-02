@@ -1,5 +1,9 @@
 .panel.left(ng-class="{ 'full': showFullChat }")
-    input.form-control(type="text" placeholder="Search for friends and conversations")
+    input.form-control(
+        type="text" 
+        placeholder="Search for friends and conversations"
+        ng-model="recentQuery"
+    )
     
     //- Adding a group
     button.btn.btn-primary.btn-block.btn-sm(
@@ -18,7 +22,7 @@
     //- Display group and buddy list
     table.table
         tr.clickable(
-            ng-repeat="(id, item) in recents | orderRecents"
+            ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
             ng-if="id !== account._id"
             ng-class="{ 'offline': item.presence === 'unavailable', 'selectedRecent': selectedChat._id === item._id }"
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
