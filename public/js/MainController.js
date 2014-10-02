@@ -1,14 +1,14 @@
 var chat;
-function scrollChatToBottom() {
+function scrollChatToBottom(force) {
     if (!chat) {
         chat = document.getElementById('chat');
     }
     var nearBottomOfChat = chat.scrollHeight - chat.scrollTop < 320;
-    if (nearBottomOfChat) {
-        setTimeout(function () {
+    setTimeout(function () {
+        if (nearBottomOfChat || force) {
             chat.scrollTop = chat.scrollHeight;
-        });
-    }
+        }
+    });
    
 }
 exports = module.exports = [
@@ -194,7 +194,7 @@ exports = module.exports = [
                         return;
                     }
                     $scope.selectedChat.messages = messages;
-                    scrollChatToBottom();
+                    scrollChatToBottom(true);
                 });
             }
         };
@@ -221,7 +221,7 @@ exports = module.exports = [
                     return;
                 }
             });
-            scrollChatToBottom();
+            scrollChatToBottom(true);
         };
     }
 
