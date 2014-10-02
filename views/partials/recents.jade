@@ -1,8 +1,25 @@
 .panel.left.animated.fadeInRightBig(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
+    
+    //- User account and settings
     .row
         .col-xs-3: img.img-responsive(ng-src="{{ gravatar(account.email) }}")
         .col-xs-9
-            h5 {{ account.display }}
+            //- Display name
+            h5(
+                ng-mouseover="showEditDisplayIcon = true"
+                ng-mouseout="showEditDisplayIcon = false"
+                ng-click="newDisplayName = account.display; showEditDisplay = true;"
+                ng-hide="showEditDisplay"
+            )
+                | {{ account.display }}&nbsp;
+                i.fa.fa-pencil.fa-sm(ng-show="showEditDisplayIcon")
+            input.form-control(type="text"
+                ng-model="newDisplayName"
+                ng-show="showEditDisplay"
+                ap-enter="setDisplayName(newDisplayName); showEditDisplay = false;"
+            )
+
+            //- Presence
             .dropdown
                 button.btn.btn-default.btn-xs(
                     data-toggle="dropdown"

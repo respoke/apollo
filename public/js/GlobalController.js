@@ -104,6 +104,17 @@ exports = module.exports = [
             $rootScope.recents[$rootScope.account._id].presence = strPresence;
         };
 
+        $scope.setDisplayName = function (name) {
+            $log.debug('setDisplayName', name);
+            Account.update({ display: name }, function (err, acct) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                $rootScope.account.display = name;
+            });
+        };
+
         $scope.login = function () {
 
             if (!$scope.signin.email) {
