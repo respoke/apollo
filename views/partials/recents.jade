@@ -20,7 +20,7 @@
             | Cancel
 
     //- Display group and buddy list
-    table.table
+    .scrollable: table.table
         tr.clickable(
             ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
             ng-if="id !== account._id"
