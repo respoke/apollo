@@ -9,8 +9,8 @@ html
     script(src="https://cdn.respoke.io/respoke-v1.7.1.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js")
     script(src="/js/apollo.js")
-  body(ng-app="apollo" ng-controller="GlobalController")
-
+  body#container(ng-app="apollo" ng-controller="GlobalController")
+    canvas#pixie
     .notifications(ng-cloak)
         .alert.alert-info(
             ng-repeat="notif in notifications track by $index"
@@ -29,3 +29,4 @@ html
 
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
+    script(src="/js/pixie.js")

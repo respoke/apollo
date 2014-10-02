@@ -11,6 +11,8 @@ html, body {
     .panelGradient();
 }
 .center { text-align: center }
+.align-right { text-align: right }
+.align-left { text-align: left }
 .notifications {
     position: fixed;
     top: 0;
@@ -54,11 +56,11 @@ html, body {
     }
     &.right {
         right: 0;
-        input.form-control {
+        textarea {
             position: fixed;
             bottom: 0;
-            right: 0;
-            left: 360px;
+            /*right: 0;*/
+            /*left: 360px;*/
         }
         &.full {
             background: transparent;
@@ -78,10 +80,18 @@ html, body {
             left: 0;
             overflow-y: auto;
             table.table {
+                display: block;
+                width: 100%;
                 background: rgba(0,0,0,0,.3);
                 
+                tr {
+                    width: 100%;
+                }
                 tr, td {
                     border: none;
+                }
+                td {
+                    width: 50%;
                 }
             }
         }
@@ -104,4 +114,10 @@ html, body {
     overflow-y: auto;
     height: 100%;
     padding-bottom: 50px;
+}
+
+#pixie {
+    height: 100%;
+    width: 100%;
+    position: fixed;
 }

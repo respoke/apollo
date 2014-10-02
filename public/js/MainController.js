@@ -27,6 +27,7 @@ exports = module.exports = [
         $scope.trustAsHtml = $sce.trustAsHtml;
         $scope.marked = marked;
         $scope.emo = emo;
+        $scope.account = $rootScope.account;
 
         $scope.showFullChat = true;
         $scope.selectedChat = null;
