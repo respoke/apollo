@@ -1,16 +1,19 @@
-.panel.right(ng-class="{ 'full': showFullChat }")
+.panel.right(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
     #chat
         table.table
             tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 //- avatar for remote party
-                td: div(ng-if="message.from._id !== account._id")
-                    .well(ng-bind-html="trustAsHtml(marked(emo(message.content)))")
-                    small {{ message.from.display }}
+                td(width="40px"): small
+                    img.img-responsive.img-circle(
+                        style="width: 30px"
+                        ng-src="{{ gravatar(message.from.email) }}"
+                    )
+                    small.help-block {{ message.from.display }}
 
-                //- avatar for logged in user
-                td: div.align-right(ng-if="message.from._id === account._id")
-                    .well.align-left(ng-bind-html="trustAsHtml(marked(emo(message.content)))")
-                    small {{ message.from.display }}
+                td(ng-bind-html="trustAsHtml(marked(emo(message.content)))")
+                td.align-right(width="90px")
+                    small: small.help-block {{ moment(message.created).fromNow() }}
+
 
     textarea.form-control(
         ng-model="textInput"

@@ -2,6 +2,14 @@
 @import 'cyborg.less';
 @import 'animate.less';
 
+.translationReset () {
+    -webkit-transform: translate(0%,0px);
+    -moz-transform: translate(0%,0px);
+    -ms-transform: translate(0%,0px);
+    -o-transform: translate(0%,0px);
+    transform: translate(0%,0px);
+}
+
 html, body {
     height: 100%;
     width: 100%;
@@ -9,6 +17,9 @@ html, body {
     padding: 0;
     font-weight: 300;
     .panelGradient();
+}
+#container {
+    position: absolute;
 }
 .center { text-align: center }
 .align-right { text-align: right }
@@ -34,9 +45,9 @@ html, body {
 }
 
 .panel {
+    .translationReset();
     position: fixed;
 
-    background: @medLtBase;
     border-radius: 0;
     margin: 0;
 
@@ -59,39 +70,30 @@ html, body {
         textarea {
             position: fixed;
             bottom: 0;
-            /*right: 0;*/
-            /*left: 360px;*/
+            resize: none;
         }
         &.full {
             background: transparent;
-            left: 362px;
-            #chat {
-                left: 360px;
-            }
+            left: 360px;
         }
 
         #chat {
             position: fixed;
             display: block;
             width: 100%;
-            top: 60px;
+            top: 53px;
             right: 2px;
             bottom: 40px;
             left: 0;
             overflow-y: auto;
+
             table.table {
-                display: block;
-                width: 100%;
-                background: rgba(0,0,0,0,.3);
-                
-                tr {
-                    width: 100%;
-                }
+                background: rgba(0,0,0,.6);
                 tr, td {
                     border: none;
                 }
-                td {
-                    width: 50%;
+                td:nth-child(2) {
+                    padding-left: 13px;
                 }
             }
         }

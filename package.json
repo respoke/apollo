@@ -2,8 +2,9 @@
   "name": "apollo",
   "version": "0.0.0",
   "private": true,
+  "main": "app.js",
   "scripts": {
-    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth node ./bin/www"
+    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth node app.js"
   },
   "dependencies": {
     "body-parser": "~1.8.1",
@@ -18,6 +19,7 @@
     "highlight.js": "^8.2.0",
     "jade": "~1.6.0",
     "less-middleware": "1.0.x",
+    "moment": "^2.8.3",
     "mongoose": "^3.8.17",
     "morgan": "~1.3.0",
     "nodemailer": "^1.3.0",
@@ -26,5 +28,11 @@
     "serve-favicon": "~2.1.3",
     "showdown": "^0.3.1",
     "uuid": "^2.0.1"
+  },
+  "domains": [
+    "apollo.ruffrey.com"
+  ],
+  "engines": {
+    "node": "0.10.31"
   }
 }

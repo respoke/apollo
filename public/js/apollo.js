@@ -1,3 +1,4 @@
+/* global angular */
 /* global respoke */
 /* global marked */
 var apollo = angular.module('apollo', ['ngRoute']);
@@ -17,6 +18,9 @@ apollo.factory('marked', function () {
 apollo.factory('emo', function () {
     return require('./emo');
 });
+apollo.factory('moment', function () {
+    return require('moment');
+})
 apollo.filter('orderRecents', function() {
     return function(items) {
         var filtered = [];
@@ -55,7 +59,6 @@ apollo.directive('apEnter', function () {
         }
     };
 });
-
 
 apollo.config(['$routeProvider', function ($routeProvider) {
     $routeProvider

@@ -1,10 +1,28 @@
-.panel.left(ng-class="{ 'full': showFullChat }")
-    input.form-control(
-        type="text" 
-        placeholder="Search for friends and conversations"
-        ng-model="recentQuery"
-    )
-    
+.panel.left.animated.fadeInRightBig(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
+    .row
+        .col-xs-3: img.img-responsive(ng-src="{{ gravatar(account.email) }}")
+        .col-xs-9
+            h5 {{ account.display }}
+            .dropdown
+                button.btn.btn-default.btn-xs(
+                    data-toggle="dropdown"
+                    ng-class="{ 'btn-warning': recents[account._id].presence === 'busy' }"
+                )
+                    | {{ recents[account._id].presence }}&nbsp;&nbsp;
+                    i.fa.fa-caret-down
+                ul.dropdown-menu
+                    li: a(
+                        tabindex="-1"
+                        ng-click="setPresence('available')"
+                        href="javascript:void(0)"
+                    ) available
+                    li: a(
+                        tabindex="-1"
+                        ng-click="setPresence('busy')"
+                        href="javascript:void(0)"
+                    ) busy
+
+    br
     //- Adding a group
     button.btn.btn-primary.btn-block.btn-sm(
         ng-show="!showCreateGroup"
@@ -19,11 +37,18 @@
         button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
             | Cancel
 
+
+    input.form-control(
+        type="text" 
+        placeholder="Search for friends and conversations"
+        ng-model="recentQuery"
+    )
+
     //- Display group and buddy list
     .scrollable: table.table
         tr.clickable(
             ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
-            ng-if="id !== account._id"
+            ng-if="item._id !== account._id"
             ng-class="{ 'offline': item.presence === 'unavailable', 'selectedRecent': selectedChat._id === item._id }"
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
@@ -35,3 +60,6 @@
                 p(ng-if="item.presence") {{ item.presence }}
             td
                 span.badge(ng-if="item.unread && selectedChat._id !== item._id") {{ item.unread }}
+            
+            td: small.help-block 
+                | {{ item.messages.length ? moment(item.messages[ item.messages.length -1 ].created).fromNow() : ""}}

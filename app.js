@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var nodemailer = require('nodemailer');
 var Respoke = require('respoke');
+var debug = require('debug')('apollo-app');
 
 // Express middleware
 var favicon = require('serve-favicon');
@@ -44,6 +45,7 @@ app.use(session({
     secret: config.mongoSessions.secret,
     store: new MongoStore({
         db: config.mongoSessions.db,
+        url: config.mongoURI
     }),
     saveUninitialized: true,
     resave: true
@@ -133,3 +135,8 @@ else {
 }
 
 module.exports = app;
+
+
+var server = app.listen(config.port, function() {
+    debug(config.name + ' is listening at http://localhost:' + server.address().port + '/');
+});

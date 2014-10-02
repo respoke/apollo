@@ -20,13 +20,15 @@ exports = module.exports = [
     'Message',
     'marked',
     'emo',
+    'moment',
     '$sce',
 
-    function ($log, $rootScope, $scope, Account, Group, Message, marked, emo, $sce) {
+    function ($log, $rootScope, $scope, Account, Group, Message, marked, emo, moment, $sce) {
         // make available to the view
         $scope.trustAsHtml = $sce.trustAsHtml;
         $scope.marked = marked;
         $scope.emo = emo;
+        $scope.moment = moment;
         $scope.account = $rootScope.account;
 
         $scope.showFullChat = true;
@@ -54,9 +56,8 @@ exports = module.exports = [
             }
             var setPresenceListener = function (endpt) {
                 return function () {
-                    $rootScope.client
-                        .getEndpoint({ id: endpt })
-                        .listen('presence', function (evt) {
+                    $rootScope.recents[endpt].endpoint = $rootScope.client.getEndpoint({ id: endpt });
+                    $rootScope.recents[endpt].endpoint.listen('presence', function (evt) {
                             $log.debug('presence for endpoint', evt);
                             $rootScope.recents[endpt].presence = evt.presence;
                             $scope.$apply();
@@ -66,9 +67,6 @@ exports = module.exports = [
             var listeners = [];
 
             accounts.forEach(function (account) {
-                if (account._id === $rootScope.account._id) {
-                    return;
-                }
                 $rootScope.recents[account._id] = account;
                 $rootScope.recents[account._id].messages = [];
                 $rootScope.recents[account._id].presence = "unavailable";
@@ -135,6 +133,7 @@ exports = module.exports = [
                     $rootScope.recents[itemId].unread = 0;
                 }
                 $rootScope.recents[itemId].unread++;
+                $rootScope.audio.messageGroup.play();
             }
             // private message
             else {
@@ -147,13 +146,14 @@ exports = module.exports = [
                     $rootScope.recents[itemId].unread = 0;
                 }
                 $rootScope.recents[itemId].unread++;
+                $rootScope.audio.messagePrivate.play();
             }
             $rootScope.$apply();
 
             // TODO: implement this in a directive
             // scrolling the chat window
             if ($scope.selectedChat && itemId.indexOf($scope.selectedChat._id) !== -1) {
-                scrollChatToBottom();
+                scrollChatToBottom(true);
             }
         });
 

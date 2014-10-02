@@ -11,6 +11,18 @@ exports = module.exports = [
 
     function ($log, $location, $window, $rootScope, $scope, Account, respoke) {
         respoke.log.setLevel('debug');
+        $rootScope.justLoggedIn = false;
+        $rootScope.justLoggedOut = false;
+
+        $rootScope.audio = {
+            messagePrivate: new Audio('/audio/message-private.ogg'),
+            messageGroup: new Audio('/audio/message-private.ogg')
+        };
+        for (var a in $rootScope.audio) {
+            $rootScope.audio[a].volume = .3;
+        }
+
+
         $rootScope.recents = {};
         $rootScope.connected = false;
         $rootScope.notifications = [];
@@ -19,7 +31,7 @@ exports = module.exports = [
         $rootScope.client.listen('connect', function () {
             $log.debug('connected');
             $rootScope.connected = true;
-            $rootScope.client.setPresence({ presence: 'online' });
+            $rootScope.client.setPresence({ presence: 'available' });
             $rootScope.$apply();
         });
         $rootScope.client.listen('disconnect', function () {
@@ -77,7 +89,7 @@ exports = module.exports = [
                             return presence !== 'unavailable';
                         });
                         if (nonOffline.length) {
-                            return nonOffline.join(', ');
+                            return nonOffline[nonOffline.length - 1];
                         }
                         else {
                             return 'unavailable';
@@ -85,6 +97,11 @@ exports = module.exports = [
                     }
                 });
             });
+        };
+
+        $scope.setPresence = function (strPresence) {
+            $rootScope.client.setPresence({ presence: strPresence });
+            $rootScope.recents[$rootScope.account._id].presence = strPresence;
         };
 
         $scope.login = function () {
@@ -109,8 +126,12 @@ exports = module.exports = [
                 $rootScope.notifications = [];
                 $scope.signin = {};
                 $rootScope.account = data;
-                $location.path('/');
+                $rootScope.justLoggedIn = true;
                 $scope.respokeConnect();
+                setTimeout(function () {
+                    $location.path('/');
+                    $rootScope.justLoggedIn = false;
+                });
             });
         };
 
@@ -121,7 +142,10 @@ exports = module.exports = [
                     return;
                 }
                 $rootScope.account = null;
-                $window.open('/', '_self');
+                $rootScope.justLoggedOut = true;
+                setTimeout(function () {
+                    $window.open('/', '_self');
+                });
             });
         };
 
