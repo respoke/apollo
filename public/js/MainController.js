@@ -41,6 +41,9 @@ exports = module.exports = [
         $scope.showSettings = false;
         $scope.selectedChat = null;
 
+        $scope.activeCall = null;
+        $scope.incomingCall = "";
+
         $scope.recentQuery = "";
         $scope.filterRecents = function (val) {
             if (!$scope.recentQuery) {
@@ -163,6 +166,24 @@ exports = module.exports = [
                 scrollChatToBottom(true);
             }
         });
+        
+        // receive calls
+        $rootScope.client.ignore('call');
+        $rootScope.client.listen('call', function (evt) {
+            if (evt.call.caller) {
+                return;
+            }
+            if ($scope.activeCall) {
+                $rootScope.notifications.push(
+                    $rootScope.recents[evt.endpoint.id].display
+                    + ' tried to call you.'
+                );
+                return;
+            }
+            $scope.activeCall = evt.call;
+            $scope.incomingCall = $rootScope.recents[evt.endpoint.id].display;
+            $scope.$apply();
+        });
 
         $scope.createGroup = function (groupName) {
             Group.create({
@@ -231,6 +252,33 @@ exports = module.exports = [
                 }
             });
             scrollChatToBottom(true);
+        };
+
+        $scope.audioCall = function (id) {
+            $log.debug('audio call requested with ', id);
+            var endpoint = $rootScope.client.getEndpoint({ id: id });
+            $scope.activeCall = endpoint.startAudioCall();
+            $scope.activeCall.listen('hangup', function () {
+                $scope.activeCall = null;
+                $scope.$apply();
+            });
+        };
+        $scope.hangup = function () {
+            if ($scope.activeCall) {
+                $scope.activeCall.hangup();
+                $scope.activeCall = null;
+            }
+        };
+        $scope.answer = function () {
+            if ($scope.activeCall) {
+                $scope.activeCall.answer({
+                    constraints: {
+                        audio: true,
+                        video: true
+                    }
+                });
+                $scope.incomingCall = "";
+            }
         };
 
         $scope.onPasteUpload = function (data) {

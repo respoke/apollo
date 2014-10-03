@@ -3,7 +3,7 @@
     //- User account and settings
     .row
         .col-xs-3: img.img-responsive(ng-src="{{ gravatar(account.email) }}")
-        .col-xs-9
+        .col-xs-6
             //- Display name
             h5(
                 ng-mouseover="showEditDisplayIcon = true"
@@ -44,6 +44,15 @@
                 //- Sign out
                 button.btn.btn-default.btn-xs(ng-click="logout()"): i.fa.fa-sign-out
 
+            //- Call controls
+        .col-xs-3(ng-show="activeCall")
+            //- hangup
+            button.btn.btn-danger.btn-xs(ng-click="hangup()") Hangup
+            button.btn.btn-success.btn-xs.animated.rubberBand.infinite(
+                ng-click="answer()"
+                ng-show="incomingCall"
+            ) 
+                | Answer call from {{ incomingCall }}
     br
     //- Adding a group
     button.btn.btn-primary.btn-block.btn-sm(
@@ -82,6 +91,13 @@
                 p(ng-if="item.presence") {{ item.presence }}
             td
                 span.badge(ng-if="item.unread && selectedChat._id !== item._id") {{ item.unread }}
+                
+                //- audio call
+                button.btn.btn-primary.btn-success.btn-sm(
+                    ng-click="audioCall(item._id)"
+                    ng-show="!activeCall && item.display && item.presence !== 'unavailable'"
+                )
+                    i.fa.fa-phone
             
             td: small.help-block 
                 | {{ item.messages.length ? moment(item.messages[ item.messages.length -1 ].created).fromNow() : ""}}
