@@ -6,7 +6,8 @@ exports = module.exports = function () {
             var apDrop = attrs.apDrop ? scope.$eval(attrs.apDrop) : function (data) { };
 
             element[0].addEventListener('drop', function (evt) {
-
+                element.removeClass('animated pulse infinite');
+                
                 evt.stopPropagation();
                 evt.preventDefault();
 

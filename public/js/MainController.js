@@ -238,18 +238,7 @@ exports = module.exports = [
             File.create({
                 contentType: data.contentType,
                 content: data.content
-            }, function (err, file) {
-                if (err) {
-                    $rootScope.notifications.push(err);
-                    return;
-                }
-                var fileURL = '/files/' + file._id;
-                var messageText = file.contentType.indexOf('image') !== -1
-                    ? '![' + file._id + '](' + fileURL + ')'
-                    : '[' + fileURL + '](/files/' + file._id + ')';
-                
-                $scope.sendMessage(messageText);
-            });
+            }, onAfterUpload);
         };
 
         $scope.onDropUpload = function (data) {
@@ -257,19 +246,23 @@ exports = module.exports = [
             File.create({
                 contentType: data.contentType,
                 content: data.content
-            }, function (err, file) {
-                if (err) {
-                    $rootScope.notifications.push(err);
-                    return;
-                }
-                var fileURL = '/files/' + file._id;
-                var messageText = file.contentType.indexOf('image') !== -1
-                    ? '![' + file._id + '](' + fileURL + ')'
-                    : '[' + fileURL + '](/files/' + file._id + ')';
-                
-                $scope.sendMessage(messageText);
-            });
+            }, onAfterUpload);
         };
+
+        function onAfterUpload(err, file) {
+            if (err) {
+                $rootScope.notifications.push(err);
+                return;
+            }
+            var fileURL = '/files/' + file._id;
+            var bytes = (4 * (file.content.length / 3)) * .6;
+
+            var messageText = file.contentType.indexOf('image') !== -1
+                ? '![' + file._id + '](' + fileURL + ')'
+                : '[' + file.contentType + ' ' + (bytes/1024/1024).toFixed(3) + 'mb' + '](/files/' + file._id + ')';
+            
+            $scope.sendMessage(messageText);
+        }
     }
 
 ];
