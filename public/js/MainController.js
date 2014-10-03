@@ -26,9 +26,6 @@ exports = module.exports = [
     '$interval',
 
     function ($log, $rootScope, $scope, Account, Group, Message, File, marked, emo, moment, $sce, $interval) {
-        $interval(function () {
-            $scope.$apply();
-        }, 2 * 60 * 1000);
 
         // make available to the view
         $scope.trustAsHtml = $sce.trustAsHtml;
