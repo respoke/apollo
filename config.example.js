@@ -50,6 +50,8 @@ config.smtp = {
     }
 };
 
+config.localSignupEnabled = true;
+
 // Allow Google authentication?
 // See PassportJS docs. http://passportjs.org/guide/google/
 config.google = {

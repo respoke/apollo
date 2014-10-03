@@ -1,0 +1,22 @@
+h3.center Sign In
+if(config.google.enabled)
+    .center: a.btn.btn-primary(href="/auth/google")
+        i.fa.fa-google
+        br
+        | Google
+    br
+    h6 use 
+        =config.name
+        |  account
+
+input.form-control(
+    type="text" placeholder="username or email" ng-model="signin.email" ap-enter="login()"
+    autofocus
+)
+br
+input.form-control(type="password" placeholder="password" ng-model="signin.password" ap-enter="login()")
+br
+button.btn.btn-primary(ng-click="login()") Sign In
+a.pull-right(href="javascript:void(0)" ng-click="forgot()") Forgot password
+
+br

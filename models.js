@@ -85,7 +85,7 @@ AccountSchema.pre('validate', function (next) {
         }
     }
 
-    if (this.isNew) {
+    if (this.isNew && !this.google) {
         this.conf = 'confirm-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4();
         this._id = this._id.toLowerCase();
     }
@@ -213,6 +213,10 @@ models.Group = mongoose.model('Group', GroupSchema);
  * These are group and 1+1 messages.
  */
 var MessageSchema = new mongoose.Schema({
+    __v: {
+        type: Number,
+        select: false
+    },
     from: {
         type: String,
         ref: 'Account',
@@ -254,6 +258,10 @@ models.Message = mongoose.model('Message', MessageSchema);
  * File model
  */
 var FileSchema = new mongoose.Schema({
+    __v: {
+        type: Number,
+        select: false
+    },
     content: {
         type: String,
         required: true,

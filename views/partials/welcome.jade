@@ -1,0 +1,19 @@
+.container-fluid: .animated.fadeInLeftBig(ng-class="{ 'fadeOutLeftBig': justLoggedIn }")
+    h1.center Apollo
+
+    //- When passport authorization fails, it will redirect here with a querystring message.
+    .alert.alert-danger(ng-show="authFailureMessage") {{ authFailureMessage }}
+    
+    br
+    .row
+        if(!config.localSignupEnabled)
+            .col-sm-6.col-sm-offset-3
+                include login
+        else
+            .col-sm-6
+                include login
+
+        if(config.localSignupEnabled)
+            .col-sm-6
+                include register
+

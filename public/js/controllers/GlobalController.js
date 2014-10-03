@@ -13,6 +13,7 @@ exports = module.exports = [
         respoke.log.setLevel('debug');
         $rootScope.justLoggedIn = false;
         $rootScope.justLoggedOut = false;
+        $scope.authFailureMessage = $location.search().authFailed;
 
         $rootScope.audio = {
             messagePrivate: new Audio('/audio/message-private.ogg'),

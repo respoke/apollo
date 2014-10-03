@@ -230,6 +230,9 @@ exports = module.exports = [
                     scrollChatToBottom(true);
                 });
             }
+            else {
+                scrollChatToBottom(true);
+            }
         };
 
         $scope.sendMessage = function (txt) {

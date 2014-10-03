@@ -10,6 +10,7 @@ router.delete('/session', function (req, res) {
     res.send({ message: 'Logged out' });
 });
 
+// Respoke token brokered authentication
 router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
     var authSettings = {
         endpointId: req.user._id,
@@ -43,6 +44,11 @@ router.post('/local', function (req, res, next) {
         if (!account) {
             return res.status(400).send({ message: 'Incorrect username.' });
         }
+        if (!account.password) {
+            return res.status(401).send({
+                message: 'A password has not been set for this account yet.'
+            });
+        }
         var hashedPassword = req.utils.hash(req.body.password);
         if (hashedPassword !== account.password) {
             return res.status(401).send({ message: 'Incorrect password.' });
@@ -57,5 +63,14 @@ router.post('/local', function (req, res, next) {
         });
     });
 });
+
+// Redirect the user to Google for authentication.  When complete, Google
+// will redirect the user back to the application at
+//     /auth/google/return
+router.get('/google', passport.authenticate('google'));
+router.get('/google/return', passport.authenticate('google', {
+    successRedirect: '/',
+    failureRedirect: '/#/welcome?authFailure=Google+auth+failed'
+}));
 
 module.exports = router;

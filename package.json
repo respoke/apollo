@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth node app.js"
+    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth,apollo-passport node app.js"
   },
   "dependencies": {
     "body-parser": "~1.8.1",

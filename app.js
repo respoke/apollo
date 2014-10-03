@@ -59,7 +59,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(jadeStatic({
     baseDir: path.join(__dirname, '/views/partials'),
     baseUrl: '/partials',
-    jade: { pretty: true }
+    jade: {
+        pretty: true,
+        config: config
+    }
 }));
 
 // Attaching app locals and utils to request

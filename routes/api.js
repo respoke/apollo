@@ -153,6 +153,12 @@ router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
 });
 
 router.post('/accounts', function (req, res, next) {
+    if (!config.localSignupEnabled) {
+        return res.status(403).send({
+            error: 'Local account signups are disabled by the system administrator.'
+        });
+    }
+    
     var newAccount = new req.db.Account(req.body);
     var conf = newAccount.conf;
     newAccount.save(function (err, account) {
