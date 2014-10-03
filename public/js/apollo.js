@@ -1,67 +1,35 @@
 /* global angular */
 /* global respoke */
-/* global marked */
 var apollo = angular.module('apollo', ['ngRoute']);
 
-var restFactories = require('./rest-factories.js');
-restFactories(apollo);
+// Controllers
+apollo.controller('GlobalController', require('./controllers/GlobalController'));
+apollo.controller('MainController', require('./controllers/MainController'));
 
+// Services and Factories
+require('./services/rest-factories.js')(apollo);
 apollo.factory('respoke', function () {
     return respoke;
 });
-
-apollo.controller('GlobalController', require('./GlobalController'));
-apollo.controller('MainController', require('./MainController'));
 apollo.factory('marked', function () {
-    return require('./marked');
+    return require('./lib/marked');
 });
 apollo.factory('emo', function () {
-    return require('./emo');
+    return require('./lib/emo');
 });
 apollo.factory('moment', function () {
     return require('moment');
 });
-apollo.filter('orderRecents', function() {
-    return function(items) {
-        var filtered = [];
-        angular.forEach(items, function(item) {
-            filtered.push(item);
-        });
-        filtered.sort(function (a, b) {
-            if (a.presence && !b.presence) {
-                return 1;
-            }
-            if (!a.presence && b.presence) {
-                return -1;
-            }
-            if (a.presence !== 'unavailable' && b.presence === 'unavailable') {
-                return -1;
-            }
-            if (a.presence === 'unavailable' && b.presence !== 'unavailable') {
-                return 1
-            }
-            return 0;
-        });
-        return filtered;
-    };
-});
-apollo.directive('apEnter', function () {
-    return {
-        link: function (scope, element, attrs) {
-            element.bind("keypress", function (event) {
-                if (event.which === 13 && !event.shiftKey) {
-                    scope.$apply(function () {
-                        scope.$eval(attrs.apEnter);
-                    });
-                    event.preventDefault();
-                }
-            });
-        }
-    };
-});
-apollo.directive('apPaste', require('./ap-paste'));
-apollo.directive('apDrop', require('./ap-drop'));
 
+// Filters
+apollo.filter('orderRecents', require('./filters/sort-order-recents'));
+
+// Directives
+apollo.directive('apEnter', require('./directives/ap-enter'));
+apollo.directive('apPaste', require('./directives/ap-paste'));
+apollo.directive('apDrop', require('./directives/ap-drop'));
+
+// Routes
 apollo.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/', {

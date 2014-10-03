@@ -8,18 +8,27 @@ html
     script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular-route.min.js")
     script(src="https://cdn.respoke.io/respoke-v1.7.1.min.js")
     script(src="/js/apollo.js")
-  body(ng-app="apollo" ng-controller="GlobalController")
-    #container: canvas#pixie
-    .notifications(ng-cloak)
-        .alert.alert-info(
-            ng-repeat="notif in notifications track by $index"
-            ng-class="{{ notif.class || '' }}"
-        )
-            button.close(data-dismiss="alert" ng-click="notifications.splice($index, 1)")
-                i.fa.fa-remove
-            | {{ notif.message || notif.error || notif }}
+  
+  body
     
-    block content
+    //- Background animation container
+    #container: canvas#pixie
+
+    //- Apollo angular app
+    div(ng-app="apollo" ng-controller="GlobalController")
+        
+        //- Notification Area
+        .notifications(ng-cloak)
+            .alert.alert-info(
+                ng-repeat="notif in notifications track by $index"
+                ng-class="{{ notif.class || '' }}"
+            )
+                button.close(data-dismiss="alert" ng-click="notifications.splice($index, 1)")
+                    i.fa.fa-remove
+                | {{ notif.message || notif.error || notif }}
+        
+        //- Main view area
+        block content
 
     br
     br
@@ -28,4 +37,4 @@ html
 
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
-    script(src="/js/pixie.js")
+    script(src="/js/lib/pixie.js")
