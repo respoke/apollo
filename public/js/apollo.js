@@ -13,7 +13,7 @@ apollo.factory('respoke', function () {
 apollo.controller('GlobalController', require('./GlobalController'));
 apollo.controller('MainController', require('./MainController'));
 apollo.factory('marked', function () {
-    return marked;
+    return require('./marked');
 });
 apollo.factory('emo', function () {
     return require('./emo');

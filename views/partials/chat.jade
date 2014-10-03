@@ -19,7 +19,7 @@
 
     textarea.form-control(
         ng-model="textInput"
-        placeholder="Text input"
+        placeholder="Type text, markdown, or paste files"
         ap-enter="sendMessage(textInput); textInput = '';"
         ng-show="selectedChat"
         ap-paste="onPasteUpload"
