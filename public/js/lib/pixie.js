@@ -1,29 +1,47 @@
 /*!
 * Courtesy of http://timothypoon.com/blog/demos/canvas-particle-parallax/
+* Edited gingerly by @ruffrey
 */
 (function () {
     'use strict';
     var WIDTH;
     var HEIGHT;
+    var TOTAL_PIXIES = 15;
     var canvas;
     var con;
     var g;
     var pxs = new Array();
-    var rint = 60;
+    var REDRAW_INTERVAL = 30;
+    var INTERVAL;
 
     $(document).ready(function(){
-        WIDTH = window.innerWidth;
-        HEIGHT = window.innerHeight;
-        $('#container').width(WIDTH).height(HEIGHT);
-        canvas = document.getElementById('pixie');
-        $(canvas).attr('width', WIDTH).attr('height',HEIGHT);
-        con = canvas.getContext('2d');
-        for(var i = 0; i < 100; i++) {
-            pxs[i] = new Circle();
-            pxs[i].reset();
-        }
-        setInterval(draw,rint);
+        window.pixies.start();
     });
+
+    function Pixies () {
+        this.start = function () {
+            WIDTH = window.innerWidth;
+            HEIGHT = window.innerHeight;
+            $('#container').width(WIDTH).height(HEIGHT);
+            canvas = document.getElementById('pixie');
+            $(canvas).attr('width', WIDTH).attr('height',HEIGHT);
+            con = canvas.getContext('2d');
+            for(var i = 0; i < TOTAL_PIXIES; i++) {
+                pxs[i] = new Circle();
+                pxs[i].reset();
+            }
+            INTERVAL = setInterval(draw,REDRAW_INTERVAL);
+        };
+
+        this.resume = function () {
+            INTERVAL = setInterval(draw,REDRAW_INTERVAL);
+        };
+
+        this.stop = function () {
+            clearInterval(INTERVAL);
+        };
+    }
+    window.pixies = new Pixies();
 
     function draw() {
         con.clearRect(0,0,WIDTH,HEIGHT);
@@ -43,7 +61,7 @@
             this.r = ((this.s.rmax-1)*Math.random()) + 1;
             this.dx = (Math.random()*this.s.xmax) * (Math.random() < .5 ? -1 : 1);
             this.dy = (Math.random()*this.s.ymax) * (Math.random() < .5 ? -1 : 1);
-            this.hl = (this.s.ttl/rint)*(this.r/this.s.rmax);
+            this.hl = (this.s.ttl/REDRAW_INTERVAL)*(this.r/this.s.rmax);
             this.rt = Math.random()*this.hl;
             this.s.rt = Math.random()+1;
             this.stop = Math.random()*.2+.4;
