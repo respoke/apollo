@@ -36,8 +36,6 @@ exports = module.exports = function () {
             if (a.messages && b.messages && a.messages.length && b.messages.length) {
                 var adate = +new Date(a.messages[a.messages.length - 1].created);
                 var bdate = +new Date(b.messages[b.messages.length - 1].created);
-                console.log('adate', adate);
-                console.log('bdate', bdate);
                 if (adate > bdate) {
                     return -1;
                 }
