@@ -20,7 +20,7 @@ apollo.factory('emo', function () {
 });
 apollo.factory('moment', function () {
     return require('moment');
-})
+});
 apollo.filter('orderRecents', function() {
     return function(items) {
         var filtered = [];
@@ -59,6 +59,7 @@ apollo.directive('apEnter', function () {
         }
     };
 });
+apollo.directive('apPaste', require('./ap-paste'));
 
 apollo.config(['$routeProvider', function ($routeProvider) {
     $routeProvider

@@ -20,7 +20,7 @@
             )
 
             //- Presence
-            .dropdown
+            .btn-group
                 button.btn.btn-default.btn-xs(
                     data-toggle="dropdown"
                     ng-class="{ 'btn-warning': recents[account._id].presence === 'busy' }"
@@ -38,6 +38,11 @@
                         ng-click="setPresence('busy')"
                         href="javascript:void(0)"
                     ) busy
+                
+                //- Settings
+                button.btn.btn-default.btn-xs(ng-click="showSettings = true; selectedChat = null;"): i.fa.fa-cog
+                //- Sign out
+                button.btn.btn-default.btn-xs(ng-click="logout()"): i.fa.fa-sign-out
 
     br
     //- Adding a group

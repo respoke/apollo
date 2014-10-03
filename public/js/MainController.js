@@ -18,12 +18,18 @@ exports = module.exports = [
     'Account',
     'Group',
     'Message',
+    'File',
     'marked',
     'emo',
     'moment',
     '$sce',
+    '$interval',
 
-    function ($log, $rootScope, $scope, Account, Group, Message, marked, emo, moment, $sce) {
+    function ($log, $rootScope, $scope, Account, Group, Message, File, marked, emo, moment, $sce, $interval) {
+        $interval(function () {
+            $scope.$apply();
+        }, 2 * 60 * 1000);
+
         // make available to the view
         $scope.trustAsHtml = $sce.trustAsHtml;
         $scope.marked = marked;
@@ -32,6 +38,7 @@ exports = module.exports = [
         $scope.account = $rootScope.account;
 
         $scope.showFullChat = true;
+        $scope.showSettings = false;
         $scope.selectedChat = null;
 
         $scope.recentQuery = "";
@@ -171,6 +178,7 @@ exports = module.exports = [
 
         $scope.switchChat = function (id) {
             $log.debug('switchChat', id);
+            $scope.showSettings = false;
             // reset the current chat unreads to zero
             if ($scope.selectedChat) {
                 $scope.selectedChat.unread = 0;
@@ -223,6 +231,20 @@ exports = module.exports = [
                 }
             });
             scrollChatToBottom(true);
+        };
+
+        $scope.onPasteUpload = function (data) {
+            // $log.debug('paste upload', data);
+            File.create({
+                contentType: data.contentType,
+                content: data.content
+            }, function (err, file) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                $scope.sendMessage('![' + file._id + '](/files/' + file._id + ')');
+            });
         };
     }
 

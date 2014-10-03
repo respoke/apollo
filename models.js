@@ -250,5 +250,30 @@ MessageSchema.pre('validate', function (next) {
 });
 models.Message = mongoose.model('Message', MessageSchema);
 
+/**
+ * File model
+ */
+var FileSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true,
+        description: 'Base64 content'
+    },
+    contentType: {
+        type: String,
+        required: true
+    },
+    owner: {
+        type: String,
+        ref: 'Account',
+        required: true
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    }
+});
+models.File = mongoose.model('File', FileSchema);
+
 
 exports = module.exports = models;

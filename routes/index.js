@@ -1,12 +1,26 @@
 var express = require('express');
 var router = express.Router();
 var config = require('../config');
+var middleware = require('../lib/middleware');
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
     res.render('index', { title: config.name });
 });
 
-router.get('/conf/:_id/:conf', function(req, res, next) {
+router.get('/files/:id', middleware.isAuthorized, function (req, res, next) {
+    req.db.File.findById(req.params.id, function (err, file) {
+        if (err) {
+            return next(err);
+        }
+        if (!file) {
+            return res.status(404).send({ error: 'Not found'});
+        }
+        res.set('Content-Type', file.contentType);
+        res.send(new Buffer(file.content, 'base64'));
+    });
+});
+
+router.get('/conf/:_id/:conf', function (req, res, next) {
     req.db.Account
     .findOne({ _id: req.params._id, conf: req.params.conf })
     .exec(function (err, account) {

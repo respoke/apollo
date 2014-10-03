@@ -14,11 +14,14 @@
                 td.align-right(width="90px")
                     small: small.help-block {{ moment(message.created).fromNow() }}
 
+        #settings.animated.fadeIn(ng-show="showSettings")
+            include settings.jade
 
     textarea.form-control(
         ng-model="textInput"
         placeholder="Text input"
         ap-enter="sendMessage(textInput); textInput = '';"
         ng-show="selectedChat"
+        ap-paste="onPasteUpload"
     )
 

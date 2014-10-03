@@ -320,4 +320,31 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
+router.post('/files', middleware.isAuthorized, function (req, res, next) {
+    new req.db.File({
+        content: req.body.content,
+        contentType: req.body.contentType,
+        owner: req.user._id
+    }).save(function (err, file) {
+        if (err) {
+            return next(err);
+        }
+        res.send(file);
+    });
+});
+
+// this is /api/files/:id
+// get the actual file at /files/:id
+router.get('/files/:id', middleware.isAuthorized, function (req, res, next) {
+    req.db.File.findById(req.params.id, function (err, file) {
+        if (err) {
+            return next(err);
+        }
+        if (!file) {
+            return res.status(404).send({ error: 'Not found'});
+        }
+        res.send(file);
+    });
+});
+
 module.exports = router;

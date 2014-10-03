@@ -151,4 +151,17 @@ exports = module.exports = function (app) {
             };
         }
     ]);
+
+    // File
+    app.factory('File', ['$http',
+        function ($http) {
+            return {
+                create: function (params, callback) {
+                    $http
+                    .post('/api/files', params)
+                    .success(success(callback)).error(fail(callback));
+                }
+            };
+        }
+    ]);
 };

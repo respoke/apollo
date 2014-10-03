@@ -22,7 +22,6 @@ exports = module.exports = [
             $rootScope.audio[a].volume = .3;
         }
 
-
         $rootScope.recents = {};
         $rootScope.connected = false;
         $rootScope.notifications = [];

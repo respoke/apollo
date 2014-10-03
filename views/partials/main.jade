@@ -1,23 +1,6 @@
 .main(ng-controller="MainController")
-    //- Navigation
-    nav#main-nav.navbar.navbar-default.animated.fadeInRightBig(
-        ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }"
-    )
-        .container-fluid
-            .navbar-header
-                button.navbar-toggle.collapsed(data-toggle="collapse" data-target="#apollo-nav")
-                    span.icon-bar
-                    span.icon-bar
-                    span.icon-bar
-                h5.navbar-text(ng-show="selectedChat") {{ selectedChat.display || selectedChat._id }}
-                p.navbar-text(ng-show="!selectedChat") Select a person or group to join the conversation
-                //- p.navbar-text(ng-show="connected")
-                //-     i.fa.fa-check-circle
-
-            #apollo-nav.navbar-collapse.collapse
-                ul.nav.navbar-nav.pull-right
-                    li(ng-show="account._id")
-                        a(href="javascript:void(0)" ng-click="logout()") Sign Out
+    p.navbar-text.animated.fadeInRightBig(ng-show="!selectedChat && !showSettings") 
+        | Select a person or group to join the conversation
 
     include recents.jade
     include chat.jade
