@@ -182,6 +182,8 @@ exports = module.exports = [
             }
             $scope.activeCall = evt.call;
             $scope.incomingCall = $rootScope.recents[evt.endpoint.id].display;
+            $rootScope.audio.callIncoming.play();
+            $rootScope.audio.callIncoming.loop = true;
             $scope.$apply();
         });
 
@@ -231,6 +233,9 @@ exports = module.exports = [
 
         $scope.sendMessage = function (txt) {
             $log.debug('sendMessage', txt);
+            if (!txt) {
+                return;
+            }
             var msg = {
                 content: txt
             };
@@ -260,6 +265,11 @@ exports = module.exports = [
             $scope.activeCall = endpoint.startAudioCall();
             $scope.activeCall.listen('hangup', function () {
                 $scope.activeCall = null;
+
+                // in case the hangup happened before the answer
+                $rootScope.audio.callIncoming.pause();
+                $rootScope.audio.callIncoming.loop = false;
+                $rootScope.audio.callIncoming.currentTime = 0;
                 $scope.$apply();
             });
         };
@@ -267,6 +277,11 @@ exports = module.exports = [
             if ($scope.activeCall) {
                 $scope.activeCall.hangup();
                 $scope.activeCall = null;
+                // in case we were being rung
+                $scope.incomingCall = "";
+                $rootScope.audio.callIncoming.pause();
+                $rootScope.audio.callIncoming.loop = false;
+                $rootScope.audio.callIncoming.currentTime = 0;
             }
         };
         $scope.answer = function () {
@@ -278,6 +293,9 @@ exports = module.exports = [
                     }
                 });
                 $scope.incomingCall = "";
+                $rootScope.audio.callIncoming.pause();
+                $rootScope.audio.callIncoming.loop = false;
+                $rootScope.audio.callIncoming.currentTime = 0;
             }
         };
 

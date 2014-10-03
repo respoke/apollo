@@ -16,7 +16,8 @@ exports = module.exports = [
 
         $rootScope.audio = {
             messagePrivate: new Audio('/audio/message-private.ogg'),
-            messageGroup: new Audio('/audio/message-private.ogg')
+            messageGroup: new Audio('/audio/message-group.ogg'),
+            callIncoming: new Audio('/audio/call-incoming.ogg')
         };
         for (var a in $rootScope.audio) {
             $rootScope.audio[a].volume = .3;
