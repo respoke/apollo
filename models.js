@@ -263,6 +263,9 @@ var FileSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    name: {
+        type: String
+    },
     owner: {
         type: String,
         ref: 'Account',

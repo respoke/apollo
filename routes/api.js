@@ -324,6 +324,7 @@ router.post('/files', middleware.isAuthorized, function (req, res, next) {
     new req.db.File({
         content: req.body.content,
         contentType: req.body.contentType,
+        name: req.body.name,
         owner: req.user._id
     }).save(function (err, file) {
         if (err) {

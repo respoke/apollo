@@ -245,7 +245,8 @@ exports = module.exports = [
             $log.debug('drop upload', data);
             File.create({
                 contentType: data.contentType,
-                content: data.content
+                content: data.content,
+                name: data.name
             }, onAfterUpload);
         };
 
@@ -257,9 +258,32 @@ exports = module.exports = [
             var fileURL = '/files/' + file._id;
             var bytes = (4 * (file.content.length / 3)) * .6;
 
+            var displayText = file.contentType;
+            if (/audio/.test(file.contentType)) {
+                displayText = ':file-audio-o:';
+            }
+            else if (/video/.test(file.contentType)) {
+                displayText = ':file-video-o:';
+            }
+            else if (/zip|gz|tar/.test(file.contentType)) {
+                displayText = ':file-archive-o:';
+            }
+            else if (/html|javascript|css|json/.test(file.contentType)) {
+                displayText = ':file-code-o:';
+            }
+            else if (/pdf/.test(file.contentType)) {
+                displayText = ':file-pdf-o:';
+            }
+            else if (/text/.test(file.contentType)) {
+                displayText = ':file-text-o';
+            }
+
+            if (file.name) {
+                displayText += ' ' + file.name;
+            }
             var messageText = file.contentType.indexOf('image') !== -1
                 ? '![' + file._id + '](' + fileURL + ')'
-                : '[' + file.contentType + ' ' + (bytes/1024/1024).toFixed(3) + 'mb' + '](/files/' + file._id + ')';
+                : '[' + displayText + ' - ' + (bytes/1024/1024).toFixed(3) + 'mb' + '](/files/' + file._id + ')';
             
             $scope.sendMessage(messageText);
         }

@@ -17,9 +17,15 @@ exports = module.exports = function () {
                     var file = files[i];
                     var reader = new FileReader();
                     reader.onload = function () {
+                        var contentType = reader.result.split(';')[0].replace('data:', '');
+                        var content = reader.result.split('base64,')[1];
                         var data = {
-                            content: reader.result.split(';')[1].split('base64,')[1],
-                            contentType: reader.result.split(';')[0].split(':')[1]
+                            dataURL: reader.result,
+                            event: evt,
+                            file: file,
+                            name: file.name,
+                            contentType: contentType,
+                            content: content
                         };
                         apDrop(data);
                     };
