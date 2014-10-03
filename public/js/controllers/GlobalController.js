@@ -19,6 +19,7 @@ exports = module.exports = [
             messageGroup: new Audio('/audio/message-group.ogg'),
             callIncoming: new Audio('/audio/call-incoming.ogg')
         };
+        // keep the audio a little low - these sounds are pretty loud.
         for (var a in $rootScope.audio) {
             $rootScope.audio[a].volume = .3;
         }
