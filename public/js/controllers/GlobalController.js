@@ -33,6 +33,9 @@ exports = module.exports = [
             $log.debug('connected');
             $rootScope.connected = true;
             $rootScope.client.setPresence({ presence: 'available' });
+            // apply presence directly to the object. it seems not to want to update
+            // with a listener event.
+            $rootScope.recents[$rootScope.account._id].presence = 'available';
             $rootScope.$apply();
         });
         $rootScope.client.listen('disconnect', function () {
