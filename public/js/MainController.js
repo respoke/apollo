@@ -243,7 +243,31 @@ exports = module.exports = [
                     $rootScope.notifications.push(err);
                     return;
                 }
-                $scope.sendMessage('![' + file._id + '](/files/' + file._id + ')');
+                var fileURL = '/files/' + file._id;
+                var messageText = file.contentType.indexOf('image') !== -1
+                    ? '![' + file._id + '](' + fileURL + ')'
+                    : '[' + fileURL + '](/files/' + file._id + ')';
+                
+                $scope.sendMessage(messageText);
+            });
+        };
+
+        $scope.onDropUpload = function (data) {
+            $log.debug('drop upload', data);
+            File.create({
+                contentType: data.contentType,
+                content: data.content
+            }, function (err, file) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                var fileURL = '/files/' + file._id;
+                var messageText = file.contentType.indexOf('image') !== -1
+                    ? '![' + file._id + '](' + fileURL + ')'
+                    : '[' + fileURL + '](/files/' + file._id + ')';
+                
+                $scope.sendMessage(messageText);
             });
         };
     }

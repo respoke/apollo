@@ -1,5 +1,5 @@
 .panel.right(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
-    #chat
+    #chat(ap-drop="onDropUpload")
         table.table
             tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 //- avatar for remote party
@@ -19,9 +19,10 @@
 
     textarea.form-control(
         ng-model="textInput"
-        placeholder="Type text, markdown, or paste files"
+        placeholder="Type text, markdown, paste images, or drag files"
         ap-enter="sendMessage(textInput); textInput = '';"
         ng-show="selectedChat"
         ap-paste="onPasteUpload"
+        ap-drop="onDropUpload"
     )
 

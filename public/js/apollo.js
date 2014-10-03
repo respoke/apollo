@@ -60,6 +60,7 @@ apollo.directive('apEnter', function () {
     };
 });
 apollo.directive('apPaste', require('./ap-paste'));
+apollo.directive('apDrop', require('./ap-drop'));
 
 apollo.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
