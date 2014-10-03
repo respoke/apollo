@@ -1,8 +1,11 @@
+// This file is excluded from source control by the .gitignore file.
+
 var config = {};
 config.name = 'Apollo';
 config.port = process.env.PORT || 3000;
 
-// password hashing salt
+// Password hashing salt.
+// Once implemented, DO NOT CHANGE or all passwords will cease to work
 config.salt = 'change-this-please-1234';
 
 // Where the application lives, with no trailing slash
@@ -47,6 +50,24 @@ config.smtp = {
     }
 };
 
+// Allow Google authentication?
+// See PassportJS docs. http://passportjs.org/guide/google/
+config.google = {
+
+    // Apollo option: enable this feature?
+    enabled: false,
+
+    // Apollo option: restrict to a list of email domains?
+    // Leave empty for any domain.
+    domains: [],
+
+    // passport options
+    returnURL: '',
+    realm: ''
+};
+
+
+// Put your environment specific configurations here.
 if (process.env.NODE_ENV === 'production') {
 
 }

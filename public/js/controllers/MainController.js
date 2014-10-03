@@ -222,6 +222,10 @@ exports = module.exports = [
                         $rootScope.notifications.push(err);
                         return;
                     }
+                    // Messages are sorted descending from the server, to capture
+                    // the latest ones. So to get the most recent on the bottom, 
+                    // the array gets reversed.
+                    messages.reverse();
                     $scope.selectedChat.messages = messages;
                     scrollChatToBottom(true);
                 });

@@ -260,7 +260,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
     // Build a message query.
     // Always sorted descending by created.
 
-    var query = req.db.Message.find();
+    var query = req.db.Message.find().sort('-created');
 
     // specific message _id list
     if (req.query.ids) {
@@ -295,7 +295,6 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 
 
     query
-    .sort('created')
     .populate('from to group')
     .exec(function (err, messages) {
         if (err) {
