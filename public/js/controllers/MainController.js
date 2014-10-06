@@ -15,6 +15,10 @@ exports = module.exports = [
     '$log',
     '$rootScope',
     '$scope',
+    '$sce',
+    '$interval',
+    '$window',
+
     'Account',
     'Group',
     'Message',
@@ -22,11 +26,26 @@ exports = module.exports = [
     'marked',
     'emo',
     'moment',
-    '$sce',
-    '$interval',
+    'favicon',
 
-    function ($log, $rootScope, $scope, Account, Group, Message, File, marked, emo, moment, $sce, $interval) {
+    function (
+        $log,
+        $rootScope,
+        $scope,
+        $sce,
+        $interval,
+        $window,
 
+        Account,
+        Group,
+        Message,
+        File,
+        marked,
+        emo,
+        moment,
+        favicon
+
+    ) {
         // make available to the view
         $scope.trustAsHtml = $sce.trustAsHtml;
         $scope.marked = marked;
@@ -40,6 +59,8 @@ exports = module.exports = [
 
         $scope.activeCall = null;
         $scope.incomingCall = "";
+        $scope.messagesDuringBlur = 0;
+        $scope.windowInFocus = true;
 
         $scope.recentQuery = "";
         $scope.filterRecents = function (val) {
@@ -55,6 +76,17 @@ exports = module.exports = [
             }
             return false;
         };
+
+        $window.addEventListener('focus', function () {
+            $log.debug('window focus');
+            $scope.windowInFocus = true;
+            $scope.messagesDuringBlur = 0;
+            favicon($scope.messagesDuringBlur);
+        });
+        $window.addEventListener('blur', function () {
+            $log.debug('window blur');
+            $scope.windowInFocus = false;
+        });
 
         Account.get(function (err, accounts) {
             if (err) {
@@ -154,6 +186,10 @@ exports = module.exports = [
                 }
                 $rootScope.recents[itemId].unread++;
                 $rootScope.audio.messagePrivate.play();
+            }
+            // tracking unread messages
+            if (!$scope.windowInFocus) {
+                favicon($scope.messagesDuringBlur++);
             }
             $rootScope.$apply();
 

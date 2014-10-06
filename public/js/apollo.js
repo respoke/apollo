@@ -20,6 +20,9 @@ apollo.factory('emo', function () {
 apollo.factory('moment', function () {
     return require('moment');
 });
+apollo.factory('favicon', function () {
+    return require('./lib/favicon');
+});
 
 // Filters
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));
