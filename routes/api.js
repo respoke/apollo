@@ -3,6 +3,7 @@ var router = express.Router();
 var config = require('../config');
 var debug = require('debug')('apollo-api');
 var middleware = require('../lib/middleware');
+var async = require('async');
 
 router.get('/me', function (req, res, next) {
     if (!req.user) {
@@ -200,9 +201,14 @@ router.post('/accounts', function (req, res, next) {
 });
 
 router.get('/groups', middleware.isAuthorized, function (req, res, next) {
-    if (req.query.ids && typeof req.query.ids === 'string') {
+    if (req.query.ids) {
         req.db.Group.find()
         .where('_id').in(req.query.ids.split(','))
+        .exec(handler);
+    }
+    else if (req.query.owner) {
+        req.db.Group.find()
+        .where('owner', req.query.owner)
         .exec(handler);
     }
     else {
@@ -237,6 +243,56 @@ router.post('/groups', middleware.isAuthorized, function (req, res, next) {
             return next(err);
         }
         res.send(group);
+    });
+});
+router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) {
+    req.db.Group.findById(req.params.id, function (err, group) {
+        if (err) {
+            return next(err);
+        }
+        if (!group) {
+            return res.status(404).send({ error: 'Group not found by id ' + req.params.id });
+        }
+        if (group.owner.toString() !== req.user._id.toString()) {
+            return res.status(401).send({ error: 'Unable to remove group that does not belong to you.' });
+        }
+
+        async.series([
+            function (cb) {
+                req.db.Message.distinct('file', {
+                    group: req.params.id
+                })
+                .exec(function (err, ids) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    debug('files', ids);
+                    req.db.File.remove({
+                        _id: { $in: ids }
+                    })
+                    .exec(cb);
+                });
+            },
+            function (cb) {
+                req.db.Message.remove({
+                    group: req.params.id
+                })
+                .exec(function (err) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    cb();
+                });
+            },
+            function (cb) {
+                group.remove(cb);
+            }
+        ], function (err) {
+            if (err) {
+                return next(err);
+            }
+            res.send({ message: 'Group was removed successfully.' });
+        });
     });
 });
 
@@ -330,7 +386,8 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
         from: req.user._id,
         to: req.body.to,
         group: req.body.group,
-        content: req.body.content
+        content: req.body.content,
+        file: req.body.file
     }).save(function (err, message) {
         if (err) {
             return next(err);

@@ -3,10 +3,25 @@ div(ng-controller="SettingsController")
     br
     table.table
         tr
-            td Group message sounds
-            td
+            td.col-sm-7 Group message sounds
+            td.col-sm-5
                 ap-toggle-setting(key="groupMessageSounds" initial="account.settings.groupMessageSounds")
         tr
             td Private message sounds
             td
                 ap-toggle-setting(key="privateMessageSounds" initial="account.settings.privateMessageSounds")
+
+    h3 My groups
+
+    p(ng-show="!groups"): em Fetching your groups...
+    p(ng-show="groups && !groups.length"): em You have not created any groups.
+    table.table
+        tr(ng-repeat="group in groups" ng-init="showConf = false")
+            td.col-sm-7 {{ group._id }}
+            td.col-sm-5
+                button.btn.btn-default.btn-xs(ng-click="showConf = true" ng-show="!showConf")
+                    i.fa.fa-remove
+                p(ng-show="showConf") Removing a group will remove all files and messages, as well as the group.
+                    |  This action cannot be undone.
+                    button.btn.btn-default.btn-xs(ng-click="showConf = false") Cancel
+                    button.btn.btn-danger.btn-xs(ng-click="removeGroup(group._id, $index)") DELETE

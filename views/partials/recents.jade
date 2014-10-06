@@ -23,7 +23,7 @@
             .btn-group
                 button.btn.btn-default.btn-xs(
                     data-toggle="dropdown"
-                    ng-class="{ 'btn-warning': recents[account._id].presence === 'busy' }"
+                    ng-class="{ 'btn-warning': recents[account._id].presence === 'busy', 'btn-danger': recents[account._id].presence === 'away' }"
                 )
                     | {{ recents[account._id].presence }}&nbsp;&nbsp;
                     i.fa.fa-caret-down
@@ -38,6 +38,11 @@
                         ng-click="setPresence('busy')"
                         href="javascript:void(0)"
                     ) busy
+                    li: a(
+                        tabindex="-1"
+                        ng-click="setPresence('away')"
+                        href="javascript:void(0)"
+                    ) away
                 
                 //- Settings
                 button.btn.btn-default.btn-xs(ng-click="setSettingsVisible(true);"): i.fa.fa-cog

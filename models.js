@@ -244,6 +244,10 @@ var MessageSchema = new mongoose.Schema({
         required: true,
         default: ''
     },
+    file: {
+        type: ObjectId,
+        ref: 'File'
+    },
     created: {
         type: Date,
         default: Date.now
@@ -256,7 +260,7 @@ MessageSchema.pre('validate', function (next) {
     if (!this.to && !this.group) {
         return next(new Error("Either 'group' or 'to' is required."));
     }
-    if (!this.content) {
+    if (!this.content && !this.file) {
         return next(new Error("The 'content' field is required."));
     }
     next();

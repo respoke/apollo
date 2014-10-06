@@ -72,6 +72,9 @@ exports = module.exports = [
         $scope.resetPass;
 
         $scope.gravatar = function(email) {
+            if (!email) {
+                return;
+            }
             return 'https://secure.gravatar.com/avatar/' 
                 + crypto.createHash('md5').update(email).digest("hex");
         };

@@ -297,7 +297,7 @@ exports = module.exports = [
             }
         };
 
-        $scope.sendMessage = function (txt) {
+        $scope.sendMessage = function (txt, fileId) {
             $log.debug('sendMessage', txt);
             if (!txt) {
                 return;
@@ -310,6 +310,9 @@ exports = module.exports = [
             }
             else {
                 msg.group = $scope.selectedChat._id;
+            }
+            if (fileId) {
+                msg.file = fileId;
             }
             $scope.selectedChat.messages.push({
                 content: txt,
@@ -417,8 +420,10 @@ exports = module.exports = [
                 ? '![' + file._id + '](' + fileURL + ')'
                 : '[' + displayText + ' - ' + (bytes/1024/1024).toFixed(3) + 'mb' + '](/files/' + file._id + ')';
             
-            $scope.sendMessage(messageText);
+            $scope.sendMessage(messageText, file._id);
         }
+
+
     }
 
 ];

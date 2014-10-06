@@ -147,6 +147,14 @@ exports = module.exports = function (app) {
                     }
                     $http.get(reqUrl)
                     .success(success(callback)).error(fail(callback));
+                },
+                getByOwner: function (owner, callback) {
+                    $http.get('/api/groups?owner=' + owner)
+                    .success(success(callback)).error(fail(callback));
+                },
+                remove: function (id, callback) {
+                    $http.delete('/api/groups/' + id)
+                    .success(success(callback)).error(fail(callback));
                 }
             };
         }
