@@ -19,7 +19,14 @@
     });
 
     function Pixies () {
-        this.start = function () {
+        var self = this;
+
+        self.isRunning = false;
+
+        self.start = function () {
+            if (self.isRunning) {
+                return; 
+            }
             WIDTH = window.innerWidth;
             HEIGHT = window.innerHeight;
             $('#container').width(WIDTH).height(HEIGHT);
@@ -31,21 +38,28 @@
                 pxs[i].reset();
             }
             INTERVAL = setInterval(draw,REDRAW_INTERVAL);
+            self.isRunning = true;
         };
 
-        this.resume = function () {
-            INTERVAL = setInterval(draw,REDRAW_INTERVAL);
+        self.resume = function () {
+            if (!self.isRunning) {
+                INTERVAL = setInterval(draw, REDRAW_INTERVAL);
+                self.isRunning = true;
+            }
         };
 
-        this.stop = function () {
-            clearInterval(INTERVAL);
+        self.stop = function () {
+            if (self.isRunning) {
+                clearInterval(INTERVAL);
+                self.isRunning = false;
+            }
         };
     }
     window.pixies = new Pixies();
 
     function draw() {
         con.clearRect(0,0,WIDTH,HEIGHT);
-        for(var i = 0; i < pxs.length; i++) {
+        for (var i = 0; i < pxs.length; i++) {
             pxs[i].fade();
             pxs[i].move();
             pxs[i].draw();

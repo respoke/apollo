@@ -11,6 +11,9 @@ function scrollChatToBottom(force) {
     });
    
 }
+function focusInput() {
+    document.getElementById('textInput').focus();
+}
 exports = module.exports = [
     '$log',
     '$rootScope',
@@ -55,6 +58,16 @@ exports = module.exports = [
 
         $scope.showFullChat = true;
         $scope.showSettings = false;
+        $scope.setSettingsVisible = function (val) {
+            $scope.showSettings = val;
+            if (val) {
+                $scope.selectedChat = null;
+                $window.pixies.resume();
+            }
+            else {
+                $window.pixies.stop();
+            }
+        };
         $scope.selectedChat = null;
 
         $scope.activeCall = null;
@@ -159,53 +172,55 @@ exports = module.exports = [
             // $log.debug('message event', evt);
             var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
 
-            // group message
+            // Adding the message to local history
             if (evt.group) {
                 $rootScope.recents[itemId].messages.push({
                     group: evt.group.id,
                     from: $rootScope.recents[evt.message.endpointId],
                     content: evt.message.message
                 });
-                if (!$rootScope.recents[itemId].unread) {
-                    $rootScope.recents[itemId].unread = 0;
-                }
-                // audio notifications if chat is not selected
-                if (rootScope.selectedChat && $rootScope.selectedChat._id !== itemId) {
-                    $rootScope.recents[itemId].unread++;
-                    if (!$scope.windowInFocus) {
-                        $rootScope.audio.messageGroup.play();
-                    }
-                }
             }
-            // private message
             else {
                 $rootScope.recents[itemId].messages.push({
                     from: $rootScope.recents[itemId],
                     to: $rootScope.account,
                     content: evt.message.message
                 });
-                if (!$rootScope.recents[itemId].unread) {
-                    $rootScope.recents[itemId].unread = 0;
+            }
+
+            // Playing sounds
+            // they do not play when you have focus on the window and are viewing the chat
+            if (
+                !$scope.windowInFocus
+                || !$scope.selectedChat
+                || itemId !== $scope.selectedChat._id
+            ) {
+                $log.debug('group sound', evt.group, $rootScope.account.settings.groupMessageSounds);
+                if (evt.group && $rootScope.account.settings.groupMessageSounds) {
+                    $rootScope.audio.messageGroup.play();
                 }
-                // audio notifications if chat is not selected
-                if (rootScope.selectedChat && $rootScope.selectedChat._id !== itemId) {
-                    $rootScope.recents[itemId].unread++;
-                    if (!$scope.windowInFocus) {
-                        $rootScope.audio.messagePrivate.play();
-                    }
+                else if (!evt.group && $rootScope.account.settings.privateMessageSounds) {
+                    $rootScope.audio.messagePrivate.play();
                 }
             }
-            // tracking and audio notifications for unread 
-            // favicon while window is out of focus
+
+            // Tracking unread items on this chat
+            $rootScope.recents[itemId].unread = $rootScope.recents[itemId].unread || 0;
+            if (!$scope.windowInFocus || ($scope.selectedChat && itemId !== $scope.selectedChat._id)) {
+                $rootScope.recents[itemId].unread++;
+            }
+
+            // Update favicon while window is out of focus
             if (!$scope.windowInFocus) {
                 $scope.messagesDuringBlur++
                 favicon($scope.messagesDuringBlur);
             }
+
             $rootScope.$apply();
 
             // TODO: implement this in a directive
             // scrolling the chat window
-            if ($scope.selectedChat && itemId.indexOf($scope.selectedChat._id) !== -1) {
+            if ($scope.selectedChat && itemId === $scope.selectedChat._id) {
                 scrollChatToBottom(true);
             }
         });
@@ -244,7 +259,7 @@ exports = module.exports = [
 
         $scope.switchChat = function (id) {
             $log.debug('switchChat', id);
-            $scope.showSettings = false;
+            $scope.setSettingsVisible(false);
             // reset the current chat unreads to zero
             if ($scope.selectedChat) {
                 $scope.selectedChat.unread = 0;
@@ -255,7 +270,7 @@ exports = module.exports = [
             // reset the NEW chat unreads to zero
             $scope.selectedChat.unread = 0;
 
-            if ($scope.selectedChat.messages.length < 200) {
+            if ($scope.selectedChat.messages.length < 100) {
                 var qs;
                 if ($scope.selectedChat.display) {
                     qs = '?account=' + $scope.selectedChat._id;
@@ -274,6 +289,7 @@ exports = module.exports = [
                     messages.reverse();
                     $scope.selectedChat.messages = messages;
                     scrollChatToBottom(true);
+                    focusInput();
                 });
             }
             else {

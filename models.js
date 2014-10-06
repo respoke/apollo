@@ -50,6 +50,15 @@ var AccountSchema = new mongoose.Schema({
         type: String,
         select: false
     },
+    settings: {
+        type: {},
+        default: {
+            privateMessageSounds: true,
+            groupMessageSounds: true
+        },
+        required: true,
+        select: false
+    },
     created: {
         type: Date,
         default: Date.now,

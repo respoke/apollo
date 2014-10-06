@@ -5,7 +5,15 @@ var debug = require('debug')('apollo-api');
 var middleware = require('../lib/middleware');
 
 router.get('/me', function (req, res, next) {
-    res.send(req.user);
+    if (!req.user) {
+        return res.send(req.user);
+    }
+    req.db.Account.findById(req.user._id).select('+settings').exec(function (err, account) {
+        if (err) {
+            return next(err);
+        }
+        res.send(account);
+    });
 });
 
 router.patch('/me', middleware.isAuthorized, function (req, res, next) {
@@ -19,20 +27,26 @@ router.patch('/me', middleware.isAuthorized, function (req, res, next) {
     if (req.body.email) {
         updateFields.email = req.body.email;
     }
+    if (req.body.settings) {
+        updateFields.settings = req.body.settings;
+    }
     if (!Object.keys(updateFields).length) {
         return res.send(req.user);
     }
-    req.db.Account.findById(req.user._id, function (err, account) {
+    req.db.Account.findById(req.user._id).select('+settings').exec(function (err, account) {
         if (err) {
             return next(err);
         }
         for (var f in updateFields) {
             account[f] = updateFields[f]
         }
+        var settings = account.settings;
         account.save(function (err, saved) {
             if (err) {
                 return next(err);
             }
+            saved = saved.toObject();
+            saved.settings = settings; // these are normally excluded
             res.send(saved);
         });
     });
@@ -291,7 +305,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
         query = query.limit(req.params.limit);
     }
     else {
-        query = query.limit(200);
+        query = query.limit(100);
     }
 
     // skip

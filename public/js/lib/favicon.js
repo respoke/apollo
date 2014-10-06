@@ -3,7 +3,6 @@
  * Custom favicon with count.
  */
 exports = module.exports = function (count) {
-    console.log('favicon', count);
     var canvas = document.createElement('canvas');
     var ctx;
     var img = document.createElement('img');

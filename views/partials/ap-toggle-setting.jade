@@ -1,0 +1,9 @@
+.btn-group
+    button.btn.btn-xs(
+        ng-class="{ 'btn-default disabled': setting, 'btn-primary': !setting }"
+        ng-click="setting = true; updateSetting(settingKey, setting);") On 
+        i.fa.fa-check.animated.fadeIn(ng-show="setting")
+    button.btn.btn-xs(
+        ng-class="{ 'btn-default disabled': !setting, 'btn-danger': setting }"
+        ng-click="setting = false; updateSetting(settingKey, setting);") Off 
+        i.fa.fa-check.animated.fadeIn(ng-show="!setting")

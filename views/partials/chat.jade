@@ -1,5 +1,5 @@
-.panel.right(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
-    #chat(ap-drop="onDropUpload")
+.panel.right(ng-class="{ 'full': showFullChat }")
+    #chat(ap-drop="onDropUpload" ng-class="{ 'fadeOutRightBig': justLoggedOut }")
         table.table
             tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 //- avatar for remote party
@@ -17,7 +17,7 @@
         #settings.animated.fadeIn(ng-show="showSettings")
             include settings.jade
 
-    textarea.form-control(
+    textarea#textInput.form-control(
         ng-model="textInput"
         placeholder="Type text, markdown, paste images, or drag files"
         ap-enter="sendMessage(textInput); textInput = '';"

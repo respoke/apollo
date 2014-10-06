@@ -1,5 +1,5 @@
+'use strict';
 var crypto = require('crypto');
-
 exports = module.exports = [
     '$log',
     '$location',

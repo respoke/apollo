@@ -5,6 +5,7 @@ var apollo = angular.module('apollo', ['ngRoute']);
 // Controllers
 apollo.controller('GlobalController', require('./controllers/GlobalController'));
 apollo.controller('MainController', require('./controllers/MainController'));
+apollo.controller('SettingsController', require('./controllers/SettingsController'));
 
 // Services and Factories
 require('./services/rest-factories.js')(apollo);
@@ -31,6 +32,7 @@ apollo.filter('orderRecents', require('./filters/sort-order-recents'));
 apollo.directive('apEnter', require('./directives/ap-enter'));
 apollo.directive('apPaste', require('./directives/ap-paste'));
 apollo.directive('apDrop', require('./directives/ap-drop'));
+apollo.directive('apToggleSetting', require('./directives/ap-toggle-setting'));
 
 // Routes
 apollo.config(['$routeProvider', function ($routeProvider) {

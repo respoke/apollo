@@ -1,2 +1,12 @@
-h3 Settings
-
+div(ng-controller="SettingsController")
+    h3= config.name + " Settings"
+    br
+    table.table
+        tr
+            td Group message sounds
+            td
+                ap-toggle-setting(key="groupMessageSounds" initial="account.settings.groupMessageSounds")
+        tr
+            td Private message sounds
+            td
+                ap-toggle-setting(key="privateMessageSounds" initial="account.settings.privateMessageSounds")
