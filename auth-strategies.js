@@ -1,6 +1,6 @@
 var passport = require('passport');
 var mongoose = require('mongoose');
-var GoogleStrategy = require('passport-google').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var config = require('./config');
 var debug = require('debug')('passport');
 var uuid = require('uuid');
@@ -11,11 +11,13 @@ function strategize() {
 
     if (config.google.enabled) {
         passport.use(new GoogleStrategy({
-                returnURL: config.google.returnURL,
-                realm: config.google.realm
+                clientID: config.google.clientID,
+                clientSecret: config.google.clientSecret,
+                callbackURL: config.google.callbackURL
             },
-            function (identifier, profile, done) {
-                debug('google identifier', identifier);
+            function (accessToken, refreshToken, profile, done) {
+                debug('google accessToken', accessToken);
+                debug('google refreshToken', refreshToken);
                 debug('google profile', profile);
 
                 var email = "";
@@ -46,7 +48,7 @@ function strategize() {
                 var Account = mongoose.model('Account');
                 Account
                 .findOne()
-                .or([{ google: identifier }, { email: email }])
+                .or([{ google: profile.id }, { email: email }])
                 .exec(function (err, account) {
                     if (err) {
                         debug('ERROR google', err);
@@ -59,7 +61,7 @@ function strategize() {
                         new Account({
                             _id: (email).toLowerCase().replace(/[^a-z]/g, ''),
                             email: email,
-                            google: identifier,
+                            google: profile.id,
                             display: display
                         }).save(function (err, saved) {
                             if (err) {
@@ -75,7 +77,7 @@ function strategize() {
                     // for this email
                     if (!account.google) {
                         debug('linking google account', email);
-                        account.google = identifier;
+                        account.google = profile.id;
                         account.save(function (err, saved) {
                             if (err) {
                                 debug('ERROR google linking account save', err);

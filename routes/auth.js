@@ -65,12 +65,20 @@ router.post('/local', function (req, res, next) {
 });
 
 // Redirect the user to Google for authentication.  When complete, Google
-// will redirect the user back to the application at
-//     /auth/google/return
-router.get('/google', passport.authenticate('google'));
-router.get('/google/return', passport.authenticate('google', {
-    successRedirect: '/',
+// will redirect the user back to the application at /auth/google/callback
+router.get(
+    '/google',
+    passport.authenticate('google', {
+        scope: [
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email'
+        ]
+    })
+);
+router.get('/google/callback', passport.authenticate('google', {
     failureRedirect: '/#/welcome?authFailure=Google+auth+failed'
-}));
+}), function (req, res) {
+    res.redirect('/');
+});
 
 module.exports = router;

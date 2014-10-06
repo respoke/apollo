@@ -1,11 +1,11 @@
-h3.center Sign In
 if(config.google.enabled)
-    .center: a.btn.btn-primary(href="/auth/google")
-        i.fa.fa-google
-        br
-        | Google
     br
-    h6 use 
+    .center
+        h6 with Google
+        a.btn.btn-primary(href="/auth/google"): i.fa.fa-google
+    br
+    br
+    h6.center with  
         =config.name
         |  account
 

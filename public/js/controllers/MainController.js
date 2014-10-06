@@ -78,13 +78,11 @@ exports = module.exports = [
         };
 
         $window.addEventListener('focus', function () {
-            $log.debug('window focus');
             $scope.windowInFocus = true;
             $scope.messagesDuringBlur = 0;
             favicon($scope.messagesDuringBlur);
         });
         $window.addEventListener('blur', function () {
-            $log.debug('window blur');
             $scope.windowInFocus = false;
         });
 
@@ -158,7 +156,7 @@ exports = module.exports = [
         // receiving messages
         $rootScope.client.ignore('message');
         $rootScope.client.listen('message', function (evt) {
-            $log.debug('message event', evt);
+            // $log.debug('message event', evt);
             var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
 
             // group message
@@ -171,8 +169,13 @@ exports = module.exports = [
                 if (!$rootScope.recents[itemId].unread) {
                     $rootScope.recents[itemId].unread = 0;
                 }
-                $rootScope.recents[itemId].unread++;
-                $rootScope.audio.messageGroup.play();
+                // audio notifications if chat is not selected
+                if (rootScope.selectedChat && $rootScope.selectedChat._id !== itemId) {
+                    $rootScope.recents[itemId].unread++;
+                    if (!$scope.windowInFocus) {
+                        $rootScope.audio.messageGroup.play();
+                    }
+                }
             }
             // private message
             else {
@@ -184,12 +187,19 @@ exports = module.exports = [
                 if (!$rootScope.recents[itemId].unread) {
                     $rootScope.recents[itemId].unread = 0;
                 }
-                $rootScope.recents[itemId].unread++;
-                $rootScope.audio.messagePrivate.play();
+                // audio notifications if chat is not selected
+                if (rootScope.selectedChat && $rootScope.selectedChat._id !== itemId) {
+                    $rootScope.recents[itemId].unread++;
+                    if (!$scope.windowInFocus) {
+                        $rootScope.audio.messagePrivate.play();
+                    }
+                }
             }
-            // tracking unread messages
+            // tracking and audio notifications for unread 
+            // favicon while window is out of focus
             if (!$scope.windowInFocus) {
-                favicon($scope.messagesDuringBlur++);
+                $scope.messagesDuringBlur++
+                favicon($scope.messagesDuringBlur);
             }
             $rootScope.$apply();
 

@@ -50,13 +50,19 @@ config.smtp = {
     }
 };
 
+// Let people sign up using their local account?
 config.localSignupEnabled = true;
 
-// Allow Google authentication?
-// See PassportJS docs. http://passportjs.org/guide/google/
+// Allow Google OAuth 2.0?
+// Create a project and go to APIs & Auth > Credentials
+// - https://console.developers.google.com
+// - be sure to setup the consent screen as well
+// 
+// Using Passport.js google oauth plugin:
+// -  https://github.com/jaredhanson/passport-google-oauth
 config.google = {
 
-    // Apollo option: enable this feature?
+    // Apollo option: enable authentication via google?
     enabled: false,
 
     // Apollo option: restrict to a list of email domains?
@@ -64,8 +70,9 @@ config.google = {
     domains: [],
 
     // passport options
-    returnURL: '',
-    realm: ''
+    clientID: 'GOOGLE_CLIENT_ID',
+    clientSecret: 'GOOGLE_CLIENT_SECRET',
+    callbackURL: config.baseURL + '/auth/google/callback'
 };
 
 
