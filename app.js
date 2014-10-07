@@ -50,8 +50,8 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
-app.use(bodyParser.json({ limit: '15.6mb' }));
-app.use(bodyParser.urlencoded({ extended: false, limit: '15.6mb' }));
+app.use(bodyParser.json({ limit: config.maxUploadSize }));
+app.use(bodyParser.urlencoded({ extended: false, limit: config.maxUploadSize }));
 app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use('/js', browserify('./public/js'));

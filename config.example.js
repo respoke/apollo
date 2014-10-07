@@ -77,6 +77,8 @@ config.google = {
     callbackURL: config.baseURL + '/auth/google/callback'
 };
 
+// Keep in mind, the maximum size for a MongoDB record 16mb.
+config.maxUploadSize = '15.6mb';
 
 // Put your environment specific configurations here.
 if (process.env.NODE_ENV === 'production') {
