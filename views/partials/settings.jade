@@ -19,10 +19,11 @@ div(ng-controller="SettingsController")
             td
                 ap-toggle-setting(key="htmlEmails" initial="account.settings.htmlEmails")
 
-    h3 My groups
+    h6 Manage groups
+        button.btn.btn-default.btn-sm(ng-click="loadGroups()")
+            i.fa.fa-refresh
 
-    p(ng-show="!groups"): em Fetching your groups...
-    p(ng-show="groups && !groups.length"): em You have not created any groups.
+    p(ng-show="groups && !groups.length"): em You do not own any groups.
     table.table
         tr(ng-repeat="group in groups" ng-init="showConf = false")
             td.col-sm-7 {{ group._id }}
@@ -31,5 +32,6 @@ div(ng-controller="SettingsController")
                     i.fa.fa-remove
                 p(ng-show="showConf") Removing a group will remove all files and messages, as well as the group.
                     |  This action cannot be undone.
+                    br
                     button.btn.btn-default.btn-xs(ng-click="showConf = false") Cancel
                     button.btn.btn-danger.btn-xs(ng-click="removeGroup(group._id, $index)") DELETE
