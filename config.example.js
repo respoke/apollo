@@ -11,6 +11,8 @@ config.salt = 'change-this-please-1234';
 // Where the application lives, with no trailing slash
 config.baseURL = 'http://localhost:' + config.port;
 
+config.respokeJS = 'https://cdn.respoke.io/respoke-v1.8.0.min.js';
+
 // main DB
 config.mongoURI = 'mongodb://localhost/apollo';
 
@@ -21,7 +23,7 @@ config.mongoSessions = {
 };
 
 config.email = {
-    from: 'Apollo <system@example.com.'
+    from: 'Apollo <system@example.com>'
 };
 
 // Respoke settings
