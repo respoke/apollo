@@ -142,8 +142,12 @@ exports = module.exports = [
                 id: group._id,
                 onSuccess: function (evt) {
                     $log.debug('joined ' + group._id);
+                    // if this was a rejoin, use the existing messages
+                    var msgs = $rootScope.recents['group-' + group._id]
+                        ? $rootScope.recents['group-' + group._id].messages
+                        : [];
                     $rootScope.recents['group-' + group._id] = group;
-                    $rootScope.recents['group-' + group._id].messages = [];
+                    $rootScope.recents['group-' + group._id].messages = msgs;
                     $rootScope.$apply();
                 },
                 onError: function (evt) {
@@ -219,11 +223,11 @@ exports = module.exports = [
 
             $rootScope.$apply();
 
-            // TODO: implement this in a directive
-            // scrolling the chat window
-            if ($scope.selectedChat && itemId === $scope.selectedChat._id) {
+            var isSelectedChat = $scope.selectedChat && itemId.indexOf($scope.selectedChat._id) !== -1;
+            if (isSelectedChat) {
                 scrollChatToBottom(true);
             }
+
         });
         
         // receive calls

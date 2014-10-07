@@ -37,7 +37,7 @@ exports = module.exports = function (file, callback) {
     }
     else if (/image/.test(file.contentType)) {
         iconSymbol = ':file-image-o:';
-        embed = '<br /><br /><img src="' + fileURL + '" />';
+        embed = '<br /><br /><a href="' + fileURL + '" target="_blank"><img src="' + fileURL + '" /></a>';
     }
 
     if (file.name) {
