@@ -307,6 +307,10 @@ exports = module.exports = [
             };
             if ($scope.selectedChat.display) {
                 msg.to = $scope.selectedChat._id;
+                // indicate the recipient was not online and needs to be notified
+                if ($rootScope.recents[$scope.selectedChat._id].presence === 'unavailable') {
+                    msg.recipientOffline = true;
+                }
             }
             else {
                 msg.group = $scope.selectedChat._id;

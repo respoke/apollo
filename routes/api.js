@@ -393,6 +393,31 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
             return next(err);
         }
         res.send(message);
+
+        // send offline indication email
+        if (req.body.recipientOffline) {
+            req.db.Account.findById(req.body.to, function (err, account) {
+                if (err) {
+                    debug(err);
+                }
+                if (!account) {
+                    return;
+                }
+                req.email.sendMail({
+                    from: config.email.from,
+                    to: acct.email,
+                    subject: '[' + config.name + '] Message from ' 
+                        + req.user.display + ' while you were offline',
+                    text: req.user.display + ' said:\n\n' + req.body.content
+                }, function (err) {
+                    if (err) {
+                        debug(err);
+                    }
+                });
+            });
+        }
+
+
     });
 });
 
