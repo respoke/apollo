@@ -100,42 +100,32 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-// Error handlers
+// Error handler
 // will respond with JSON or HTML depending upon request
+app.use(function(err, req, res, next) {
+    err.status = err.status || 500;
 
-// Development error handler
-// will print stacktrace
-if (process.env.NODE_ENV !== 'production') {
-    app.use(function(err, req, res, next) {
-        if (req.accepts('json')) {
-            res.send(err.status || 500, {
-                error: err.message,
-                stack: err.stack
-            });
-            return;
-        }
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-// Production error handler
-// no stacktraces leaked to user
-else {
-    app.use(function(err, req, res, next) {
-        if (req.accepts('json')) {
-            res.send(err.status || 500, { error: err.message });
-            return;
-        }
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: {}
-        });
-    });
-}
+    var errOut = {
+        error: err,
+        message: err.message,
+        status: err.status
+    };
+
+    if (process.env.NODE_ENV !== 'production') {
+        stack: err.stack
+    }
+
+    res.status(err.status);
+
+    if (req.accepts('json')) {
+        res.send(errOut);
+        return;
+    }
+    else {
+        res.render('error', errOut);
+    }
+    
+});
 
 module.exports = app;
 

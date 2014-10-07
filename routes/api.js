@@ -405,14 +405,19 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                 }
                 req.email.sendMail({
                     from: config.email.from,
-                    to: acct.email,
-                    subject: '[' + config.name + '] Message from ' 
-                        + req.user.display + ' while you were offline',
-                    text: req.user.display + ' said:\n\n' + req.body.content
+                    replyTo: req.user.email,
+                    to: account.email,
+                    subject: '[' + config.name + '] ' 
+                        + req.user.display + ' sent you a message while you were offline',
+                    text: req.user.display + ' said:\n------\n' + req.body.content
+                        + '\n------\n' + 'You can disable these messages in your settings. '
+                        + config.baseURL
                 }, function (err) {
                     if (err) {
                         debug(err);
+                        return;
                     }
+                    debug('offline email sent', req.user.email, account.email);
                 });
             });
         }
