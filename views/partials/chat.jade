@@ -1,6 +1,6 @@
 .panel.right(ng-class="{ 'full': showFullChat }")
     #chat(ap-drop="onDropUpload" ng-class="{ 'fadeOutRightBig': justLoggedOut }")
-        table.table
+        table#chat-table.table
             tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 //- avatar for remote party
                 td(width="40px"): small

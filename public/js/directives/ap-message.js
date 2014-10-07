@@ -4,8 +4,9 @@ exports = module.exports = [
 
     // from client-config.js
     'messageRenderingMiddleware',
+    'scrollChatToBottom',
 
-    function ($sce, middleware) {
+    function ($sce, middleware, scrollChatToBottom) {
         // First, validate that the middleware functionas are valid
         var invalidMiddlware = new Error("ap-message middleware must be an array of functions");
         if (!middleware || !(middleware instanceof Array)) {
@@ -37,6 +38,19 @@ exports = module.exports = [
                     mwIndex++;
                     if (mwIndex < middleware.length) {
                         middleware[mwIndex](scope.content, next);
+                    }
+                    else {
+                        setTimeout(function () {
+                            var imgs = element.find('img');
+                            if (imgs.length) {
+                                imgs.on('load', function (evt) {
+                                    scrollChatToBottom(true);
+                                });
+                            }
+                            else {
+                                scrollChatToBottom(true);
+                            }
+                        });
                     }
                 };
                 

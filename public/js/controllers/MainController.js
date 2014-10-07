@@ -1,16 +1,3 @@
-var chat;
-function scrollChatToBottom(force) {
-    if (!chat) {
-        chat = document.getElementById('chat');
-    }
-    var nearBottomOfChat = chat.scrollHeight - chat.scrollTop < 400;
-    setTimeout(function () {
-        if (nearBottomOfChat || force) {
-            chat.scrollTop = chat.scrollHeight;
-        }
-    });
-   
-}
 function focusInput() {
     document.getElementById('textInput').focus();
 }
@@ -28,6 +15,7 @@ exports = module.exports = [
     'moment',
     'favicon',
     'renderFile',
+    'scrollChatToBottom',
 
     function (
         $log,
@@ -42,7 +30,8 @@ exports = module.exports = [
         File,
         moment,
         favicon,
-        renderFile
+        renderFile,
+        scrollChatToBottom
 
     ) {
         // make available to the view
@@ -88,13 +77,16 @@ exports = module.exports = [
             $scope.windowInFocus = true;
             $scope.messagesDuringBlur = 0;
             favicon($scope.messagesDuringBlur);
+
             if ($scope.selectedChat) {
+                if ($scope.selectedChat.unread) {
+                    // scrollChatToBottom(true);
+                }
                 $scope.selectedChat.unread = 0;
                 $scope.$apply();
             }
             // force chat scrolling to the bottom, because it will not scroll
             // when the window is out of focus on some browsers
-            scrollChatToBottom(true);
         });
         $window.addEventListener('blur', function () {
             $scope.windowInFocus = false;
@@ -225,7 +217,7 @@ exports = module.exports = [
 
             var isSelectedChat = $scope.selectedChat && itemId.indexOf($scope.selectedChat._id) !== -1;
             if (isSelectedChat) {
-                scrollChatToBottom(true);
+                // scrollChatToBottom(true);
             }
 
         });
@@ -275,7 +267,8 @@ exports = module.exports = [
             // reset the NEW chat unreads to zero
             $scope.selectedChat.unread = 0;
 
-            if ($scope.selectedChat.messages.length < 100) {
+            // fetch messages if there arent very many
+            if (!$scope.selectedChat.messages.length < 20) {
                 var qs;
                 if ($scope.selectedChat.display) {
                     qs = '?account=' + $scope.selectedChat._id;
@@ -293,12 +286,12 @@ exports = module.exports = [
                     // the array gets reversed.
                     messages.reverse();
                     $scope.selectedChat.messages = messages;
-                    scrollChatToBottom(true);
+                    // scrollChatToBottom(true);
                     focusInput();
                 });
             }
             else {
-                scrollChatToBottom(true);
+                // scrollChatToBottom(true);
             }
         };
 
@@ -334,7 +327,7 @@ exports = module.exports = [
                     return;
                 }
             });
-            scrollChatToBottom(true);
+            // scrollChatToBottom(true);
         };
 
         $scope.audioCall = function (id) {

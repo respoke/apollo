@@ -26,6 +26,19 @@ apollo.factory('messageRenderingMiddleware', function () {
 apollo.factory('renderFile', function () {
     return clientConfig.renderFile;
 });
+apollo.factory('scrollChatToBottom', function () {
+    var chat;
+    var scrollChatToBottom = window.sc = function (force) {
+        if (!chat) {
+            chat = document.getElementById('chat');
+        }
+        var nearBottomOfChat = chat.scrollHeight - chat.scrollTop < 400;
+        if (nearBottomOfChat || force) {
+            chat.scrollTop = chat.scrollHeight;
+        }
+    };
+    return scrollChatToBottom;
+});
 
 // Filters
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));
