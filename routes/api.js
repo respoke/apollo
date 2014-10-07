@@ -9,7 +9,7 @@ router.get('/me', function (req, res, next) {
     if (!req.user) {
         return res.send(req.user);
     }
-    req.db.Account.findById(req.user._id).select('+settings').exec(function (err, account) {
+    req.db.Account.findById(req.user._id).exec(function (err, account) {
         if (err) {
             return next(err);
         }
@@ -34,7 +34,7 @@ router.patch('/me', middleware.isAuthorized, function (req, res, next) {
     if (!Object.keys(updateFields).length) {
         return res.send(req.user);
     }
-    req.db.Account.findById(req.user._id).select('+settings').exec(function (err, account) {
+    req.db.Account.findById(req.user._id).exec(function (err, account) {
         if (err) {
             return next(err);
         }
@@ -399,7 +399,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
             if (req.body.file) {
                 return;
             }
-            req.db.Account.findById(req.body.to).select('+settings').exec(function (err, account) {
+            req.db.Account.findById(req.body.to).exec(function (err, account) {
                 if (err) {
                     debug(err);
                 }

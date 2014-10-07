@@ -58,8 +58,7 @@ var AccountSchema = new mongoose.Schema({
             offlineNotifications: true,
             htmlEmails: true
         },
-        required: true,
-        select: false
+        required: true
     },
     created: {
         type: Date,
