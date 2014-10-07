@@ -10,7 +10,8 @@
                     )
                     small.help-block {{ message.from.display }}
 
-                td(ng-bind-html="trustAsHtml(marked(emo(message.content)))")
+                td
+                    ap-message(ap-content="message.content" ap-file="message.file")
                 td.align-right(width="90px")
                     small: small.help-block {{ moment(message.created).fromNow() }}
 
@@ -19,9 +20,10 @@
 
     textarea#textInput.form-control(
         ng-model="textInput"
-        placeholder="Type text, markdown, paste images, or drag files"
+        placeholder="{{ pendingUploads ? 'Uploading ' + pendingUploads + ' files...' : 'Type text, markdown, paste images, or drag files' }}"
         ap-enter="sendMessage(textInput); textInput = '';"
         ng-show="selectedChat"
+        ng-disabled="pendingUploads"
         ap-paste="onPasteUpload"
         ap-drop="onDropUpload"
     )

@@ -54,7 +54,9 @@ var AccountSchema = new mongoose.Schema({
         type: {},
         default: {
             privateMessageSounds: true,
-            groupMessageSounds: true
+            groupMessageSounds: true,
+            offlineNotifications: true,
+            htmlEmails: true
         },
         required: true,
         select: false

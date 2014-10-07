@@ -10,6 +10,14 @@ div(ng-controller="SettingsController")
             td Private message sounds
             td
                 ap-toggle-setting(key="privateMessageSounds" initial="account.settings.privateMessageSounds")
+        tr
+            td Offline notification emails
+            td
+                ap-toggle-setting(key="offlineNotifications" initial="account.settings.offlineNotifications")
+        tr
+            td Allow HTML in emails
+            td
+                ap-toggle-setting(key="htmlEmails" initial="account.settings.htmlEmails")
 
     h3 My groups
 

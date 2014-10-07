@@ -2,6 +2,8 @@
 /* global respoke */
 var apollo = angular.module('apollo', ['ngRoute']);
 
+var clientConfig = require('./client-config');
+
 // Controllers
 apollo.controller('GlobalController', require('./controllers/GlobalController'));
 apollo.controller('MainController', require('./controllers/MainController'));
@@ -12,17 +14,17 @@ require('./services/rest-factories.js')(apollo);
 apollo.factory('respoke', function () {
     return respoke;
 });
-apollo.factory('marked', function () {
-    return require('./lib/marked');
-});
-apollo.factory('emo', function () {
-    return require('./lib/emo');
-});
 apollo.factory('moment', function () {
     return require('moment');
 });
 apollo.factory('favicon', function () {
     return require('./lib/favicon');
+});
+apollo.factory('messageRenderingMiddleware', function () {
+    return clientConfig.messageRenderingMiddleware;
+});
+apollo.factory('renderFile', function () {
+    return clientConfig.renderFile;
 });
 
 // Filters
@@ -33,6 +35,7 @@ apollo.directive('apEnter', require('./directives/ap-enter'));
 apollo.directive('apPaste', require('./directives/ap-paste'));
 apollo.directive('apDrop', require('./directives/ap-drop'));
 apollo.directive('apToggleSetting', require('./directives/ap-toggle-setting'));
+apollo.directive('apMessage', require('./directives/ap-message.js'));
 
 // Routes
 apollo.config(['$routeProvider', function ($routeProvider) {

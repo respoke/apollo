@@ -1,4 +1,5 @@
-// This file is excluded from source control by the .gitignore file.
+// When saved as config.js, the file is excluded from source control
+// by the .gitignore file.
 
 var config = {};
 config.name = 'Apollo';

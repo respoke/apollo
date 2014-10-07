@@ -3,7 +3,7 @@ function scrollChatToBottom(force) {
     if (!chat) {
         chat = document.getElementById('chat');
     }
-    var nearBottomOfChat = chat.scrollHeight - chat.scrollTop < 320;
+    var nearBottomOfChat = chat.scrollHeight - chat.scrollTop < 400;
     setTimeout(function () {
         if (nearBottomOfChat || force) {
             chat.scrollTop = chat.scrollHeight;
@@ -18,7 +18,6 @@ exports = module.exports = [
     '$log',
     '$rootScope',
     '$scope',
-    '$sce',
     '$interval',
     '$window',
 
@@ -26,16 +25,14 @@ exports = module.exports = [
     'Group',
     'Message',
     'File',
-    'marked',
-    'emo',
     'moment',
     'favicon',
+    'renderFile',
 
     function (
         $log,
         $rootScope,
         $scope,
-        $sce,
         $interval,
         $window,
 
@@ -43,16 +40,12 @@ exports = module.exports = [
         Group,
         Message,
         File,
-        marked,
-        emo,
         moment,
-        favicon
+        favicon,
+        renderFile
 
     ) {
         // make available to the view
-        $scope.trustAsHtml = $sce.trustAsHtml;
-        $scope.marked = marked;
-        $scope.emo = emo;
         $scope.moment = moment;
         $scope.account = $rootScope.account;
 
@@ -69,6 +62,7 @@ exports = module.exports = [
             }
         };
         $scope.selectedChat = null;
+        $scope.pendingUploads = 0;
 
         $scope.activeCall = null;
         $scope.incomingCall = "";
@@ -94,6 +88,13 @@ exports = module.exports = [
             $scope.windowInFocus = true;
             $scope.messagesDuringBlur = 0;
             favicon($scope.messagesDuringBlur);
+            if ($scope.selectedChat) {
+                $scope.selectedChat.unread = 0;
+                $scope.$apply();
+            }
+            // force chat scrolling to the bottom, because it will not scroll
+            // when the window is out of focus on some browsers
+            scrollChatToBottom(true);
         });
         $window.addEventListener('blur', function () {
             $scope.windowInFocus = false;
@@ -373,58 +374,49 @@ exports = module.exports = [
         };
 
         $scope.onPasteUpload = function (data) {
-            // $log.debug('paste upload', data);
+            $log.debug('paste upload', data.contentType);
+            if ($scope.pendingUploads) {
+                $rootScope.notifications.push('Wait for uploads to finish.');
+                return;
+            }
+            $scope.pendingUploads++;
             File.create({
                 contentType: data.contentType,
                 content: data.content
             }, onAfterUpload);
         };
 
-        $scope.onDropUpload = function (data) {
-            $log.debug('drop upload', data);
-            File.create({
-                contentType: data.contentType,
-                content: data.content,
-                name: data.name
-            }, onAfterUpload);
+        $scope.onDropUpload = function (files) {
+            if ($scope.pendingUploads) {
+                $rootScope.notifications.push('Wait for uploads to finish.');
+                return;
+            }
+            $log.debug('drag and drop ', files.length, 'files');
+            files.forEach(function (data) {
+                $log.debug(data.name, data.contentType);
+                $scope.pendingUploads++;
+                File.create({
+                    contentType: data.contentType,
+                    content: data.content,
+                    name: data.name
+                }, onAfterUpload);
+            });
         };
 
         function onAfterUpload(err, file) {
+            $scope.pendingUploads--;
             if (err) {
                 $rootScope.notifications.push(err);
                 return;
             }
-            var fileURL = '/files/' + file._id;
-            var bytes = (4 * (file.content.length / 3)) * .6;
-
-            var displayText = file.contentType;
-            if (/audio/.test(file.contentType)) {
-                displayText = ':file-audio-o:';
-            }
-            else if (/video/.test(file.contentType)) {
-                displayText = ':file-video-o:';
-            }
-            else if (/zip|gz|tar/.test(file.contentType)) {
-                displayText = ':file-archive-o:';
-            }
-            else if (/html|javascript|css|json/.test(file.contentType)) {
-                displayText = ':file-code-o:';
-            }
-            else if (/pdf/.test(file.contentType)) {
-                displayText = ':file-pdf-o:';
-            }
-            else if (/text/.test(file.contentType)) {
-                displayText = ':file-text-o';
-            }
-
-            if (file.name) {
-                displayText += ' ' + file.name;
-            }
-            var messageText = file.contentType.indexOf('image') !== -1
-                ? '![' + file._id + '](' + fileURL + ')'
-                : '[' + displayText + ' - ' + (bytes/1024/1024).toFixed(3) + 'mb' + '](/files/' + file._id + ')';
             
-            $scope.sendMessage(messageText, file._id);
+            renderFile(file, function (err, messageText) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                $scope.sendMessage(messageText, file._id);
+            });
         }
 
 

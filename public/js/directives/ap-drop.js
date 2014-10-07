@@ -1,4 +1,7 @@
 'use strict';
+/**
+ * Drag and drop multiple files for multi-file upload
+ */
 exports = module.exports = function () {
     return {
         link: function (scope, element, attrs) {
@@ -12,24 +15,30 @@ exports = module.exports = function () {
                 evt.preventDefault();
 
                 var files = evt.dataTransfer.files; // FileList object.
+                var data = []; // array of file data
 
                 for (var i=0; i < files.length; i++) {
-                    var file = files[i];
-                    var reader = new FileReader();
-                    reader.onload = function () {
-                        var contentType = reader.result.split(';')[0].replace('data:', '');
-                        var content = reader.result.split('base64,')[1];
-                        var data = {
-                            dataURL: reader.result,
-                            event: evt,
-                            file: file,
-                            name: file.name,
-                            contentType: contentType,
-                            content: content
+                    (function () {
+                        var file = files[i];
+                        var reader = new FileReader();
+                        reader.onload = function () {
+                            var contentType = reader.result.split(';')[0].replace('data:', '');
+                            var content = reader.result.split('base64,')[1];
+                            var d = {
+                                dataURL: reader.result,
+                                event: evt,
+                                file: file,
+                                name: file.name,
+                                contentType: contentType,
+                                content: content
+                            };
+                            data.push(d);
+                            if (data.length === files.length) {
+                                apDrop(data);
+                            } 
                         };
-                        apDrop(data);
-                    };
-                    reader.readAsDataURL(file);
+                        reader.readAsDataURL(file);
+                    })();
                 }
 
             }, false);

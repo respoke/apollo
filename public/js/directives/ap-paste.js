@@ -24,6 +24,9 @@ exports = module.exports = function () {
                     }
 
                     var file = clipboardData.items[i].getAsFile();
+                    if (!file) {
+                        return; // not a file blob, just text
+                    }
                     var reader = new FileReader();
                     reader.onload = function (evt) {
                         var contentType = evt.target.result.split(';')[0].replace('data:', '');

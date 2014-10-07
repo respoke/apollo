@@ -361,7 +361,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
         query = query.limit(req.params.limit);
     }
     else {
-        query = query.limit(100);
+        query = query.limit(50);
     }
 
     // skip
@@ -396,23 +396,41 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
 
         // send offline indication email
         if (req.body.recipientOffline) {
-            req.db.Account.findById(req.body.to, function (err, account) {
+            if (req.body.file) {
+                return;
+            }
+            req.db.Account.findById(req.body.to).select('+settings').exec(function (err, account) {
                 if (err) {
                     debug(err);
                 }
                 if (!account) {
                     return;
                 }
-                req.email.sendMail({
+                if (!account.settings.offlineNotifications) {
+                    return;
+                }
+
+                var emailContent = {
                     from: config.email.from,
                     replyTo: req.user.email,
                     to: account.email,
                     subject: '[' + config.name + '] ' 
                         + req.user.display + ' sent you a message while you were offline',
                     text: req.user.display + ' said:\n------\n' + req.body.content
-                        + '\n------\n' + 'You can disable these messages in your settings. '
+                        + '\n------\nYou can unsubscribe from these messages in your '
+                        + config.name + ' settings. '
                         + config.baseURL
-                }, function (err) {
+                };
+
+                if (account.settings.htmlEmails) {
+                    emailContent.html = req.user.display + ' said:<hr />' 
+                        + req.body.content
+                        + '<hr /><a href="' + config.baseURL + '">'
+                        + 'Unsubscribe from these messages in the '
+                        + config.name + ' settings</a>';
+                }
+
+                req.email.sendMail(emailContent, function (err) {
                     if (err) {
                         debug(err);
                         return;
@@ -427,9 +445,11 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
 });
 
 router.post('/files', middleware.isAuthorized, function (req, res, next) {
+    var contentType = req.body.contentType || 'text/plain';
+
     new req.db.File({
         content: req.body.content,
-        contentType: req.body.contentType,
+        contentType: contentType,
         name: req.body.name,
         owner: req.user._id
     }).save(function (err, file) {

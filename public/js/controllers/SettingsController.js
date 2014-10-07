@@ -9,13 +9,15 @@ exports = module.exports = [
     function ($log, $rootScope, $scope, Account, Group) {
         $scope.groups = null;
 
-        Group.getByOwner($rootScope.account._id, function (err, groups) {
-            if (err) {
-                $rootScope.notification.push(err);
-                return;
-            }
-            $scope.groups = groups;
-        });
+        $scope.loadGroups = function () {
+            Group.getByOwner($rootScope.account._id, function (err, groups) {
+                if (err) {
+                    $rootScope.notification.push(err);
+                    return;
+                }
+                $scope.groups = groups;
+            });
+        };
 
         $scope.updateSetting = function (key, val) {
             $log.debug('setting change', key, val);
