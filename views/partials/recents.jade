@@ -115,7 +115,7 @@
                 )
                     i.fa.fa-phone
 
-                span.badge(ng-if="item.unread") {{ item.unread }}
+                span.badge(ng-show="item.unread") {{ item.unread }}
             
             td: small.help-block 
                 | {{ item.messages.length ? moment(item.messages[ item.messages.length -1 ].created).fromNow() : ""}}
