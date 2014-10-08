@@ -173,16 +173,17 @@ router.post('/accounts', function (req, res, next) {
             error: 'Local account signups are disabled by the system administrator.'
         });
     }
-    if (req.body._id === config.systemEndpoint) {
+    if (req.body._id === config.systemEndpointId) {
         return res.status(400).send({
             error: 'Name not available'
         });
     }
-    
+    debug('trying to create new account', req.body._id);
     var newAccount = new req.db.Account(req.body);
     var conf = newAccount.conf;
     newAccount.save(function (err, account) {
         if (err) {
+            debug(err);
             return next(err);
         }
         res.send({ message: 'Account created successfully. Check your email to confirm.'});

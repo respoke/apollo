@@ -190,7 +190,7 @@ exports = module.exports = [
         $scope.register = function () {
             Account.create($scope.signup, function (err, account) {
                 if (err) {
-                    $rootScope.notifications.push(err.error);
+                    $rootScope.notifications.push(err);
                     return;
                 }
                 // do not log them in. need to confirm account first.
@@ -206,7 +206,7 @@ exports = module.exports = [
             }
             Account.forgotPassword($scope.signin.email, function (err, data) {
                 if (err) {
-                    $rootScope.notifications.push(err.error);
+                    $rootScope.notifications.push(err);
                     return;
                 }
                 $scope.signin = {};
@@ -230,7 +230,7 @@ exports = module.exports = [
                 $scope.resetPass.password,
                 function (err, account) {
                     if (err) {
-                        $rootScope.notifications.push(err.error);
+                        $rootScope.notifications.push(err);
                         return;
                     }
                     $rootScope.account = account;
