@@ -8,9 +8,10 @@
             tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 //- avatar for remote party
                 td(width="40px"): small
-                    img.img-responsive.img-circle(
+                    img.img-responsive.img-circle.clickable(
                         style="width: 30px"
                         ng-src="{{ gravatar(message.from.email) }}"
+                        ng-click="switchChat(message.from._id)"
                     )
                     small.help-block {{ message.from.display }}
 

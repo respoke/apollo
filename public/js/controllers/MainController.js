@@ -222,16 +222,21 @@ exports = module.exports = [
         // receive calls
         $rootScope.client.ignore('call');
         $rootScope.client.listen('call', function (evt) {
+            // when we are the caller, no need to display the incoming call
             if (evt.call.caller) {
                 return;
             }
+            // only allow one call at a time.
             if ($scope.activeCall) {
                 $rootScope.notifications.push(
                     $rootScope.recents[evt.endpoint.id].display
                     + ' tried to call you.'
                 );
+                evt.call.hangup();
+                $scope.$apply();
                 return;
             }
+
             $scope.activeCall = evt.call;
             $scope.incomingCall = $rootScope.recents[evt.endpoint.id].display;
             $rootScope.audio.callIncoming.play();
@@ -364,6 +369,7 @@ exports = module.exports = [
             $log.debug('audio call requested with ', id);
             var endpoint = $rootScope.client.getEndpoint({ id: id });
             $scope.activeCall = endpoint.startAudioCall();
+            $log.debug('activeCall', $scope.activeCall);
             $scope.activeCall.listen('hangup', function () {
                 $scope.activeCall = null;
 
