@@ -13,7 +13,7 @@ exports = module.exports = [
         respoke.log.setLevel('debug');
         $rootScope.justLoggedIn = false;
         $rootScope.justLoggedOut = false;
-        $scope.authFailureMessage = $location.search().authFailed;
+        $scope.authFailureMessage = $location.search().authFailure;
 
         $rootScope.audio = {
             messagePrivate: new Audio('/audio/message-private.ogg'),
@@ -148,7 +148,7 @@ exports = module.exports = [
                 $rootScope.justLoggedIn = true;
                 $scope.respokeConnect();
                 setTimeout(function () {
-                    $location.path('/');
+                    $location.search('authFailure', null).path('/');
                     $rootScope.justLoggedIn = false;
                 });
             });

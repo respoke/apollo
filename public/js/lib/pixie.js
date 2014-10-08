@@ -1,3 +1,4 @@
+'use strict';
 /*!
 * Courtesy of http://timothypoon.com/blog/demos/canvas-particle-parallax/
 * Edited gingerly by @ruffrey

@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Default file renderer. Outputs some markdown and special symbol formats
  * for showing file icons (rendered by `emo`).

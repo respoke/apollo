@@ -1,6 +1,6 @@
 var emo = require('./lib/emo');
 var marked = require('./lib/marked');
-var renderFile = require('./lib/renderFile');
+var renderFile = require('./lib/render-file');
 
 
 var clientConfig = {};

@@ -26,31 +26,8 @@ apollo.factory('messageRenderingMiddleware', function () {
 apollo.factory('renderFile', function () {
     return clientConfig.renderFile;
 });
-apollo.factory('scrollChatToBottom', ['$rootScope', function ($rootScope) {
-    var chat;
-    var scrollChatToBottom = function () {
-        if (!chat) {
-            chat = document.getElementById('chat');
-        }
-        if (!$rootScope.autoScrollDisabled) {
-            chat.scrollTop = chat.scrollHeight;
-        }
-    };
-    return scrollChatToBottom;
-}]);
-apollo.factory('paddTopScroll', function () {
-    return function (items) {
-        var rows = document.querySelectorAll('#chat-table tr');
-        if (!rows || !rows.length) {
-            return;
-        }
-        var totalHeight = 0;
-        for (var i=0; i<items && i<rows.length; i++) {
-            totalHeight += rows[i].offsetHeight
-        }
-        chat.scrollTop = totalHeight;
-    };
-});
+apollo.factory('scrollChatToBottom', require('./lib/scroll-chat-to-bottom'));
+apollo.factory('paddTopScroll', require('./lib/padd-top-scroll'));
 
 // Filters
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));

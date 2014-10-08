@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Custom favicon with count.
+ * Favicon with count of unread messages.
  */
 exports = module.exports = function (count) {
     var canvas = document.createElement('canvas');

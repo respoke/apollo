@@ -145,3 +145,32 @@ html, body {
         }
     }
 }
+
+.passport-btn {
+    padding: 21px 21px 13px 21px;
+}
+
+#btn-settings {
+    position: fixed;
+    transition: all 0.4s ease;
+    top: 42px;
+    right: 20px;
+}
+#btn-settings.settings-visible {
+    top: 0px;
+    right: 0px;
+    padding: 8px 14px;
+    font-size: 20px;
+    border-color: transparent;
+    .panelGradient();
+}
+#btn-presence {
+    width: 90px;
+}
+
+#audio-call-controls {
+    padding-top: 8px;
+    p {
+        color: @text;
+    }
+}

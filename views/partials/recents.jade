@@ -2,8 +2,8 @@
     
     //- User account and settings
     .row
-        .col-xs-3: img.img-responsive(ng-src="{{ gravatar(account.email) }}")
-        .col-xs-6
+        .col-xs-3(ng-show="!activeCall"): img.img-responsive(ng-src="{{ gravatar(account.email) }}")
+        .col-xs-9(ng-show="!activeCall")
             //- Display name
             h5(
                 ng-mouseover="showEditDisplayIcon = true"
@@ -20,44 +20,57 @@
             )
 
             //- Presence
-            .btn-group
-                button.btn.btn-default.btn-xs(
-                    data-toggle="dropdown"
-                    ng-class="{ 'btn-warning': recents[account._id].presence === 'busy', 'btn-danger': recents[account._id].presence === 'away' }"
-                )
-                    | {{ recents[account._id].presence }}&nbsp;&nbsp;
-                    i.fa.fa-caret-down
-                ul.dropdown-menu
-                    li: a(
-                        tabindex="-1"
-                        ng-click="setPresence('available')"
-                        href="javascript:void(0)"
-                    ) available
-                    li: a(
-                        tabindex="-1"
-                        ng-click="setPresence('busy')"
-                        href="javascript:void(0)"
-                    ) busy
-                    li: a(
-                        tabindex="-1"
-                        ng-click="setPresence('away')"
-                        href="javascript:void(0)"
-                    ) away
+
+            button#btn-presence.btn.btn-default.btn-xs(
+                data-toggle="dropdown"
+                ng-class="{ 'btn-warning': recents[account._id].presence === 'busy', 'btn-danger': recents[account._id].presence === 'away' }"
+            )
+                | {{ recents[account._id].presence }}&nbsp;&nbsp;
+                i.fa.fa-caret-down
+            ul.dropdown-menu
+                li: a(
+                    tabindex="-1"
+                    ng-click="setPresence('available')"
+                    href="javascript:void(0)"
+                ) available
+                li: a(
+                    tabindex="-1"
+                    ng-click="setPresence('busy')"
+                    href="javascript:void(0)"
+                ) busy
+                li: a(
+                    tabindex="-1"
+                    ng-click="setPresence('away')"
+                    href="javascript:void(0)"
+                ) away
                 
-                //- Settings
-                button.btn.btn-default.btn-xs(ng-click="setSettingsVisible(true);"): i.fa.fa-cog
             //- Sign out
             button.btn.btn-default.btn-xs(ng-click="logout()"): i.fa.fa-sign-out
 
+            //- Settings
+            button#btn-settings.btn.btn-default.btn-xs(
+                ng-click="toggleSettings();"
+                ng-class="{ 'settings-visible': showSettings }"
+            )
+                i.fa.fa-cog
+
             //- Call controls
-        .col-xs-3(ng-show="activeCall")
+        #audio-call-controls.col-xs-8(ng-show="activeCall")
+            h6 {{ incomingCall }} Mr. Bill braskey
+            p(ng-show="incomingCall") is calling you
             //- hangup
-            button.btn.btn-danger.btn-xs(ng-click="hangup()") Hangup
-            button.btn.btn-success.btn-xs.animated.rubberBand.infinite(
-                ng-click="answer()"
-                ng-show="incomingCall"
-            ) 
-                | Answer call from {{ incomingCall }}
+            p
+                button.btn.btn-danger.btn-xs(ng-click="hangup()") Hangup
+                //- answer
+                button.btn.btn-success.btn-xs(
+                    ng-click="answer()"
+                    ng-show="incomingCall"
+                ) Answer
+        .col-xs-3(ng-show="activeCall")
+            br
+            br
+            br
+            i.fa.fa-3x.fa-phone.animated.bounce.infinite
     br
     //- Adding a group
     button.btn.btn-primary.btn-block.btn-sm(

@@ -2,7 +2,9 @@
     h1.center= "Sign in to " + config.name
 
     //- When passport authorization fails, it will redirect here with a querystring message.
-    .alert.alert-danger(ng-show="authFailureMessage") {{ authFailureMessage }}
+    .alert.alert-warning(ng-show="authFailureMessage") {{ authFailureMessage }}
+        button.close(data-dismiss="alert")
+            i.fa.fa-remove
     
     br
     .row

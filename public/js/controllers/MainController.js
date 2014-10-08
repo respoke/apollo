@@ -42,14 +42,14 @@ exports = module.exports = [
 
         $scope.showFullChat = true;
         $scope.showSettings = false;
-        $scope.setSettingsVisible = function (val) {
-            $scope.showSettings = val;
-            if (val) {
-                $scope.selectedChat = null;
+        $scope.toggleSettings = function (override) {
+            $scope.showSettings = typeof override !== 'undefined' ? override : !$scope.showSettings;
+            if ($scope.showSettings) {
                 $window.pixies.resume();
             }
             else {
                 $window.pixies.stop();
+                $timeout(scrollChatToBottom);
             }
         };
         $scope.selectedChat = null;
@@ -82,7 +82,7 @@ exports = module.exports = [
 
             if ($scope.selectedChat) {
                 if ($scope.selectedChat.unread) {
-                    scrollChatToBottom(true);
+                    scrollChatToBottom();
                 }
                 $scope.selectedChat.unread = 0;
                 $scope.$apply();
@@ -253,7 +253,7 @@ exports = module.exports = [
 
         $scope.switchChat = function (id) {
             $log.debug('switchChat', id);
-            $scope.setSettingsVisible(false);
+            $scope.toggleSettings(false);
             // reset the current chat unreads to zero
             if ($scope.selectedChat) {
                 $scope.selectedChat.unread = 0;
@@ -283,7 +283,7 @@ exports = module.exports = [
                     // the array gets reversed.
                     messages.reverse();
                     $scope.selectedChat.messages = messages;
-                    scrollChatToBottom(true);
+                    scrollChatToBottom();
                     focusInput();
                 });
             }
