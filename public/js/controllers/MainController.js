@@ -306,6 +306,10 @@ exports = module.exports = [
 
         $scope.switchChat = function (id) {
             $log.debug('switchChat', id);
+            if (id === $rootScope.account._id) {
+                $log.debug('not switching to chat because it is self');
+                return;
+            }
             $scope.toggleSettings(false);
             // reset the current chat unreads to zero
             if ($scope.selectedChat) {
