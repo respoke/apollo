@@ -26,24 +26,37 @@ apollo.factory('messageRenderingMiddleware', function () {
 apollo.factory('renderFile', function () {
     return clientConfig.renderFile;
 });
-apollo.factory('scrollChatToBottom', function () {
+apollo.factory('scrollChatToBottom', ['$rootScope', function ($rootScope) {
     var chat;
-    var scrollChatToBottom = window.sc = function (force) {
+    var scrollChatToBottom = function () {
         if (!chat) {
             chat = document.getElementById('chat');
         }
-        var nearBottomOfChat = chat.scrollHeight - chat.scrollTop < 400;
-        if (nearBottomOfChat || force) {
+        if (!$rootScope.autoScrollDisabled) {
             chat.scrollTop = chat.scrollHeight;
         }
     };
     return scrollChatToBottom;
+}]);
+apollo.factory('paddTopScroll', function () {
+    return function (items) {
+        var rows = document.querySelectorAll('#chat-table tr');
+        if (!rows || !rows.length) {
+            return;
+        }
+        var totalHeight = 0;
+        for (var i=0; i<items && i<rows.length; i++) {
+            totalHeight += rows[i].offsetHeight
+        }
+        chat.scrollTop = totalHeight;
+    };
 });
 
 // Filters
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));
 
 // Directives
+apollo.directive('apChat', require('./directives/ap-chat'));
 apollo.directive('apEnter', require('./directives/ap-enter'));
 apollo.directive('apPaste', require('./directives/ap-paste'));
 apollo.directive('apDrop', require('./directives/ap-drop'));

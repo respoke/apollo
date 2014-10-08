@@ -5,7 +5,7 @@ exports = module.exports = [
     '$log',
     '$rootScope',
     '$scope',
-    '$interval',
+    '$timeout',
     '$window',
 
     'Account',
@@ -16,12 +16,13 @@ exports = module.exports = [
     'favicon',
     'renderFile',
     'scrollChatToBottom',
+    'paddTopScroll',
 
     function (
         $log,
         $rootScope,
         $scope,
-        $interval,
+        $timeout,
         $window,
 
         Account,
@@ -31,7 +32,8 @@ exports = module.exports = [
         moment,
         favicon,
         renderFile,
-        scrollChatToBottom
+        scrollChatToBottom,
+        paddTopScroll
 
     ) {
         // make available to the view
@@ -80,7 +82,7 @@ exports = module.exports = [
 
             if ($scope.selectedChat) {
                 if ($scope.selectedChat.unread) {
-                    // scrollChatToBottom(true);
+                    scrollChatToBottom(true);
                 }
                 $scope.selectedChat.unread = 0;
                 $scope.$apply();
@@ -215,11 +217,6 @@ exports = module.exports = [
 
             $rootScope.$apply();
 
-            var isSelectedChat = $scope.selectedChat && itemId.indexOf($scope.selectedChat._id) !== -1;
-            if (isSelectedChat) {
-                // scrollChatToBottom(true);
-            }
-
         });
         
         // receive calls
@@ -268,7 +265,7 @@ exports = module.exports = [
             $scope.selectedChat.unread = 0;
 
             // fetch messages if there arent very many
-            if (!$scope.selectedChat.messages.length < 20) {
+            if ($scope.selectedChat.messages.length < 25) {
                 var qs;
                 if ($scope.selectedChat.display) {
                     qs = '?account=' + $scope.selectedChat._id;
@@ -286,14 +283,48 @@ exports = module.exports = [
                     // the array gets reversed.
                     messages.reverse();
                     $scope.selectedChat.messages = messages;
-                    // scrollChatToBottom(true);
+                    scrollChatToBottom(true);
                     focusInput();
                 });
             }
-            else {
-                // scrollChatToBottom(true);
+            else if ($scope.selectedChat.messages.length > 100) {
+                var overLimit = $scope.selectedChat.messages.length - 100;
+                $scope.selectedChat.messages.splice(0, overLimit);
             }
         };
+
+        $scope.loadBackMessages = function () {
+            if (!$scope.selectedChat) {
+                return;
+            }
+            if (!$scope.selectedChat.messages.length) {
+                return;
+            }
+            var qs;
+            if ($scope.selectedChat.display) {
+                qs = '?account=' + $scope.selectedChat._id;
+            }
+            else {
+                qs = '?group=' + $scope.selectedChat._id;
+            }
+            qs += '&before=' + encodeURIComponent($scope.selectedChat.messages[0].created);
+            qs += '&limit=20';
+
+            Message.get(qs, function (err, messages) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                // Messages are sorted descending from the server, to capture
+                // the latest ones. So to get the most recent on the bottom, 
+                // the array gets reversed.
+                messages.reverse();
+                $scope.selectedChat.messages = messages.concat($scope.selectedChat.messages);
+                $timeout(function () {
+                    paddTopScroll(20);
+                });
+            });
+        }
 
         $scope.sendMessage = function (txt, fileId) {
             $log.debug('sendMessage', txt);
@@ -327,7 +358,6 @@ exports = module.exports = [
                     return;
                 }
             });
-            // scrollChatToBottom(true);
         };
 
         $scope.audioCall = function (id) {

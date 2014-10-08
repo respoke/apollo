@@ -357,8 +357,8 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
     }
 
     // limit
-    if (req.params.limit) {
-        query = query.limit(req.params.limit);
+    if (req.query.limit) {
+        query = query.limit(req.query.limit);
     }
     else {
         query = query.limit(50);
@@ -366,10 +366,13 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 
     // skip
     if (req.params.skip) {
-        query = query.skip(req.params.skip);
+        query = query.skip(req.query.skip);
     }
 
-
+    if (req.query.before) {
+        query = query.where('created').lt(req.query.before);
+    }
+    
     query
     .populate('from to group')
     .exec(function (err, messages) {

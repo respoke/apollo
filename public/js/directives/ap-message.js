@@ -44,11 +44,11 @@ exports = module.exports = [
                             var imgs = element.find('img');
                             if (imgs.length) {
                                 imgs.on('load', function (evt) {
-                                    scrollChatToBottom(true);
+                                    scrollChatToBottom();
                                 });
                             }
                             else {
-                                scrollChatToBottom(true);
+                                scrollChatToBottom();
                             }
                         });
                     }
