@@ -28,6 +28,7 @@ apollo.factory('renderFile', function () {
 });
 apollo.factory('scrollChatToBottom', require('./lib/scroll-chat-to-bottom'));
 apollo.factory('paddTopScroll', require('./lib/padd-top-scroll'));
+apollo.factory('respokeVideo', require('./lib/respoke-video'));
 
 // Filters
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));

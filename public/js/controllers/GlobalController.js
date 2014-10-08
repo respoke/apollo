@@ -15,6 +15,9 @@ exports = module.exports = [
         $rootScope.justLoggedOut = false;
         $scope.authFailureMessage = $location.search().authFailure;
 
+        $rootScope.systemGroupId = '';
+        $rootScope.systemEndpointId = '';
+
         $rootScope.audio = {
             messagePrivate: new Audio('/audio/message-private.ogg'),
             messageGroup: new Audio('/audio/message-group.ogg'),
@@ -38,6 +41,17 @@ exports = module.exports = [
             // with a listener event.
             $rootScope.recents[$rootScope.account._id].presence = 'available';
             $rootScope.$apply();
+
+            $rootScope.client.join({
+                id: $rootScope.systemGroupId,
+                onSuccess: function (evt) {
+                    $log.debug('joined ' + $rootScope.systemGroupId);
+                },
+                onError: function (evt) {
+                    $log.debug('FAIL joining ' + $rootScope.systemGroupId, evt);
+                }
+            });
+
         });
         $rootScope.client.listen('disconnect', function () {
             $rootScope.connected = false;
@@ -89,9 +103,14 @@ exports = module.exports = [
                 $rootScope.client.listen('disconnect', function () {
                     $scope.respokeConnect();
                 });
+                
+                $rootScope.systemGroupId = respokeAuth.systemGroupId;
+                $rootScope.systemEndpointId = respokeAuth.systemEndpointId;
+
                 $rootScope.client.connect({
                     token: respokeAuth.token,
                     appId: respokeAuth.appId,
+                    baseURL: respokeAuth.baseURL ? respokeAuth.baseURL.replace('/v1','') : undefined,
                     resolveEndpointPresence: function (presenceList) {
                         var nonOffline = presenceList.filter(function (presence) {
                             return presence !== 'unavailable';

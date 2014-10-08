@@ -99,24 +99,9 @@ exports = module.exports = [
                 $rootScope.notifications.push(err);
                 return;
             }
-            var setPresenceListener = function (endpt) {
-                return function () {
-                    $rootScope.recents[endpt].endpoint = $rootScope.client.getEndpoint({ id: endpt });
-                    $rootScope.recents[endpt].endpoint.listen('presence', function (evt) {
-                            $log.debug('presence for endpoint', evt);
-                            $rootScope.recents[endpt].presence = evt.presence;
-                            $scope.$apply();
-                        });
-                };
-            };
-            var listeners = [];
 
-            accounts.forEach(function (account) {
-                $rootScope.recents[account._id] = account;
-                $rootScope.recents[account._id].messages = [];
-                $rootScope.recents[account._id].presence = "unavailable";
-                listeners.push(setPresenceListener(account._id));
-            });
+            var listeners = accounts.map(buildAccount);
+
             if ($rootScope.client.connectionId) {
                 listeners.forEach(function (listener) {
                     listener();
@@ -130,6 +115,22 @@ exports = module.exports = [
                 });
             }
         });
+        function buildAccount(account) {
+            $rootScope.recents[account._id] = account;
+            $rootScope.recents[account._id].messages = [];
+            $rootScope.recents[account._id].presence = "unavailable";
+            return setPresenceListener(account._id);
+        }
+        function setPresenceListener(endpt) {
+            return function () {
+                $rootScope.recents[endpt].endpoint = $rootScope.client.getEndpoint({ id: endpt });
+                $rootScope.recents[endpt].endpoint.listen('presence', function (evt) {
+                    $log.debug('presence for endpoint', evt);
+                    $rootScope.recents[endpt].presence = evt.presence;
+                    $scope.$apply();
+                });
+            };
+        }
     
         function bindGroup(group) {
             $rootScope.client.join({
@@ -138,7 +139,7 @@ exports = module.exports = [
                     $log.debug('joined ' + group._id);
                     // if this was a rejoin, use the existing messages
                     var msgs = $rootScope.recents['group-' + group._id]
-                        ? $rootScope.recents['group-' + group._id].messages
+                        ? $rootScope.recents['group-' + group._id].messages || []
                         : [];
                     $rootScope.recents['group-' + group._id] = group;
                     $rootScope.recents['group-' + group._id].messages = msgs;
@@ -155,6 +156,7 @@ exports = module.exports = [
                 $rootScope.notifications.push(err);
                 return;
             }
+            // already connected
             if ($rootScope.client.connectionId) {
                 groups.forEach(bindGroup);
             }
@@ -168,7 +170,51 @@ exports = module.exports = [
         // receiving messages
         $rootScope.client.ignore('message');
         $rootScope.client.listen('message', function (evt) {
-            // $log.debug('message event', evt);
+            // System messages
+            if (evt.group && evt.group.id === $rootScope.systemGroupId) {
+                $log.debug('system message', evt);
+
+                var msg = evt.message.message.split('-');
+                var msgType = msg[0];
+                var msgValue = msg[1];
+
+                switch (msgType) {
+                    case 'newaccount':
+                        Account.get(msgValue, function (err, account) {
+                            if (err) {
+                                $rootScope.notifications.push(err);
+                                return;
+                            }
+                            buildAccount(account)();
+                        });
+                    break;
+                    case 'newgroup':
+                        Group.get(msgValue, function (err, group) {
+                            if (err) {
+                                $rootScope.notifications.push(err);
+                                return;
+                            }
+                            bindGroup(group);
+                        });
+                    break;
+                    case 'removegroup':
+                        if ($rootScope.recents['group-' + msgValue]) {
+                            if ($scope.selectedChat._id === 'group-' + msgValue) {
+                                $rootScope.notifications.push(
+                                    "Group " + msgValue + " was just deleted by the owner."
+                                );
+                                $scope.selectedChat = null;
+                            }
+                            delete $rootScope.recents['group-' + msgValue];
+                            $rootScope.client.getGroup({ id: msgValue }).leave();
+                            $rootScope.$apply();
+                        }
+                    break;
+                }
+                return;
+            }
+
+            // Normal messages
             var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
 
             // Adding the message to local history
@@ -176,14 +222,16 @@ exports = module.exports = [
                 $rootScope.recents[itemId].messages.push({
                     group: evt.group.id,
                     from: $rootScope.recents[evt.message.endpointId],
-                    content: evt.message.message
+                    content: evt.message.message,
+                    created: new Date()
                 });
             }
             else {
                 $rootScope.recents[itemId].messages.push({
                     from: $rootScope.recents[itemId],
                     to: $rootScope.account,
-                    content: evt.message.message
+                    content: evt.message.message,
+                    created: new Date()
                 });
             }
 
@@ -302,7 +350,7 @@ exports = module.exports = [
             if (!$scope.selectedChat) {
                 return;
             }
-            if (!$scope.selectedChat.messages.length) {
+            if (!$scope.selectedChat.messages.length || $scope.selectedChat.messages[0].created) {
                 return;
             }
             var qs;
@@ -354,7 +402,8 @@ exports = module.exports = [
             }
             $scope.selectedChat.messages.push({
                 content: txt,
-                from: $rootScope.account
+                from: $rootScope.account,
+                created: new Date()
             });
             Message.create(msg, function (err, sentMessage) {
                 if (err) {

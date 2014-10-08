@@ -173,6 +173,11 @@ router.post('/accounts', function (req, res, next) {
             error: 'Local account signups are disabled by the system administrator.'
         });
     }
+    if (req.body._id === config.systemEndpoint) {
+        return res.status(400).send({
+            error: 'Name not available'
+        });
+    }
     
     var newAccount = new req.db.Account(req.body);
     var conf = newAccount.conf;
@@ -196,6 +201,15 @@ router.post('/accounts', function (req, res, next) {
                 return;
             }
             debug('Sent account confirmation email', account.email);
+        });
+
+        req.respoke.groups.publish({
+            groupId: config.systemGroupId,
+            message: 'newaccount-' + account._id
+        }, function (err) {
+            if (err) {
+                debug('failed to send new account notification', err);
+            }
         });
     });
 });
@@ -243,6 +257,15 @@ router.post('/groups', middleware.isAuthorized, function (req, res, next) {
             return next(err);
         }
         res.send(group);
+
+        req.respoke.groups.publish({
+            groupId: config.systemGroupId,
+            message: 'newgroup-' + group._id
+        }, function (err) {
+            if (err) {
+                debug('failed to send new account notification', err);
+            }
+        });
     });
 });
 router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) {
@@ -256,6 +279,16 @@ router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) 
         if (group.owner.toString() !== req.user._id.toString()) {
             return res.status(401).send({ error: 'Unable to remove group that does not belong to you.' });
         }
+
+        // kick everyone out first
+        req.respoke.groups.publish({
+            groupId: config.systemGroupId,
+            message: 'removegroup-' + group._id
+        }, function (err) {
+            if (err) {
+                debug('failed to send new account notification', err);
+            }
+        });
 
         async.series([
             function (cb) {

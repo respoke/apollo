@@ -28,9 +28,26 @@ var api = require('./routes/api');
 var auth = require('./routes/auth');
 
 var app = express();
+
+// Respoke setup
 var respoke = new Respoke({
     'App-Secret': config.respoke.appSecret,
-    appId: config.respoke.appId
+    appId: config.respoke.appId,
+    baseURL: config.respoke.baseURL
+});
+respoke.auth.connect({ endpointId: config.systemEndpointId });
+respoke.on('connect', function () {
+    debug('connected to respoke');
+    respoke.groups.join({ groupId: config.systemGroupId }, function (err) {
+        if (err) {
+            debug('failed to join system group', config.systemGroupId, err);
+            return;
+        }
+        debug('joined system group', config.systemGroupId);
+    });
+});
+respoke.on('error', function (err) {
+    debug('failed to connect to respoke', err);
 });
 
 // view engine setup

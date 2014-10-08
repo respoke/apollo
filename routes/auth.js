@@ -24,7 +24,10 @@ router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
         }
         res.send({
             token: authData.tokenId,
-            appId: req.respoke.appId
+            appId: req.respoke.appId,
+            baseURL: config.respoke.baseURL,
+            systemGroupId: config.systemGroupId,
+            systemEndpointId: config.systemEndpointId
         });
     });
 });

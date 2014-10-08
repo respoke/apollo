@@ -9,6 +9,10 @@ config.port = process.env.PORT || 3000;
 // Once implemented, DO NOT CHANGE or all passwords will cease to work
 config.salt = 'change-this-please-1234';
 
+// configuration for application level messages
+config.systemGroup = 'apollo-system-messages';
+config.systemEndpoint = 'apollo-system-endpoint';
+
 // Where the application lives, with no trailing slash
 config.baseURL = 'http://localhost:' + config.port;
 
