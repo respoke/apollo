@@ -115,6 +115,7 @@ exports = module.exports = [
             $rootScope.recents[account._id] = account;
             $rootScope.recents[account._id].messages = [];
             $rootScope.recents[account._id].presence = "unavailable";
+            $rootScope.recents[account._id].unread = 0;
             return setPresenceListener(account._id);
         }
         function setPresenceListener(endpt) {
@@ -268,7 +269,7 @@ exports = module.exports = [
 
             // Tracking unread items on this chat
             $rootScope.recents[itemId].unread = $rootScope.recents[itemId].unread || 0;
-            if (!$scope.windowInFocus || ($scope.selectedChat && itemId !== $scope.selectedChat._id)) {
+            if (!$scope.windowInFocus || !$scope.selectedChat || ($scope.selectedChat && itemId !== $scope.selectedChat._id)) {
                 $rootScope.recents[itemId].unread++;
             }
 
