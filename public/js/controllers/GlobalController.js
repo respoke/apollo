@@ -6,6 +6,7 @@ exports = module.exports = [
     '$window',
     '$rootScope',
     '$scope',
+
     'Account',
     'respoke',
 
@@ -127,7 +128,7 @@ exports = module.exports = [
             });
         };
 
-        $scope.setPresence = function (strPresence) {
+        $rootScope.setPresence = function (strPresence) {
             $rootScope.client.setPresence({ presence: strPresence });
             $rootScope.recents[$rootScope.account._id].presence = strPresence;
         };

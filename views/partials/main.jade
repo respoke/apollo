@@ -1,3 +1,4 @@
 .main(ng-controller="MainController")
     include recents.jade
-    include chat.jade
+    .panel.right(ng-class="{ 'full': showFullChat }")
+        include chat.jade

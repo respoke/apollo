@@ -27,10 +27,12 @@ exports = module.exports = [
 
 
         if ($rootScope.client.connectionId) {
+            $rootScope.setPresence('busy');
             joinGroup();
         }
         else {
             $rootScope.client.listen('connect', function () {
+                $rootScope.setPresence('busy');
                 joinGroup();
             });
         }

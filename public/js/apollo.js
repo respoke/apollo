@@ -13,6 +13,7 @@ apollo.controller('ChatController', require('./controllers/ChatController'));
 
 // Services and Factories
 require('./services/rest-factories.js')(apollo);
+
 apollo.factory('respoke', function () {
     return respoke;
 });

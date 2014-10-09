@@ -15,7 +15,6 @@ exports = module.exports = function () {
         for (var i=0; i<nRows && i<rows.length; i++) {
             totalHeight += rows[i].offsetHeight
         }
-        // console.log('paddTopScroll', nRows, totalHeight);
         chat.scrollTop = totalHeight;
     };
 };

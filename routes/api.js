@@ -453,14 +453,14 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                     to: account.email,
                     subject: '[' + config.name + '] ' 
                         + req.user.display + ' sent you a message while you were offline',
-                    text: req.user.display + ' said:\n------\n' + req.body.content
-                        + '\n------\nYou can unsubscribe from these messages in your '
+                    text: req.user.display + ' said:\n\n' + req.body.content
+                        + '\n---\nUnsubscribe from these messages in the '
                         + config.name + ' settings. '
                         + config.baseURL
                 };
 
                 if (account.settings.htmlEmails) {
-                    emailContent.html = req.user.display + ' said:<hr />' 
+                    emailContent.html = req.user.display + ' said:<br /><br />' 
                         + req.body.content
                         + '<hr /><a href="' + config.baseURL + '">'
                         + 'Unsubscribe from these messages in the '

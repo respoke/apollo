@@ -105,10 +105,10 @@
 
     "maxerr"        : 100,      // Maximum errors before stopping.
     "predef"        : [         // Extra globals.
-        'it',
-        'describe',
-        'xit',
-        'xdescribe'
+        "it",
+        "describe",
+        "xit",
+        "xdescrib"
     ],
     "indent"        : 4         // Specify indentation spacing
 }

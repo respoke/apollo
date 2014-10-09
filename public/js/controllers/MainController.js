@@ -15,9 +15,7 @@ exports = module.exports = [
     'File',
     'moment',
     'favicon',
-    'renderFile',
     'scrollChatToBottom',
-    'paddTopScroll',
 
     function (
         $log,
@@ -32,9 +30,7 @@ exports = module.exports = [
         File,
         moment,
         favicon,
-        renderFile,
-        scrollChatToBottom,
-        paddTopScroll
+        scrollChatToBottom
 
     ) {
         // make available to the view
@@ -214,8 +210,27 @@ exports = module.exports = [
                 return;
             }
 
-            // Normal messages
             var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
+
+            // video call request
+            var systemIndicator = evt.message.message.substring(0, 15);
+            var systemIndicatorValue = evt.message.message.substring(15);
+            if (systemIndicator === '!!!VIDEOCALL!!!') {
+                $scope.incomingCall = systemIndicatorValue;
+                $scope.activeCall = {
+                    remoteEndpoint: $rootScope.recents[itemId],
+                    hasVideo: true
+                };
+                $scope.activeCall.remoteEndpoint.id = itemId;
+
+                $rootScope.audio.callIncoming.play();
+                $rootScope.audio.callIncoming.loop = true;
+                $scope.$apply();
+                return;
+            }
+
+
+            // Normal messages
 
             // Adding the message to local history
             if (evt.group) {
@@ -349,7 +364,7 @@ exports = module.exports = [
                 $scope.selectedChat.messages.splice(0, overLimit);
             }
         };
-        
+
 
         $scope.audioCall = function (id) {
             $log.debug('audio call requested with ', id);
@@ -368,23 +383,35 @@ exports = module.exports = [
         };
         $scope.hangup = function () {
             if ($scope.activeCall) {
-                $scope.activeCall.hangup();
+                if ($scope.activeCall.hangup) {
+                    $scope.activeCall.hangup();
+                }
                 $scope.activeCall = null;
                 // in case we were being rung
                 $scope.incomingCall = "";
                 $rootScope.audio.callIncoming.pause();
                 $rootScope.audio.callIncoming.loop = false;
                 $rootScope.audio.callIncoming.currentTime = 0;
+                $rootScope.setPresence('available');
             }
         };
         $scope.answer = function () {
             if ($scope.activeCall) {
-                $scope.activeCall.answer({
-                    constraints: {
-                        audio: true,
-                        video: true
-                    }
-                });
+                $rootScope.setPresence('busy');
+                
+                // answer video call
+                if ($scope.activeCall.hasVideo) {
+                    $scope.activeCall = null;
+                    window.open('/private/' + $scope.incomingCall, '_blank');
+                }
+                // answer audio call
+                else {
+                    $scope.activeCall.answer({
+                        constraints: {
+                            audio: true
+                        }
+                    });
+                }
                 $scope.incomingCall = "";
                 $rootScope.audio.callIncoming.pause();
                 $rootScope.audio.callIncoming.loop = false;
@@ -392,7 +419,20 @@ exports = module.exports = [
             }
         };
 
-
+        $scope.videoCall = function (id) {
+            var msg = {
+                content: '!!!VIDEOCALL!!!' + $rootScope.account._id,
+                to: id,
+                offRecord: true
+            };
+            Message.create(msg, function (err, msg) {
+                if (err) {
+                    $rootScope.notifications,push(err);
+                    return;
+                }
+                window.open('/private/' + $rootScope.account._id, '_blank');
+            });
+        };
     }
 
 ];

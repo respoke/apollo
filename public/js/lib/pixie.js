@@ -1,13 +1,12 @@
-'use strict';
 /*!
 * Courtesy of http://timothypoon.com/blog/demos/canvas-particle-parallax/
 * Edited gingerly by @ruffrey
 */
 (function () {
     'use strict';
+    var TOTAL_PIXIES = 15;
     var WIDTH;
     var HEIGHT;
-    var TOTAL_PIXIES = 15;
     var canvas;
     var con;
     var g;

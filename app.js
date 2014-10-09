@@ -128,7 +128,6 @@ app.use(function(err, req, res, next) {
         status: err.status
     };
     var prefersJson = req.accepts(['html', 'json']);
-    debug('prefers', prefersJson);
 
     if (process.env.NODE_ENV !== 'production') {
         stack: err.stack

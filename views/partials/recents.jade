@@ -54,7 +54,7 @@
             )
                 i.fa.fa-cog
 
-            //- Call controls
+        //- Call controls
         #audio-call-controls.col-xs-8(ng-show="activeCall")
             h6 {{ recents[activeCall.remoteEndpoint.id].display }} 
             p(ng-show="incomingCall") is calling you
@@ -70,7 +70,8 @@
             br
             br
             br
-            i.fa.fa-3x.fa-phone.animated.bounce.infinite
+            i.fa.fa-3x.fa-phone.animated.bounce.infinite(ng-show="!activeCall.hasVideo")
+            i.fa.fa-3x.fa-video-camera.animated.bounce.infinite(ng-show="activeCall.hasVideo")
     br
     //- Adding a group
     button.btn.btn-primary.btn-block.btn-sm(
@@ -94,28 +95,33 @@
     )
 
     //- Display group and buddy list
-    .scrollable: table.table
+    #buddies.scrollable: table.table
         tr.clickable(
             ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
             ng-if="item._id !== account._id"
             ng-class="{ 'offline': item.presence === 'unavailable', 'selectedRecent': selectedChat._id === item._id }"
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
-            td.col-xs-3.center
+            td.col-xs-2.center
                 i.fa.fa-group.fa-3x(ng-if="!item.email")
                 img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
-            td
+            td.col-xs-7
                 h6 {{ item.display || item._id }}
                 p(ng-if="item.presence") {{ item.presence }}
-            td                
-                //- audio call
-                button.btn.btn-primary.btn-success.btn-sm(
-                    ng-click="audioCall(item._id)"
-                    ng-show="!activeCall && item.display && item.presence !== 'unavailable'"
-                )
-                    i.fa.fa-phone
+            td.col-xs-3(ng-show="item.display && selectedChat._id === item._id")
+                div(ng-show="!activeCall && item.display && item.presence !== 'unavailable'")               
+                    //- audio call
+                    button.btn.btn-primary.btn-xs.btn-block(
+                        ng-click="audioCall(item._id)"
+                    ): i.fa.fa-phone
+                    //- video call
+                    button.btn.btn-primary.btn-xs.btn-block(
+                        ng-click="videoCall(item._id)"
+                    ): i.fa.fa-video-camera
 
-                span.badge(ng-show="item.unread") {{ item.unread }}
             
-            td: small.help-block 
-                | {{ item.messages.length ? moment(item.messages[ item.messages.length -1 ].created).fromNow() : ""}}
+            td.col-xs-3(ng-show="!item.display || selectedChat._id !== item._id")
+                small
+                    small.help-block 
+                        | {{ item.messages.length ? moment(item.messages[ item.messages.length -1 ].created).fromNow() : "" }}
+                    small.help-block.text-primary(ng-show="item.unread") {{ item.unread }} new

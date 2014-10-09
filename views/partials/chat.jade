@@ -1,36 +1,35 @@
-.panel.right(ng-class="{ 'full': showFullChat }")
-    ap-chat#chat(
-        ap-drop="onDropUpload"
-        ap-onscrolltop="loadBackMessages"
-        ng-class="{ 'fadeOutRightBig': justLoggedOut }"
-    )
-        table#chat-table.table(ng-show="!showSettings")
-            tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
-                //- avatar for remote party
-                td(width="40px"): small
-                    img.img-responsive.img-circle(
-                        style="width: 30px"
-                        ng-src="{{ gravatar(message.from.email) }}"
-                        ng-click="switchChat(message.from._id)"
-                        ng-class="{ clickable: message.from._id !== account._id }"
-                    )
-                    small.help-block {{ message.from.display }}
+ap-chat#chat(
+    ap-drop="onDropUpload"
+    ap-onscrolltop="loadBackMessages"
+    ng-class="{ 'fadeOutRightBig': justLoggedOut }"
+)
+    table#chat-table.table(ng-show="!showSettings")
+        tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
+            //- avatar for remote party
+            td(width="40px"): small
+                img.img-responsive.img-circle(
+                    style="width: 30px"
+                    ng-src="{{ gravatar(message.from.email) }}"
+                    ng-click="switchChat(message.from._id)"
+                    ng-class="{ clickable: message.from._id !== account._id }"
+                )
+                small.help-block {{ message.from.display }}
 
-                td
-                    ap-message(ap-content="message.content" ap-file="message.file")
-                td.align-right(width="90px")
-                    small: small.help-block {{ moment(message.created).fromNow() }}
+            td
+                ap-message(ap-content="message.content" ap-file="message.file")
+            td.align-right(width="90px")
+                small: small.help-block {{ moment(message.created).fromNow() }}
 
-        #settings.animated.fadeIn(ng-show="showSettings")
-            include settings.jade
+    #settings.animated.fadeIn(ng-show="showSettings")
+        include settings.jade
 
-    textarea#textInput.form-control(
-        ng-model="textInput"
-        placeholder="{{ pendingUploads ? 'Uploading ' + pendingUploads + ' files...' : 'Type text, markdown, paste images, or drag files' }}"
-        ap-enter="sendMessage(textInput); textInput = '';"
-        ng-show="selectedChat && selectedChat._id"
-        ng-disabled="pendingUploads"
-        ap-paste="onPasteUpload"
-        ap-drop="onDropUpload"
-    )
+textarea#textInput.form-control(
+    ng-model="textInput"
+    placeholder="{{ pendingUploads ? 'Uploading ' + pendingUploads + ' files...' : 'Type text, markdown, paste images, or drag files' }}"
+    ap-enter="sendMessage(textInput); textInput = '';"
+    ng-show="selectedChat && selectedChat._id"
+    ng-disabled="pendingUploads"
+    ap-paste="onPasteUpload"
+    ap-drop="onDropUpload"
+)
 

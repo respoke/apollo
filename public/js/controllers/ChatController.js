@@ -78,6 +78,9 @@ exports = module.exports = [
                     $rootScope.notifications.push(err);
                     return;
                 }
+                if (!messages.length) {
+                    return;
+                }
                 // Messages are sorted descending from the server, to capture
                 // the latest ones. So to get the most recent on the bottom, 
                 // the array gets reversed.
