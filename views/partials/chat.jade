@@ -28,7 +28,7 @@
         ng-model="textInput"
         placeholder="{{ pendingUploads ? 'Uploading ' + pendingUploads + ' files...' : 'Type text, markdown, paste images, or drag files' }}"
         ap-enter="sendMessage(textInput); textInput = '';"
-        ng-show="selectedChat"
+        ng-show="selectedChat && selectedChat._id"
         ng-disabled="pendingUploads"
         ap-paste="onPasteUpload"
         ap-drop="onDropUpload"

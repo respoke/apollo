@@ -17,6 +17,14 @@
 
     $(document).ready(function(){
         window.pixies.start();
+        $(window).resize(function (evt) {
+            var wasStopped = !window.pixies.isRunning;
+            window.pixies.stop();
+            window.pixies.start();
+            if (wasStopped) {
+                window.pixies.stop();
+            }
+        });
     });
 
     function Pixies () {
@@ -34,11 +42,11 @@
             canvas = document.getElementById('pixie');
             $(canvas).attr('width', WIDTH).attr('height',HEIGHT);
             con = canvas.getContext('2d');
-            for(var i = 0; i < TOTAL_PIXIES; i++) {
+            for (var i = 0; i < TOTAL_PIXIES; i++) {
                 pxs[i] = new Circle();
                 pxs[i].reset();
             }
-            INTERVAL = setInterval(draw,REDRAW_INTERVAL);
+            INTERVAL = setInterval(draw, REDRAW_INTERVAL);
             self.isRunning = true;
         };
 

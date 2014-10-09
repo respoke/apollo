@@ -19,16 +19,21 @@ html, body {
     margin: 0;
     padding: 0;
     font-weight: 100;
-    .panelGradient();
+}
+#apollo {
+    z-index: 50;
 }
 #container {
-    position: absolute;
-    z-index: 0;
+    position: fixed;
+    z-index: -100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .panelGradient();
     #pixie {
         height: 100%;
         width: 100%;
-        position: fixed;
-        z-index: -100;
     }
 }
 .center { text-align: center }

@@ -120,13 +120,15 @@ app.use(function(req, res, next) {
 // Error handler
 // will respond with JSON or HTML depending upon request
 app.use(function(err, req, res, next) {
-    err.status = err.status || 500;
+    err.status = err.status || res.statusCode || 500;
 
     var errOut = {
         error: err,
         message: err.message,
         status: err.status
     };
+    var prefersJson = req.accepts(['html', 'json']);
+    debug('prefers', prefersJson);
 
     if (process.env.NODE_ENV !== 'production') {
         stack: err.stack
@@ -134,7 +136,7 @@ app.use(function(err, req, res, next) {
 
     res.status(err.status);
 
-    if (req.accepts('json')) {
+    if (prefersJson === 'json') {
         res.send(errOut);
         return;
     }
