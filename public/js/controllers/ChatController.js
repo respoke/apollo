@@ -6,6 +6,7 @@ exports = module.exports = [
     '$log',
     '$rootScope',
     '$scope',
+    '$timeout',
 
     'Account',
     'Message',
@@ -14,7 +15,7 @@ exports = module.exports = [
     'moment',
     'renderFile',
 
-    function ($log, $rootScope, $scope, Account, Message, File, paddTopScroll, moment, renderFile) {
+    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, moment, renderFile) {
         $scope.pendingUploads = 0;
 
         $scope.sendMessage = function (txt, fileId) {
@@ -55,10 +56,11 @@ exports = module.exports = [
         };
 
         $scope.loadBackMessages = function () {
+            $log.debug('loadBackMessages', $scope.selectedChat);
             if (!$scope.selectedChat) {
                 return;
             }
-            if (!$scope.selectedChat.messages.length || $scope.selectedChat.messages[0].created) {
+            if (!$scope.selectedChat.messages.length) {
                 return;
             }
             var qs;
