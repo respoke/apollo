@@ -10,6 +10,8 @@ exports = module.exports = [
         return {
             scope: false,
             link: function (scope, element, attrs) {
+                $rootScope.autoScrollDisabled = false;
+
                 var apOnscrolltop = attrs.apOnscrolltop 
                     ? scope.$eval(attrs.apOnscrolltop) 
                     : function (data) { };
@@ -18,12 +20,15 @@ exports = module.exports = [
                 element.on('scroll', function (evt) {
                     if (evt.target.scrollTop === 0) {
                         apOnscrolltop();
-                        $rootScope.autoScrollDisabled = true;
-                        $timeout(function () {
-                            $rootScope.autoScrollDisabled = false;
-                        }, 1000);
+                        // $rootScope.autoScrollDisabled = true;
+                        // $timeout(function () {
+                        //     $rootScope.autoScrollDisabled = false;
+                        // }, 1000);
                     }
-                    if (evt.target.scrollHeight - evt.target.scrollTop < 600) {
+                    // scroll automatically when close to the bottom of the chat window.
+                    if (evt.target.scrollHeight - evt.target.scrollTop < 600
+                        || evt.target.scrollTop / evt.target.scrollHeight > .7
+                    ) {
                         $rootScope.autoScrollDisabled = false;
                     }
                     else {
