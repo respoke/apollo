@@ -79,8 +79,8 @@ exports = module.exports = function (app) {
     ]);
 
     // Message
-    app.factory('Message', ['$http', '$rootScope',
-        function ($http, $rootScope) {
+    app.factory('Message', ['$http', '$rootScope', '$log',
+        function ($http, $rootScope, $log) {
             return {
                 create: function (message, callback) {
 
@@ -93,12 +93,14 @@ exports = module.exports = function (app) {
                         });
                     }
                     else {
-                        $rootScope.client.sendMessage({
+                        var privateMessage = {
                             endpointId: message.to,
                             message: message.content,
                             onSuccess: success(callback),
                             onError: fail(callback)
-                        });
+                        };
+                        $log.debug('privateMessage', privateMessage);
+                        $rootScope.client.sendMessage(privateMessage);
                     }
 
                     if (!message.offRecord) {

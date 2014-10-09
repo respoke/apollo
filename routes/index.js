@@ -2,9 +2,19 @@ var express = require('express');
 var router = express.Router();
 var config = require('../config');
 var middleware = require('../lib/middleware');
+var Moniker = require('moniker');
 
 router.get('/', function (req, res) {
     res.render('index', { title: config.name });
+});
+
+router.get('/private', middleware.isAuthorized, function (req, res) {
+    res.redirect('/private/' + Moniker.choose());
+});
+router.get('/private/:tempCallName', middleware.isAuthorized, function (req, res) {
+    res.render('call', {
+        title: req.params.tempCallName
+    });
 });
 
 router.get('/files/:id', middleware.isAuthorized, function (req, res, next) {

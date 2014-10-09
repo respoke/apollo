@@ -1,3 +1,4 @@
+'use strict';
 function focusInput() {
     document.getElementById('textInput').focus();
 }
@@ -53,7 +54,6 @@ exports = module.exports = [
             }
         };
         $scope.selectedChat = null;
-        $scope.pendingUploads = 0;
 
         $scope.activeCall = null;
         $scope.incomingCall = "";
@@ -349,74 +349,7 @@ exports = module.exports = [
                 $scope.selectedChat.messages.splice(0, overLimit);
             }
         };
-
-        $scope.loadBackMessages = function () {
-            if (!$scope.selectedChat) {
-                return;
-            }
-            if (!$scope.selectedChat.messages.length || $scope.selectedChat.messages[0].created) {
-                return;
-            }
-            var qs;
-            if ($scope.selectedChat.display) {
-                qs = '?account=' + $scope.selectedChat._id;
-            }
-            else {
-                qs = '?group=' + $scope.selectedChat._id;
-            }
-            qs += '&before=' + encodeURIComponent($scope.selectedChat.messages[0].created);
-            qs += '&limit=20';
-
-            Message.get(qs, function (err, messages) {
-                if (err) {
-                    $rootScope.notifications.push(err);
-                    return;
-                }
-                // Messages are sorted descending from the server, to capture
-                // the latest ones. So to get the most recent on the bottom, 
-                // the array gets reversed.
-                messages.reverse();
-                $scope.selectedChat.messages = messages.concat($scope.selectedChat.messages);
-                $timeout(function () {
-                    paddTopScroll(20);
-                });
-            });
-        }
-
-        $scope.sendMessage = function (txt, fileId) {
-            $log.debug('sendMessage', txt);
-            if (!txt) {
-                return;
-            }
-            var msg = {
-                content: txt
-            };
-            if ($scope.selectedChat.display) {
-                msg.to = $scope.selectedChat._id;
-                // indicate the recipient was not online and needs to be notified
-                if ($rootScope.recents[$scope.selectedChat._id].presence === 'unavailable') {
-                    msg.recipientOffline = true;
-                }
-            }
-            else {
-                msg.group = $scope.selectedChat._id;
-            }
-            if (fileId) {
-                msg.file = fileId;
-            }
-            $scope.selectedChat.messages.push({
-                content: txt,
-                from: $rootScope.account,
-                created: new Date()
-            });
-            Message.create(msg, function (err, sentMessage) {
-                if (err) {
-                    $rootScope.notifications.push(err);
-                    $scope.selectedChat.messages.pop();
-                    return;
-                }
-            });
-        };
+        
 
         $scope.audioCall = function (id) {
             $log.debug('audio call requested with ', id);
@@ -458,52 +391,6 @@ exports = module.exports = [
                 $rootScope.audio.callIncoming.currentTime = 0;
             }
         };
-
-        $scope.onPasteUpload = function (data) {
-            $log.debug('paste upload', data.contentType);
-            if ($scope.pendingUploads) {
-                $rootScope.notifications.push('Wait for uploads to finish.');
-                return;
-            }
-            $scope.pendingUploads++;
-            File.create({
-                contentType: data.contentType,
-                content: data.content
-            }, onAfterUpload);
-        };
-
-        $scope.onDropUpload = function (files) {
-            if ($scope.pendingUploads) {
-                $rootScope.notifications.push('Wait for uploads to finish.');
-                return;
-            }
-            $log.debug('drag and drop ', files.length, 'files');
-            files.forEach(function (data) {
-                $log.debug(data.name, data.contentType);
-                $scope.pendingUploads++;
-                File.create({
-                    contentType: data.contentType,
-                    content: data.content,
-                    name: data.name
-                }, onAfterUpload);
-            });
-        };
-
-        function onAfterUpload(err, file) {
-            $scope.pendingUploads--;
-            if (err) {
-                $rootScope.notifications.push(err);
-                return;
-            }
-            
-            renderFile(file, function (err, messageText) {
-                if (err) {
-                    $rootScope.notifications.push(err);
-                    return;
-                }
-                $scope.sendMessage(messageText, file._id);
-            });
-        }
 
 
     }

@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h6=title
+    .container(ng-controller="PrivateCallController")
+        .alert.alert-warning(ng-show="errorMessage") {{ errorMessage }}
+            br
+            a(href="/private") Start a new private call
+
+        include partials/chat
+

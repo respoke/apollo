@@ -23,6 +23,13 @@ html, body {
 }
 #container {
     position: absolute;
+    z-index: 0;
+    #pixie {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        z-index: -100;
+    }
 }
 .center { text-align: center }
 .align-right { text-align: right }
@@ -125,13 +132,6 @@ html, body {
     overflow-y: auto;
     height: 100%;
     padding-bottom: 150px;
-}
-
-#pixie {
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    z-index: -100;
 }
 
 #settings {

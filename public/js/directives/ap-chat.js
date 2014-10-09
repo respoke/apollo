@@ -1,3 +1,8 @@
+'use strict';
+/**
+ * The chat window.
+ * The parent scope **must** implement the object `selectedChat`.
+ */
 exports = module.exports = [
     '$rootScope',
     '$timeout',
@@ -5,7 +10,10 @@ exports = module.exports = [
         return {
             scope: false,
             link: function (scope, element, attrs) {
-                var apOnscrolltop = attrs.apOnscrolltop ? scope.$eval(attrs.apOnscrolltop) : function (data) { };
+                var apOnscrolltop = attrs.apOnscrolltop 
+                    ? scope.$eval(attrs.apOnscrolltop) 
+                    : function (data) { };
+
                 // load previous elements
                 element.on('scroll', function (evt) {
                     if (evt.target.scrollTop === 0) {
@@ -22,7 +30,8 @@ exports = module.exports = [
                         $rootScope.autoScrollDisabled = true;
                     }
                 });
-            }
+            },
+            controller: 'ChatController'
         };
     }
 ];
