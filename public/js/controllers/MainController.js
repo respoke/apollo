@@ -363,6 +363,9 @@ exports = module.exports = [
                 var overLimit = $scope.selectedChat.messages.length - 100;
                 $scope.selectedChat.messages.splice(0, overLimit);
             }
+            $timeout(function () {
+                scrollChatToBottom();
+            });
         };
 
 

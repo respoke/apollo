@@ -110,6 +110,7 @@ exports = module.exports = [
                 $rootScope.systemEndpointId = respokeAuth.systemEndpointId;
 
                 $rootScope.client.connect({
+                    reconnect: false,
                     token: respokeAuth.token,
                     appId: respokeAuth.appId,
                     baseURL: respokeAuth.baseURL ? respokeAuth.baseURL.replace('/v1','') : undefined,

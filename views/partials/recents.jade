@@ -74,18 +74,19 @@
             i.fa.fa-3x.fa-video-camera.animated.bounce.infinite(ng-show="activeCall.hasVideo")
     br
     //- Adding a group
-    button.btn.btn-primary.btn-block.btn-sm(
-        ng-show="!showCreateGroup"
-        ng-click="showCreateGroup = true"
-    ) Create a new group +
-
-    .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
-        input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+    #newgroup
         button.btn.btn-primary.btn-block.btn-sm(
-            ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
-        ) Create
-        button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
-            | Cancel
+            ng-show="!showCreateGroup"
+            ng-click="showCreateGroup = true"
+        ) Create a new group +
+
+        .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
+            input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+            button.btn.btn-primary.btn-block.btn-sm(
+                ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
+            ) Create
+            button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+                | Cancel
 
 
     input.form-control(
