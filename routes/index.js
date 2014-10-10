@@ -3,7 +3,10 @@ var router = express.Router();
 var config = require('../config');
 var middleware = require('../lib/middleware');
 var Moniker = require('moniker');
-var moniker = Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]);
+var moniker = Moniker.generator([]);
+moniker.use(__dirname + '/../lib/words.txt');
+moniker.use(__dirname + '/../lib/words.txt');
+moniker.use(__dirname + '/../lib/words.txt');
 
 router.get('/', function (req, res) {
     res.render('index', { title: config.name });
