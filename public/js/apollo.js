@@ -37,6 +37,7 @@ apollo.factory('respokeVideo', require('./lib/respoke-video'));
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));
 
 // Directives
+apollo.directive('apDraggable', require('./directives/ap-draggable'));
 apollo.directive('apChat', require('./directives/ap-chat'));
 apollo.directive('apEnter', require('./directives/ap-enter'));
 apollo.directive('apPaste', require('./directives/ap-paste'));

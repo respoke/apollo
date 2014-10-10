@@ -191,7 +191,8 @@ input[type="text"].form-control, textarea.form-control {
 #video-call-container {
     #chat-title {
         padding-left: 20px;
-        opacity: .5;
+        opacity: .4;
+        z-index: 75;
     }
     .panel.right.full {
         right: 0;
@@ -203,19 +204,31 @@ input[type="text"].form-control, textarea.form-control {
         left: 20px;
         bottom: 20px;
     }
-    #respokeLocalVideo video {
+    #respokeLocalVideo {
         position: fixed;
-        right: 300px;
+        left: 0;
         top: 0;
         width: 200px;
+        min-height: 110px;
         z-index: 100;
+
+        video {
+            height: 100%;
+            width: 100%;
+        }
     }
-    #respokeRemoteVideo video {
+    #respokeRemoteVideo {
         position: fixed;
         left: 0;
         right: 300px;
         top: 0;
         bottom: 0;
         height: 100%;
+        z-index: 50;
+
+        video {
+            height: 100%;
+            width: 100%;
+        }
     }
 }
