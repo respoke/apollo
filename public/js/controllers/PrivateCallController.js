@@ -4,40 +4,50 @@ exports = module.exports = [
     '$rootScope',
     '$scope',
     '$location',
+    '$window',
 
     'Message',
     'Account',
+    'respokeVideo',
     'moment',
 
-    function ($log, $rootScope, $scope, $location, Message, Account, moment) {
-        $scope.errorMessage = "";
-        $scope.moment = moment;
-        $scope.showFullChat = true;
+    function ($log, $rootScope, $scope, $location, $window, Message, Account, respokeVideo, moment) {
+        var callOptions = {
+            constraints: {audio: true, video: true},
 
-        $scope.groupId = $location.absUrl().split('/')[4];
-        $scope.group = null;
+            // your video
+            onPreviewLocalMedia: function (evt) {
+                respokeVideo.setLocalVideo(evt.element);
+            },
+            // your video
+            onLocalMedia: function (evt) {
+                respokeVideo.setLocalVideo(evt.element);
+            },
 
-        $scope.remoteEndpoint = null;
+            // their video
+            onConnect: function (evt) {
+                respokeVideo.setRemoteVideo(evt.element);
+                $window.pixies.stop();
+            }
 
-        $scope.selectedChat = {
-            messages: [],
-            _id: "",
-            display: ""
         };
+        var cleanUpCall = function () {
+            respokeVideo.cleanup();
+            $window.pixies.resume();
 
+            $rootScope.notifications.push(
+                $scope.selectedChat.display + ' left.'
+            );
+            $scope.remoteConnection = null;
+            $scope.selectedChat = {
+                messages: [],
+                _id: "",
+                display: ""
+            };
+            $scope.$apply();
 
-        if ($rootScope.client.connectionId) {
-            $rootScope.setPresence('busy');
-            joinGroup();
-        }
-        else {
-            $rootScope.client.listen('connect', function () {
-                $rootScope.setPresence('busy');
-                joinGroup();
-            });
-        }
-
-        function joinGroup() {
+        };
+        var joinGroup = function () {
             $log.debug('joining', $scope.groupId);
             $rootScope.client.join({
                 id: $scope.groupId,
@@ -73,7 +83,7 @@ exports = module.exports = [
                                 }
                                 else if (distinctEndpoints.length === 1) {
                                     $log.debug('found other endpoint', otherMembers);
-                                    $scope.remoteEndpoint = otherMembers[0].getEndpoint();
+                                    $scope.remoteConnection = otherMembers[otherMembers.length - 1];
                                 }
                             }
                             bindStuff();
@@ -84,51 +94,90 @@ exports = module.exports = [
                     });
                 },
                 onError: function (evt) {
-                    $loc.debug('failed to join', evt);
+                    $log.debug('failed to join', evt);
                 }
+            });
+        };
+
+        $scope.errorMessage = "";
+        $scope.moment = moment;
+        $scope.showFullChat = true;
+        $scope.activeCall = null;
+
+        $scope.groupId = $location.absUrl().split('/')[4];
+        $scope.group = null;
+
+        $scope.remoteConnection = null;
+
+        $scope.selectedChat = {
+            messages: [],
+            _id: "",
+            display: ""
+        };
+
+
+        if ($rootScope.client.connectionId) {
+            $rootScope.setPresence('call');
+            joinGroup();
+        }
+        else {
+            $rootScope.client.listen('connect', function () {
+                $rootScope.setPresence('call');
+                joinGroup();
             });
         }
 
+        // when a call comes in
+        $rootScope.client.listen('call', function (evt) {
+            // when we are the caller, no need to display the incoming call
+            if (evt.call.caller) {
+                return;
+            }
+
+            $scope.activeCall = evt.call;
+            $scope.activeCall.answer(callOptions);
+            $scope.$apply();
+        });
+
+
         function bindStuff() {
-            $log.debug('bindStuff', $scope.remoteEndpoint);
-            if ($scope.remoteEndpoint) {
-                fetchEndpointAccount($scope.remoteEndpoint.id);
+            $log.debug('bindStuff', $scope.remoteConnection);
+            if ($scope.remoteConnection) {
+                fetchEndpointAccount($scope.remoteConnection.endpointId);
                 fetchChat();
+                // video will be started by the first person there
             }
 
             // listen for somebody joining
             $scope.group.listen('join', function (evt) {
                 $log.debug('person joined', evt.connection);
-                if (!$scope.remoteEndpoint) {
-                    $scope.remoteEndpoint = evt.connection.getEndpoint();
-                    fetchEndpointAccount($scope.remoteEndpoint.id);
+                if (!$scope.remoteConnection) {
+                    $scope.remoteConnection = evt.connection;
+                    fetchEndpointAccount($scope.remoteConnection.endpointId);
                     fetchChat();
+                    startVideo();
                 }
             });
             $scope.group.listen('leave', function (evt) {
                 $log.debug('person left', evt.connection);
 
-                // the person we're chatting with left
-                if ($scope.remoteEndpoint && $scope.remoteEndpoint.id === evt.connection.endpointId) {
-                    $rootScope.notifications.push($scope.remoteEndpoint.id + ' left.');
-                    $scope.remoteEndpoint = null;
-                    $scope.selectedChat = {
-                        messages: [],
-                        _id: "",
-                        display: ""
-                    };
-                    $scope.$apply();
+                // the person we're chatting with is the one who left
+                var remoteEndpointLeft = $scope.remoteConnection && $scope.remoteConnection.endpointId === evt.connection.endpointId;
+                if (remoteEndpointLeft) {
+                    cleanUpCall();
                 }
+
+                // otherwise it was someone else trying to join, so ignore them
             });
 
             // listen for incoming messages
             $rootScope.client.listen('message', function (evt) {
-                if (
-                    !$scope.remoteEndpoint
+                var notMessageFromChatPartner = !$scope.remoteConnection
                     || !evt.message
                     || !evt.message.endpointId
-                    || evt.message.endpointId !== $scope.remoteEndpoint.id
-                ) {
+                    || evt.message.endpointId !== $scope.remoteConnection.endpointId;
+
+                if (notMessageFromChatPartner) {
                     // we do not care about group messages
                     // or messages from other people except
                     $log.debug('ignoring message', evt);
@@ -159,7 +208,7 @@ exports = module.exports = [
         }
 
         function fetchChat() {
-            Message.get('?account=' + $scope.remoteEndpoint.id, function (err, messages) {
+            Message.get('?account=' + $scope.remoteConnection.endpointId, function (err, messages) {
                 if (err) {
                     $rootScope.notifications.push(err);
                     return;
@@ -170,6 +219,10 @@ exports = module.exports = [
                 messages.reverse();
                 $scope.selectedChat.messages = messages;
             });
+        }
+
+        function startVideo() {
+            $scope.activeCall = $scope.remoteConnection.startVideoCall(callOptions);
         }
     }
 ];

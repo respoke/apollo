@@ -1,3 +1,4 @@
+'use strict';
 /* 
  * Turn things into icons.
  * A few emoticons are supported.

@@ -4,16 +4,20 @@
  */
 exports = module.exports = [
     function () {
+        var remoteVideoParent = document.getElementById('respokeRemoteVideo');
+        var localVideoParent = document.getElementById('respokeLocalVideo');
         return {
             setLocalVideo: function (videoElement) {
-                var videoParent = document.getElementById('respokeLocalVideo');
-                videoParent.innerHTML = "";
-                videoParent.appendChild(videoElement);
+                localVideoParent.innerHTML = "";
+                localVideoParent.appendChild(videoElement);
             },
             setRemoteVideo: function (videoElement) {
-                var videoParent = document.getElementById('respokeRemoteVideo');
-                videoParent.innerHTML = "";
-                videoParent.appendChild(videoElement);
+                remoteVideoParent.innerHTML = "";
+                remoteVideoParent.appendChild(videoElement);
+            },
+            cleanup: function () {
+                localVideoParent.innerHTML = "";
+                remoteVideoParent.innerHTML = "";
             }
         };
     }

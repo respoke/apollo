@@ -11,7 +11,7 @@ exports = module.exports = function (file, callback) {
     }
 
     var fileURL = '/files/' + file._id;
-    var bytes = (4 * (file.content.length / 3)) * .6;
+    var bytes = (4 * (file.content.length / 3)) * 0.6;
     var embed = '';
     var displayText = file.contentType;
     var iconSymbol = '';

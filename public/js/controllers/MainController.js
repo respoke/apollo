@@ -56,6 +56,15 @@ exports = module.exports = [
         $scope.messagesDuringBlur = 0;
         $scope.windowInFocus = true;
 
+        var listenOwnPresence = function () {
+            // listen for own presence
+            $rootScope.client.listen('presence', function (evt) {
+                $log.debug('presence for self', evt);
+                $rootScope.recents[$rootScope.account._id].presence = evt.presence;
+                $scope.$apply();
+            });
+        };
+
         $scope.recentQuery = "";
         $scope.filterRecents = function (val) {
             if (!$scope.recentQuery) {
@@ -66,7 +75,7 @@ exports = module.exports = [
                 return true;
             }
             if (val.display && re.test(val.display)) {
-                return true
+                return true;
             }
             return false;
         };
@@ -111,6 +120,18 @@ exports = module.exports = [
                 });
             }
         });
+        
+        if ($rootScope.client.connectionId) {
+            $rootScope.client.setPresence({ presence: 'available' });
+            listenOwnPresence();
+        }
+        else {
+            $rootScope.client.listen('connect', function setOwnPresence() {
+                $rootScope.client.setPresence({ presence: 'available' });
+                listenOwnPresence();
+            });
+        }
+
         function buildAccount(account) {
             $rootScope.recents[account._id] = account;
             $rootScope.recents[account._id].messages = [];
@@ -275,7 +296,7 @@ exports = module.exports = [
 
             // Update favicon while window is out of focus
             if (!$scope.windowInFocus) {
-                $scope.messagesDuringBlur++
+                $scope.messagesDuringBlur++;
                 favicon($scope.messagesDuringBlur);
             }
 
@@ -288,6 +309,11 @@ exports = module.exports = [
         $rootScope.client.listen('call', function (evt) {
             // when we are the caller, no need to display the incoming call
             if (evt.call.caller) {
+                return;
+            }
+            // ignore if already joined the call on another connection
+            if ($rootScope.recents[$rootScope.account._id].presence === 'call') {
+                $log.debug('ignoring call since already on call');
                 return;
             }
             // only allow one call at a time.
@@ -401,7 +427,7 @@ exports = module.exports = [
         };
         $scope.answer = function () {
             if ($scope.activeCall) {
-                $rootScope.setPresence('busy');
+                $rootScope.setPresence('call');
                 
                 // answer video call
                 if ($scope.activeCall.hasVideo) {
@@ -424,17 +450,23 @@ exports = module.exports = [
         };
 
         $scope.videoCall = function (id) {
-            var msg = {
-                content: '!!!VIDEOCALL!!!' + $rootScope.account._id,
-                to: id,
-                offRecord: true
-            };
-            Message.create(msg, function (err, msg) {
+            Group.getPrivate(function (err, group) {
                 if (err) {
-                    $rootScope.notifications,push(err);
+                    $rootScope.notifications.push(err);
                     return;
                 }
-                window.open('/private/' + $rootScope.account._id, '_blank');
+                var msg = {
+                    content: '!!!VIDEOCALL!!!' + group._id,
+                    to: id,
+                    offRecord: true
+                };
+                Message.create(msg, function (err, msg) {
+                    if (err) {
+                        $rootScope.notifications.push(err);
+                        return;
+                    }
+                    window.open('/private/' + group._id, '_blank');
+                });
             });
         };
     }

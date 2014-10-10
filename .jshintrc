@@ -46,7 +46,7 @@
     "iterator"      : false,    // Allow usage of __iterator__ property.
     "lastsemic"     : false,    // Tolerat missing semicolons when the it is omitted for the
                                 // last statement in a one-line block.
-    "laxbreak"      : false,    // Tolerate unsafe line breaks e.g. `return [\n] x` without
+    "laxbreak"      : true,    // Tolerate unsafe line breaks e.g. `return [\n] x` without
                                 // semicolons.
     "laxcomma"      : false,    // Suppress warnings about comma-first coding style.
     "loopfunc"      : false,    // Allow functions to be defined within loops.
@@ -74,7 +74,7 @@
     "couch"         : false,    // Enable globals exposed by CouchDB.
     "devel"         : false,     // Allow development statements e.g. `console.log();`.
     "dojo"          : false,    // Enable globals exposed by Dojo Toolkit.
-    "jquery"        : false,    // Enable globals exposed by jQuery JavaScript library.
+    "jquery"        : true,    // Enable globals exposed by jQuery JavaScript library.
     "mootools"      : false,    // Enable globals exposed by MooTools JavaScript framework.
     "node"          : true,    // Enable globals available when code is running inside of the
                                 // NodeJS runtime environment.
@@ -108,7 +108,9 @@
         "it",
         "describe",
         "xit",
-        "xdescrib"
+        "xdescribe",
+        "MediaStreamTrack",
+        "angular"
     ],
     "indent"        : 4         // Specify indentation spacing
 }

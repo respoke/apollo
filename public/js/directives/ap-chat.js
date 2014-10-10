@@ -27,7 +27,7 @@ exports = module.exports = [
                     }
                     // scroll automatically when close to the bottom of the chat window.
                     if (evt.target.scrollHeight - evt.target.scrollTop < 600
-                        || evt.target.scrollTop / evt.target.scrollHeight > .7
+                        || evt.target.scrollTop / evt.target.scrollHeight > 0.7
                     ) {
                         $rootScope.autoScrollDisabled = false;
                     }

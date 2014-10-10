@@ -1,3 +1,4 @@
+'use strict';
 exports = module.exports = function (app) {
     var success = function (callback) {
         callback = callback || function () { };
@@ -153,6 +154,10 @@ exports = module.exports = function (app) {
                 },
                 getByOwner: function (owner, callback) {
                     $http.get('/api/groups?owner=' + owner)
+                    .success(success(callback)).error(fail(callback));
+                },
+                getPrivate: function (callback) {
+                    $http.get('/api/private')
                     .success(success(callback)).error(fail(callback));
                 },
                 remove: function (id, callback) {

@@ -26,7 +26,7 @@ exports = module.exports = [
         };
         // keep the audio a little low - these sounds are pretty loud.
         for (var a in $rootScope.audio) {
-            $rootScope.audio[a].volume = .3;
+            $rootScope.audio[a].volume = 0.3;
         }
 
         $rootScope.recents = {};
@@ -37,10 +37,6 @@ exports = module.exports = [
         $rootScope.client.listen('connect', function () {
             $log.debug('connected');
             $rootScope.connected = true;
-            $rootScope.client.setPresence({ presence: 'available' });
-            // apply presence directly to the object. it seems not to want to update
-            // with a listener event.
-            $rootScope.recents[$rootScope.account._id].presence = 'available';
             $rootScope.$apply();
 
             $rootScope.client.join({
@@ -91,8 +87,8 @@ exports = module.exports = [
             if (!email) {
                 return;
             }
-            return 'https://secure.gravatar.com/avatar/' 
-                + crypto.createHash('md5').update(email).digest("hex");
+            var gravatarBase = 'https://secure.gravatar.com/avatar/';
+            return gravatarBase + crypto.createHash('md5').update(email).digest("hex");
         };
 
         $scope.respokeConnect = function () {

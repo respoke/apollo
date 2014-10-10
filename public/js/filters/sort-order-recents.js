@@ -60,7 +60,7 @@ exports = module.exports = function () {
                 return -1;
             }
             if (a.presence === 'unavailable' && b.presence !== 'unavailable') {
-                return 1
+                return 1;
             }
             return 0;
         });

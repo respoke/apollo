@@ -3,13 +3,17 @@ var router = express.Router();
 var config = require('../config');
 var middleware = require('../lib/middleware');
 var Moniker = require('moniker');
+var moniker = Moniker.generator([Moniker.verb, Moniker.adjective, Moniker.noun]);
 
 router.get('/', function (req, res) {
     res.render('index', { title: config.name });
 });
 
 router.get('/private', middleware.isAuthorized, function (req, res) {
-    res.redirect('/private/' + Moniker.choose());
+    res.redirect('/private/' + moniker.choose());
+});
+router.get('/api/private', middleware.isAuthorized, function (req, res) {
+    res.send({ _id: moniker.choose() });
 });
 router.get('/private/:tempCallName', middleware.isAuthorized, function (req, res) {
     res.render('call', {

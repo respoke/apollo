@@ -1,11 +1,15 @@
 extends layout
 
 block content
-    h6=title
-    .container(ng-controller="PrivateCallController")
-        .alert.alert-warning(ng-show="errorMessage") {{ errorMessage }}
+    #video-call-container(ng-controller="PrivateCallController")
+        h3#chat-title
+            | {{ selectedChat._id ? selectedChat.display : "Waiting for someone to join..." }}
+        .alert.alert-warning(ng-show="errorMessage" ng-cloak) {{ errorMessage }}
             br
             a(href="/private") Start a new private call
+
+        #respokeLocalVideo
+        #respokeRemoteVideo
 
         include partials/chat
 

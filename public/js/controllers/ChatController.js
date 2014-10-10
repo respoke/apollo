@@ -139,4 +139,4 @@ exports = module.exports = [
         }
 
     }
-]
+];

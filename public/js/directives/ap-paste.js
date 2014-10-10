@@ -4,10 +4,7 @@ exports = module.exports = function () {
         link: function (scope, element, attrs) {
             
             var apPaste = attrs.apPaste ? scope.$eval(attrs.apPaste) : function (data) { };
-
-            element.bind('paste', onPasteEvent);
-
-            function onPasteEvent(event) {
+            var onPasteEvent = function (event) {
                 var clipboardData = event.clipboardData || event.originalEvent.clipboardData;
                 var found = false;
 
@@ -44,9 +41,10 @@ exports = module.exports = function () {
                     reader.readAsDataURL(file);
                     found = true;
                 });
-            }
+            };
+            element.bind('paste', onPasteEvent);
 
         }
 
-    }
+    };
 };

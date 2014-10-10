@@ -187,3 +187,35 @@ input[type="text"].form-control, textarea.form-control {
 #buddies .btn, #newgroup .btn {
     border-radius: 0;
 }
+
+#video-call-container {
+    #chat-title {
+        padding-left: 20px;
+        opacity: .5;
+    }
+    .panel.right.full {
+        right: 0;
+        left: auto;
+        width: 300px;
+    }
+    #video-call-controls {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+    }
+    #respokeLocalVideo video {
+        position: fixed;
+        right: 300px;
+        top: 0;
+        width: 200px;
+        z-index: 100;
+    }
+    #respokeRemoteVideo video {
+        position: fixed;
+        left: 0;
+        right: 300px;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+    }
+}

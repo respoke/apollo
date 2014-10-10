@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express');
 var path = require('path');
 var nodemailer = require('nodemailer');
@@ -130,7 +131,7 @@ app.use(function(err, req, res, next) {
     var prefersJson = req.accepts(['html', 'json']);
 
     if (process.env.NODE_ENV !== 'production') {
-        stack: err.stack
+        errOut.stack = err.stack;
     }
 
     res.status(err.status);

@@ -1,3 +1,4 @@
+'use strict';
 var debug = require('debug')('apollo-db');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
@@ -160,7 +161,7 @@ AccountSchema.method('isEmailInvalid', function (email) {
     return !emailValidation.valid(email);
 });
 AccountSchema.method('passwordReset', function (callback) {
-    this.conf = 'reset-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4()
+    this.conf = 'reset-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4();
     this.save(callback);
 });
 models.Account = mongoose.model('Account', AccountSchema);

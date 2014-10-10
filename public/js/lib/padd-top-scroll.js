@@ -13,7 +13,7 @@ exports = module.exports = function () {
         }
         var totalHeight = 0;
         for (var i=0; i<nRows && i<rows.length; i++) {
-            totalHeight += rows[i].offsetHeight
+            totalHeight += rows[i].offsetHeight;
         }
         chat.scrollTop = totalHeight;
     };
