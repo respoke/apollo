@@ -15,20 +15,9 @@ exports = module.exports = [
             return;
         }
 
-        var cleanUpCall = function (evt) {
-            $log.debug('got hangup');
-            respokeVideo.cleanup();
-            $window.pixies.resume();
-
-            $scope.errorMessage = "The call has ended.";
-            $scope.$apply();
-        };
-
         // prevent global scope from creating a second connection to respoke
         $rootScope.doNotConnectRespoke = true;
 
-        $window.opener.activeCall.listen('hangup', cleanUpCall);
-        $window.pixies.stop();
         $scope.$window = $window;
         $rootScope.client = $window.opener.client;
         $rootScope.recents = $window.opener.recents;
@@ -40,6 +29,16 @@ exports = module.exports = [
         $scope.selectedChat = $window.opener.activeCall.chat;
         $scope.activeCall = $window.opener.activeCall;
 
+        var cleanUpCall = function (evt) {
+            $log.debug('got hangup');
+            respokeVideo.cleanup();
+            $window.pixies.resume();
+
+            $scope.errorMessage = "The call has ended.";
+        };
+        
+        $window.opener.activeCall.listen('hangup', cleanUpCall);
+        $window.pixies.stop();
         respokeVideo.setLocalVideo($window.opener.respokeLocalStream);
         respokeVideo.setRemoteVideo($window.opener.respokeRemoteStream);
 

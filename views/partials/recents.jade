@@ -57,7 +57,8 @@
 
         //- Call controls
         #audio-call-controls.col-xs-8(ng-show="activeCall")
-            p(ng-show="!incomingCall") On a call with
+            p(ng-show="!incomingCall && !callIsRinging") On a call with
+            p(ng-show="callIsRinging") Placing a call to
             h6 {{ recents[activeCall.remoteEndpoint.id].display }} 
             p(ng-show="incomingCall") is calling you
             p

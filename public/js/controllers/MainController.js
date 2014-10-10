@@ -50,6 +50,7 @@ exports = module.exports = [
             }
         };
         $scope.selectedChat = null;
+        $scope.callIsRinging = false;
 
         $scope.activeCall = null;
         $scope.incomingCall = "";
@@ -390,9 +391,11 @@ exports = module.exports = [
                 $rootScope.audio.callIncoming.pause();
                 $rootScope.audio.callIncoming.loop = false;
                 $rootScope.audio.callIncoming.currentTime = 0;
-                $rootScope.setPresence('available');
-                $window.respokeLocalStream.stop();
-                $scope.$apply();
+                $scope.callIsRinging = false;
+                // temp workaround
+                try {
+                    $window.respokeLocalStream.stop();
+                } catch (ignored) { }
             }
         };
 
@@ -426,12 +429,16 @@ exports = module.exports = [
                     $scope.activeCall.removeStream({ id: $window.respokeLocalStream.id });
                 }
                 $scope.$apply();
+            },
+            onHangup: function (evt) {
+                $log.debug('got hangup');
+                $scope.activeCall = null;
+                $scope.callIsRinging = false;
             }
         };
 
         $scope.answer = function () {
             if ($scope.activeCall) {
-                $rootScope.setPresence('call');
                 
                 // answer call
                 $scope.activeCall.answer(videoCallConstraints);
@@ -448,11 +455,15 @@ exports = module.exports = [
             $log.debug('audio call requested with ', id);
             var endpoint = $rootScope.client.getEndpoint({ id: id });
             $scope.activeCall = endpoint.startAudioCall();
+            $scope.callIsRinging = true;
             $log.debug('activeCall', $scope.activeCall);
             $scope.activeCall.listen('hangup', function () {
                 $log.debug('got hangup');
                 $scope.activeCall = null;
-                $scope.$apply();
+            });
+            $scope.activeCall.listen('answer', function () {
+                $log.debug('call answered');
+                $scope.callIsRinging = false;
             });
         };
 
@@ -460,13 +471,17 @@ exports = module.exports = [
             $log.debug('video call requested with ', id);
             var endpoint = $rootScope.client.getEndpoint({ id: id });
             $scope.activeCall = endpoint.startVideoCall(videoCallConstraints);
+            $scope.callIsRinging = true;
             $log.debug('activeCall', $scope.activeCall);
             $scope.activeCall.listen('hangup', function () {
                 $log.debug('got hangup');
                 $scope.activeCall = null;
-                $scope.$apply();
                 // temporary workaround
                 $window.respokeLocalStream.stop();
+            });
+            $scope.activeCall.listen('answer', function () {
+                $log.debug('call answered');
+                $scope.callIsRinging = false;
             });
         };
 
