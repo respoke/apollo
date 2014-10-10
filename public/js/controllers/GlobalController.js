@@ -29,11 +29,11 @@ exports = module.exports = [
             $rootScope.audio[a].volume = 0.3;
         }
 
-        $rootScope.recents = {};
+        $rootScope.recents = $window.recents = {};
         $rootScope.connected = false;
         $rootScope.notifications = [];
         $rootScope.account = {};
-        $rootScope.client = respoke.createClient();
+        $rootScope.client = $window.client = respoke.createClient();
         $rootScope.client.listen('connect', function () {
             $log.debug('connected');
             $rootScope.connected = true;
@@ -92,6 +92,10 @@ exports = module.exports = [
         };
 
         $scope.respokeConnect = function () {
+            if ($rootScope.doNotConnectRespoke) {
+                $log.debug('refusing to connect to respoke due to $rootScope.doNotConnectRespoke');
+                return;
+            }
             Account.getToken(function (err, respokeAuth) {
                 if (err) {
                     $rootScope.notifications.push(err);

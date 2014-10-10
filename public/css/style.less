@@ -20,6 +20,12 @@ html, body {
     padding: 0;
     font-weight: 100;
 }
+.fa.fa-rotate-45 {
+    transform: rotate(45deg);
+}
+.fa.fa-rotate-135 {
+    transform: rotate(135deg);
+}
 input[type="text"].form-control, textarea.form-control {
     border-radius: 0;
 }
@@ -199,10 +205,17 @@ input[type="text"].form-control, textarea.form-control {
         left: auto;
         width: 300px;
     }
+    #chat-table {
+        td {
+            display: block;
+            float: left;
+        }
+    }
     #video-call-controls {
         position: fixed;
         left: 20px;
         bottom: 20px;
+        z-index: 200;
     }
     #respokeLocalVideo {
         position: fixed;

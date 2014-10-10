@@ -2,14 +2,13 @@ extends layout
 
 block content
     #video-call-container(ng-controller="PrivateCallController")
-        h3#chat-title
-            | {{ selectedChat._id ? selectedChat.display : "Waiting for someone to join..." }}
-        .alert.alert-warning(ng-show="errorMessage" ng-cloak) {{ errorMessage }}
-            br
-            a(href="/private") Start a new private call
+        h3#chat-title(ng-show="errorMessage") {{ errorMessage }}
 
         #respokeLocalVideo(ap-draggable)
         #respokeRemoteVideo(ap-draggable)
 
-        include partials/chat
+        div(ng-show="activeCall")
+            include partials/chat
 
+        #video-call-controls(ng-show="activeCall")
+            button.btn.btn-danger(ng-click="hangup()"): i.fa.fa-phone.fa-rotate-135

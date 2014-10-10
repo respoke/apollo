@@ -4,4 +4,5 @@ block content
     .container
         h1= message
         h2= error.status
+        h6: a.btn.btn-primary(href="/")= config.name
         pre #{error.stack}

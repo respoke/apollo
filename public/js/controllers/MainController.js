@@ -234,23 +234,6 @@ exports = module.exports = [
 
             var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
 
-            // video call request
-            var systemIndicator = evt.message.message.substring(0, 15);
-            var systemIndicatorValue = evt.message.message.substring(15);
-            if (systemIndicator === '!!!VIDEOCALL!!!') {
-                $scope.incomingCall = systemIndicatorValue;
-                $scope.activeCall = {
-                    remoteEndpoint: $rootScope.recents[itemId],
-                    hasVideo: true
-                };
-                $scope.activeCall.remoteEndpoint.id = itemId;
-
-                $rootScope.audio.callIncoming.play();
-                $rootScope.audio.callIncoming.loop = true;
-                $scope.$apply();
-                return;
-            }
-
 
             // Normal messages
 
@@ -307,6 +290,7 @@ exports = module.exports = [
         // receive calls
         $rootScope.client.ignore('call');
         $rootScope.client.listen('call', function (evt) {
+
             // when we are the caller, no need to display the incoming call
             if (evt.call.caller) {
                 return;
@@ -328,7 +312,7 @@ exports = module.exports = [
             }
 
             $scope.activeCall = evt.call;
-            $scope.incomingCall = $rootScope.recents[evt.endpoint.id].display;
+            $scope.incomingCall = evt.endpoint.id;
             $rootScope.audio.callIncoming.play();
             $rootScope.audio.callIncoming.loop = true;
             $scope.$apply();
@@ -395,22 +379,6 @@ exports = module.exports = [
             });
         };
 
-
-        $scope.audioCall = function (id) {
-            $log.debug('audio call requested with ', id);
-            var endpoint = $rootScope.client.getEndpoint({ id: id });
-            $scope.activeCall = endpoint.startAudioCall();
-            $log.debug('activeCall', $scope.activeCall);
-            $scope.activeCall.listen('hangup', function () {
-                $scope.activeCall = null;
-
-                // in case the hangup happened before the answer
-                $rootScope.audio.callIncoming.pause();
-                $rootScope.audio.callIncoming.loop = false;
-                $rootScope.audio.callIncoming.currentTime = 0;
-                $scope.$apply();
-            });
-        };
         $scope.hangup = function () {
             if ($scope.activeCall) {
                 if ($scope.activeCall.hangup) {
@@ -423,52 +391,85 @@ exports = module.exports = [
                 $rootScope.audio.callIncoming.loop = false;
                 $rootScope.audio.callIncoming.currentTime = 0;
                 $rootScope.setPresence('available');
+                $window.respokeLocalStream.stop();
+                $scope.$apply();
             }
         };
+
+        var videoCallConstraints = {
+            constraints: {audio: true, video: true},
+            // your video
+            onLocalMedia: function (evt) {
+                // workaround because transporter's evt.stream is not a true 
+                // MediaStream
+                getUserMedia({
+                    video: { 
+                        optional: [{ sourceId: evt.stream.getVideoTracks()[0].id }]
+                    }
+                }, function (stream) {
+                    $window.respokeLocalStream = stream;
+                }, function (err) {
+                    $log.debug(err);
+                });
+            },
+            // their video
+            onConnect: function (evt) {
+                $log.debug('call connected',
+                           evt.target.hasAudio, evt.target.hasVideo, evt);
+
+                if ($scope.activeCall.hasVideo) {
+                    $window.activeCall = $scope.activeCall;
+                    $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
+                    $window.respokeRemoteStream = evt.stream;
+                }
+                else {
+                    $scope.activeCall.removeStream({ id: $window.respokeLocalStream.id });
+                }
+                $scope.$apply();
+            }
+        };
+
         $scope.answer = function () {
             if ($scope.activeCall) {
                 $rootScope.setPresence('call');
                 
-                // answer video call
-                if ($scope.activeCall.hasVideo) {
-                    $scope.activeCall = null;
-                    window.open('/private/' + $scope.incomingCall, '_blank');
-                }
-                // answer audio call
-                else {
-                    $scope.activeCall.answer({
-                        constraints: {
-                            audio: true
-                        }
-                    });
-                }
-                $scope.incomingCall = "";
+                // answer call
+                $scope.activeCall.answer(videoCallConstraints);
                 $rootScope.audio.callIncoming.pause();
                 $rootScope.audio.callIncoming.loop = false;
                 $rootScope.audio.callIncoming.currentTime = 0;
+                $timeout(function () {
+                    $scope.incomingCall = "";
+                });
             }
         };
 
-        $scope.videoCall = function (id) {
-            Group.getPrivate(function (err, group) {
-                if (err) {
-                    $rootScope.notifications.push(err);
-                    return;
-                }
-                var msg = {
-                    content: '!!!VIDEOCALL!!!' + group._id,
-                    to: id,
-                    offRecord: true
-                };
-                Message.create(msg, function (err, msg) {
-                    if (err) {
-                        $rootScope.notifications.push(err);
-                        return;
-                    }
-                    window.open('/private/' + group._id, '_blank');
-                });
+        $scope.audioCall = function (id) {
+            $log.debug('audio call requested with ', id);
+            var endpoint = $rootScope.client.getEndpoint({ id: id });
+            $scope.activeCall = endpoint.startAudioCall();
+            $log.debug('activeCall', $scope.activeCall);
+            $scope.activeCall.listen('hangup', function () {
+                $log.debug('got hangup');
+                $scope.activeCall = null;
+                $scope.$apply();
             });
         };
+
+        $scope.videoCall = function (id) {
+            $log.debug('video call requested with ', id);
+            var endpoint = $rootScope.client.getEndpoint({ id: id });
+            $scope.activeCall = endpoint.startVideoCall(videoCallConstraints);
+            $log.debug('activeCall', $scope.activeCall);
+            $scope.activeCall.listen('hangup', function () {
+                $log.debug('got hangup');
+                $scope.activeCall = null;
+                $scope.$apply();
+                // temporary workaround
+                $window.respokeLocalStream.stop();
+            });
+        };
+
     }
 
 ];

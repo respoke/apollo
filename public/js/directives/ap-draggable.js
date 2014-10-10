@@ -11,10 +11,8 @@ exports = module.exports = ['$window', function ($window) {
 
                 var moveX = clientX - evt.clientX;
                 var moveY = clientY - evt.clientY;
-                console.log('orig', origX, moveX);
                 element[0].style.left = (origX -= moveX) + 'px';
                 element[0].style.top = (origY -= moveY) + 'px';
-                console.log(element[0].style);
 
                 clientX = evt.clientX;
                 clientY = evt.clientY;

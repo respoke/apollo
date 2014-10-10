@@ -4,21 +4,29 @@
  */
 exports = module.exports = [
     function () {
-        var localVideoParent = document.getElementById('respokeLocalVideo');
-        var remoteVideoParent = document.getElementById('respokeRemoteVideo');
+        
         return {
-            setLocalVideo: function (videoElement) {
+            setLocalVideo: function (stream) {
                 // since it reuses the element, you must call play 
                 // in case the call stops and then restarts.
-                videoElement.play();
+                var localVideoParent = document.getElementById('respokeLocalVideo');
                 localVideoParent.innerHTML = "";
+                var videoElement = document.createElement('video');
+                videoElement.src = window.URL.createObjectURL(stream);
+                videoElement.play();
                 localVideoParent.appendChild(videoElement);
             },
-            setRemoteVideo: function (videoElement) {
+            setRemoteVideo: function (stream) {
+                var remoteVideoParent = document.getElementById('respokeRemoteVideo');
                 remoteVideoParent.innerHTML = "";
+                var videoElement = document.createElement('video');
+                videoElement.src = window.URL.createObjectURL(stream);
+                videoElement.play();
                 remoteVideoParent.appendChild(videoElement);
             },
             cleanup: function () {
+                var localVideoParent = document.getElementById('respokeLocalVideo');
+                var remoteVideoParent = document.getElementById('respokeRemoteVideo');
                 localVideoParent.innerHTML = "";
                 remoteVideoParent.innerHTML = "";
             }

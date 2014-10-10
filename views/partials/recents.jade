@@ -45,9 +45,6 @@
                 ) away
                 
             
-            //- Launch a new call
-            a.btn.btn-primary.btn-xs(href="/private" target="_blank"): i.fa.fa-video-camera
-            | &nbsp;
             //- Sign out
             button.btn.btn-default.btn-xs(ng-click="logout()"): i.fa.fa-sign-out
 
@@ -60,22 +57,31 @@
 
         //- Call controls
         #audio-call-controls.col-xs-8(ng-show="activeCall")
+            p(ng-show="!incomingCall") On a call with
             h6 {{ recents[activeCall.remoteEndpoint.id].display }} 
             p(ng-show="incomingCall") is calling you
-            //- hangup
             p
-                button.btn.btn-danger.btn-xs(ng-click="hangup()") Hangup
                 //- answer
                 button.btn.btn-success.btn-xs(
                     ng-click="answer()"
                     ng-show="incomingCall"
                 ) Answer
+
+                //- Join video call
+                a.btn.btn-primary.btn-xs(
+                    href="/private"
+                    ng-show="activeCall.hasVideo"
+                    target="_blank") Join video call
+
+                //- hang up
+                button.btn.btn-danger.btn-xs(ng-click="hangup()") Hang up
+                
         .col-xs-3(ng-show="incomingCall")
             br
-            br
-            br
-            i.fa.fa-3x.fa-phone.animated.bounce.infinite(ng-show="!activeCall.hasVideo")
-            i.fa.fa-3x.fa-video-camera.animated.bounce.infinite(ng-show="activeCall.hasVideo")
+            img.img-responsive.img-circle.animated.bounce.infinite(
+                ng-src="{{ gravatar( recents[activeCall.remoteEndpoint.id].email ) }}"
+            )
+
     br
     //- Adding a group
     #newgroup
