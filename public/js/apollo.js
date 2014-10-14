@@ -44,6 +44,7 @@ apollo.directive('apPaste', require('./directives/ap-paste'));
 apollo.directive('apDrop', require('./directives/ap-drop'));
 apollo.directive('apToggleSetting', require('./directives/ap-toggle-setting'));
 apollo.directive('apMessage', require('./directives/ap-message.js'));
+apollo.directive('apPresence', require('./directives/ap-presence.js'));
 
 // Routes for main /#/
 apollo.config(['$routeProvider', function ($routeProvider) {
