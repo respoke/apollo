@@ -58,7 +58,7 @@ exports = module.exports = [
                 
                 next(null, scope.content);
             },
-            template: '<div ng-bind-html="trustAsHtml(content)"></div>'
+            template: '<div class="message" ng-bind-html="trustAsHtml(content)"></div>'
         };
     }
 ];
