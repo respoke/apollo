@@ -22,28 +22,31 @@
 
             //- Presence
 
-            button#btn-presence.btn.btn-default.btn-xs(
-                data-toggle="dropdown"
-                ng-class="{ 'btn-warning': recents[account._id].presence === 'busy', 'btn-danger': recents[account._id].presence === 'away' }"
-            )
-                | {{ recents[account._id].presence }}&nbsp;&nbsp;
+            button#btn-presence.btn.btn-default.btn-xs(data-toggle="dropdown")
+                ap-presence(presence="{{ recents[account._id].presence }}")
                 i.fa.fa-caret-down
             ul.dropdown-menu
                 li: a(
                     tabindex="-1"
                     ng-click="setPresence('available')"
                     href="javascript:void(0)"
-                ) available
+                )
+                    ap-presence(presence="{{'available'}}")
+                    | available
                 li: a(
                     tabindex="-1"
                     ng-click="setPresence('busy')"
                     href="javascript:void(0)"
-                ) busy
+                )
+                    ap-presence(presence="{{'busy'}}")
+                    | busy
                 li: a(
                     tabindex="-1"
                     ng-click="setPresence('away')"
                     href="javascript:void(0)"
-                ) away
+                )
+                    ap-presence(presence="{{'away'}}")
+                    | away
                 
             
             //- Sign out
