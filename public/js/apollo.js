@@ -32,6 +32,7 @@ apollo.factory('renderFile', function () {
 apollo.factory('scrollChatToBottom', require('./lib/scroll-chat-to-bottom'));
 apollo.factory('paddTopScroll', require('./lib/padd-top-scroll'));
 apollo.factory('respokeVideo', require('./lib/respoke-video'));
+apollo.factory('multiFileProcessor', require('./lib/multi-file-processor'));
 
 // Filters
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));
@@ -42,6 +43,7 @@ apollo.directive('apChat', require('./directives/ap-chat'));
 apollo.directive('apEnter', require('./directives/ap-enter'));
 apollo.directive('apPaste', require('./directives/ap-paste'));
 apollo.directive('apDrop', require('./directives/ap-drop'));
+apollo.directive('apUpload', require('./directives/ap-upload'));
 apollo.directive('apToggleSetting', require('./directives/ap-toggle-setting'));
 apollo.directive('apMessage', require('./directives/ap-message.js'));
 apollo.directive('apPresence', require('./directives/ap-presence.js'));

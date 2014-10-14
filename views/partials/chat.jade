@@ -30,16 +30,18 @@
             include settings.jade
 
     .textarea-container(ng-show="selectedChat && selectedChat._id")
+        button.btn.btn-default(
+            ap-upload="onDropUpload"
+        ): i.fa.fa-long-arrow-up
         textarea#textInput(
             ng-model="textInput"
             placeholder="Type text, markdown, paste images, or drag files"
             ap-enter="sendMessage(textInput); textInput = '';"
-            ng-disabled="pendingUploads"
             ap-paste="onPasteUpload"
             ap-drop="onDropUpload"
         )
 
-    .notify.middle.left(ng-show="!pendingUploads")
+    .notify.middle.left(ng-show="pendingUploads")
         i.fa.fa-long-arrow-up
         | &nbsp;&nbsp;
         | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...
