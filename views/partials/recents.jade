@@ -135,7 +135,7 @@
                         ): i.fa.fa-video-camera
 
                 
-                td.col-xs-3.right(ng-show="!item.display || selectedChat._id !== item._id")
+                td.col-xs-2.right(ng-show="!item.display || (!activeCall && item._id !== selectedChat._id)")
                     small.help-block
-                        ap-date(date="{{ item.messages[item.messages.length - 1].created }}")
+                        ap-date(date="{{ item.messages[item.messages.length - 1].created }}" watch="true")
                     small.help-block.text-primary(ng-show="item.unread") {{ item.unread }} new
