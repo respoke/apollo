@@ -117,7 +117,7 @@
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
             td.col-xs-2.center
-                i.fa.fa-group.fa-3x(ng-if="!item.email")
+                i.fa.fa-group.fa-3x.yellow(ng-if="!item.email")
                 img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
 
             td.col-xs-8: h6
