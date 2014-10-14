@@ -1,10 +1,14 @@
 .panel.right(ng-class="{ 'full': showFullChat }")
+    
     ap-chat#chat(
         ap-drop="onDropUpload"
         ap-onscrolltop="loadBackMessages"
         ng-class="{ 'fadeOutRightBig': justLoggedOut }"
     )
+        
         table#chat-table.table(ng-show="!showSettings")
+
+            //- Messages
             tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 //- avatar for remote party
                 td(width="60px")
@@ -21,16 +25,21 @@
                 td.align-right(width="90px")
                     small: small.help-block {{ moment(message.created).fromNow() }}
 
+        //- Settings panel
         #settings.animated.fadeIn(ng-show="showSettings")
             include settings.jade
 
     .textarea-container(ng-show="selectedChat && selectedChat._id")
         textarea#textInput(
             ng-model="textInput"
-            placeholder="{{ pendingUploads ? 'Uploading ' + pendingUploads + ' files...' : 'Type text, markdown, paste images, or drag files' }}"
+            placeholder="Type text, markdown, paste images, or drag files"
             ap-enter="sendMessage(textInput); textInput = '';"
             ng-disabled="pendingUploads"
             ap-paste="onPasteUpload"
             ap-drop="onDropUpload"
         )
 
+    .notify.middle.left(ng-show="!pendingUploads")
+        i.fa.fa-long-arrow-up
+        | &nbsp;&nbsp;
+        | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...

@@ -12,6 +12,9 @@
 .infinite {
     animation-iteration-count: infinite;
 }
+.middle {
+    vertical-align: middle;
+}
 
 html, body {
     height: 100%;
@@ -298,4 +301,11 @@ input[type="text"].form-control, textarea.form-control {
 #selfie {
     margin-top: 6px;
     margin-left: 6px;
+}
+.notify {
+    position: relative;
+    padding: 8px;
+    color: @text;
+    .processingGradient();
+    font-size: 18px;
 }
