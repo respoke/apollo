@@ -10,11 +10,11 @@
  */
 exports = module.exports = ['$rootScope', function ($rootScope) {
     var chat;
-    var scrollChatToBottom = function () {
+    var scrollChatToBottom = function (force) {
         if (!chat) {
             chat = document.getElementById('chat');
         }
-        if (!$rootScope.autoScrollDisabled) {
+        if (force || !$rootScope.autoScrollDisabled) {
             chat.scrollTop = chat.scrollHeight;
         }
     };

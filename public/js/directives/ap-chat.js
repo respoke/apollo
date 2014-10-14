@@ -20,10 +20,6 @@ exports = module.exports = [
                 element.on('scroll', function (evt) {
                     if (evt.target.scrollTop === 0) {
                         apOnscrolltop();
-                        // $rootScope.autoScrollDisabled = true;
-                        // $timeout(function () {
-                        //     $rootScope.autoScrollDisabled = false;
-                        // }, 1000);
                     }
                     // scroll automatically when close to the bottom of the chat window.
                     if (evt.target.scrollHeight - evt.target.scrollTop < 600

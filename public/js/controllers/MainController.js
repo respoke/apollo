@@ -367,7 +367,7 @@ exports = module.exports = [
                     // the array gets reversed.
                     messages.reverse();
                     $scope.selectedChat.messages = messages;
-                    scrollChatToBottom();
+                    scrollChatToBottom(true);
                     focusInput();
                 });
             }
@@ -375,9 +375,10 @@ exports = module.exports = [
                 var overLimit = $scope.selectedChat.messages.length - 100;
                 $scope.selectedChat.messages.splice(0, overLimit);
             }
+            // bummer, but we just have to do this
             $timeout(function () {
-                scrollChatToBottom();
-            });
+                scrollChatToBottom(true);
+            }, 600);
         };
 
         $scope.hangup = function () {

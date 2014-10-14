@@ -16,7 +16,7 @@ config.systemEndpoint = 'apollo-system-endpoint';
 // Where the application lives, with no trailing slash
 config.baseURL = 'http://localhost:' + config.port;
 
-config.respokeJS = 'https://cdn.respoke.io/respoke-v1.8.0.min.js';
+config.respokeJS = 'https://cdn.respoke.io/respoke.min.js';
 
 // main DB
 config.mongoURI = 'mongodb://localhost/apollo';

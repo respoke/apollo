@@ -12,10 +12,9 @@ exports = module.exports = [
     'Message',
     'File',
     'paddTopScroll',
-    'moment',
     'renderFile',
 
-    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, moment, renderFile) {
+    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, renderFile) {
         $scope.pendingUploads = 0;
 
         $scope.sendMessage = function (txt, fileId) {

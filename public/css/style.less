@@ -177,7 +177,7 @@ input[type="text"].form-control, textarea.form-control {
 }
 
 .selectedRecent {
-    background: black;
+    background: @panelGradientStart;
 }
 
 .clickable {
@@ -309,6 +309,16 @@ input[type="text"].form-control, textarea.form-control {
 #selfie {
     margin-top: 6px;
     margin-left: 6px;
+    border: 2px solid transparent;
+    &.available {
+        border: 3px solid @success;
+    }
+    &.away {
+        border: 3px solid @danger;
+    }
+    &.busy {
+        border: 3px solid @warning;
+    }
 }
 .notify {
     position: relative;
@@ -316,4 +326,16 @@ input[type="text"].form-control, textarea.form-control {
     color: @text;
     .processingGradient();
     font-size: 18px;
+}
+#me-section {
+    h3 {
+        margin-top: 8px;
+        padding-bottom: 0px;
+        margin-bottom: 1px;
+        padding-left: 8px;
+    }
+
+}
+#avatar-section {
+    min-height: 73px;
 }

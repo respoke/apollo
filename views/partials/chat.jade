@@ -22,13 +22,13 @@
                     h6 {{ message.from.display }}
                     ap-message(ap-content="message.content" ap-file="message.file")
                 td.align-right(width="90px")
-                    small: small.help-block {{ moment(message.created).fromNow() }}
+                    small: small.help-block: ap-date(date="{{message.created}}")
 
         //- Settings panel
         #settings.animated.fadeIn(ng-show="showSettings")
             include settings.jade
 
-    .textarea-container(ng-show="selectedChat && selectedChat._id")
+    .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings")
         button.btn.btn-default(
             ap-upload="onDropUpload"
         ): i.fa.fa-long-arrow-up

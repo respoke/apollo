@@ -1,5 +1,30 @@
 div(ng-controller="SettingsController")
-    h3= config.name + " Settings"
+    p
+        i.fa.fa-remove.fa-3x.clickable(ng-click="toggleSettings()")
+
+    //- Sign out
+    button.btn.btn-sm.btn-danger.pull-right.clickable(
+        ng-click="logout()"
+    ) Sign out
+
+    br
+    br
+    br
+
+    table.table
+        tr
+            td.col-md-7: label Display name
+            td.col-md-5.clickable(
+                ng-click="newDisplayName = account.display; showEditDisplay = true;"
+            )
+                span(ng-show="!showEditDisplay") {{ account.display }}&nbsp;&nbsp;
+                    i.fa.fa-edit
+                input.form-control.input-sm(type="text"
+                    ng-model="newDisplayName"
+                    ng-show="showEditDisplay"
+                    ap-enter="setDisplayName(newDisplayName); showEditDisplay = false;"
+                )
+
     br
     table.table
         tr

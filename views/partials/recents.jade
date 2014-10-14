@@ -1,144 +1,141 @@
-.panel.left.animated.fadeInRightBig(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
-    
-    //- User account and settings
-    .row
-        .col-xs-3(ng-show="!activeCall")
-            img#selfie.img-responsive.img-circle(ng-src="{{ gravatar(account.email) }}")
-        .col-xs-9(ng-show="!activeCall")
-            //- Display name
-            h5(
-                ng-mouseover="showEditDisplayIcon = true"
-                ng-mouseout="showEditDisplayIcon = false"
-                ng-click="newDisplayName = account.display; showEditDisplay = true;"
-                ng-hide="showEditDisplay"
+.panel.left.animated.fadeInRightBig(
+    ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }"
+)
+    .animated.fadeInDown(ng-show="!connected")
+        h3 Connecting to #{config.name}...
+    .animated.fadeInUp(ng-show="connected")
+        //- User account and settings
+        .row
+            #avatar-section.col-xs-3(
+                ng-show="!activeCall"
             )
-                | {{ account.display }}&nbsp;
-                i.fa.fa-pencil.fa-sm(ng-show="showEditDisplayIcon")
-            input.form-control(type="text"
-                ng-model="newDisplayName"
-                ng-show="showEditDisplay"
-                ap-enter="setDisplayName(newDisplayName); showEditDisplay = false;"
+                //- Presence
+                img#selfie.img-responsive.img-circle.clickable(
+                    ng-src="{{ gravatar(account.email) }}"
+                    data-toggle="dropdown"
+                    ng-show="recents[account._id].presence"
+                    class="{{ 'animated pulse ' + recents[account._id].presence }}"
+                )
+                ul.dropdown-menu.animated.fadeInLeft
+                    li: a(
+                        tabindex="-1"
+                        ng-click="setPresence('available')"
+                        href="javascript:void(0)"
+                    )
+                        ap-presence(presence="{{'available'}}")
+                        | available
+                    li: a(
+                        tabindex="-1"
+                        ng-click="setPresence('busy')"
+                        href="javascript:void(0)"
+                    )
+                        ap-presence(presence="{{'busy'}}")
+                        | busy
+                    li: a(
+                        tabindex="-1"
+                        ng-click="setPresence('away')"
+                        href="javascript:void(0)"
+                    )
+                        ap-presence(presence="{{'away'}}")
+                        | away
+
+
+
+            #me-section.col-xs-9.clickable(
+                ng-show="!activeCall"
+                ng-mouseover="showSettingsDisplayIcon = true"
+                ng-mouseout="showSettingsDisplayIcon = false"
+                ng-click="toggleSettings()"
             )
-
-            //- Presence
-
-            button#btn-presence.btn.btn-default.btn-xs(data-toggle="dropdown")
-                ap-presence(presence="{{ recents[account._id].presence }}")
-                i.fa.fa-caret-down
-            ul.dropdown-menu
-                li: a(
-                    tabindex="-1"
-                    ng-click="setPresence('available')"
-                    href="javascript:void(0)"
-                )
-                    ap-presence(presence="{{'available'}}")
-                    | available
-                li: a(
-                    tabindex="-1"
-                    ng-click="setPresence('busy')"
-                    href="javascript:void(0)"
-                )
-                    ap-presence(presence="{{'busy'}}")
-                    | busy
-                li: a(
-                    tabindex="-1"
-                    ng-click="setPresence('away')"
-                    href="javascript:void(0)"
-                )
-                    ap-presence(presence="{{'away'}}")
-                    | away
+                //- Display name
                 
-            
-            //- Sign out
-            button.btn.btn-default.btn-xs(ng-click="logout()"): i.fa.fa-sign-out
+                h3 {{ account.display.split(' ')[0] }}&nbsp;&nbsp;
+                    i.fa.fa-cog.fa-sm(ng-show="showSettingsDisplayIcon && !showSettings")
+                h6 {{ account.display.indexOf(' ') !== -1 ? account.display.substring(account.display.indexOf(' ') + 1) : '' }}
+                    
 
-            //- Settings
-            button#btn-settings.btn.btn-default.btn-xs(
-                ng-click="toggleSettings();"
-                ng-class="{ 'settings-visible': showSettings }"
-            )
-                i.fa.fa-cog
+            //- Call controls
+            #audio-call-controls.col-xs-8(ng-show="activeCall")
+                p(ng-show="!incomingCall && !callIsRinging") On a call with
+                p(ng-show="callIsRinging") Placing a call to
+                h6 {{ recents[activeCall.remoteEndpoint.id].display }} 
+                p(ng-show="incomingCall") is calling you
+                p
+                    //- answer
+                    button.btn.btn-success.btn-xs(
+                        ng-click="answer()"
+                        ng-show="incomingCall"
+                    ) Answer
 
-        //- Call controls
-        #audio-call-controls.col-xs-8(ng-show="activeCall")
-            p(ng-show="!incomingCall && !callIsRinging") On a call with
-            p(ng-show="callIsRinging") Placing a call to
-            h6 {{ recents[activeCall.remoteEndpoint.id].display }} 
-            p(ng-show="incomingCall") is calling you
-            p
-                //- answer
-                button.btn.btn-success.btn-xs(
-                    ng-click="answer()"
-                    ng-show="incomingCall"
-                ) Answer
+                    //- Join video call
+                    a.btn.btn-primary.btn-xs(
+                        href="/private"
+                        ng-show="activeCall.hasVideo"
+                        target="_blank") Join video call
 
-                //- Join video call
-                a.btn.btn-primary.btn-xs(
-                    href="/private"
-                    ng-show="activeCall.hasVideo"
-                    target="_blank") Join video call
+                    //- hang up
+                    button.btn.btn-danger.btn-xs(ng-click="hangup()") Hang up
+                    
+            .col-xs-3(ng-show="incomingCall")
+                br
+                img.img-responsive.img-circle.animated.bounce.infinite(
+                    ng-src="{{ gravatar( recents[activeCall.remoteEndpoint.id].email ) }}"
+                )
 
-                //- hang up
-                button.btn.btn-danger.btn-xs(ng-click="hangup()") Hang up
-                
-        .col-xs-3(ng-show="incomingCall")
-            br
-            img.img-responsive.img-circle.animated.bounce.infinite(
-                ng-src="{{ gravatar( recents[activeCall.remoteEndpoint.id].email ) }}"
-            )
+        br
 
-    br
-
-    input#recents-query.form-control(
-        type="text" 
-        placeholder="Search for friends and conversations"
-        ng-model="recentQuery"
-    )
-
-    //- Adding a group
-    #newgroup
-        button.btn.btn-primary.btn-block.btn-sm(
-            ng-show="!showCreateGroup"
-            ng-click="showCreateGroup = true"
-        ) Create a new group +
-
-        .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
-            input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
-            button.btn.btn-primary.btn-block.btn-sm(
-                ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
-            ) Create
-            button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
-                | Cancel
-
-
-    //- Display group and buddy list
-    #buddies.scrollable: table.table
-        tr.clickable(
-            ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
-            ng-if="item && item._id !== account._id"
-            ng-class="{ 'selectedRecent': selectedChat._id === item._id }"
-            ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
+        input#recents-query.form-control(
+            type="text" 
+            placeholder="Search for friends and conversations"
+            ng-model="recentQuery"
         )
-            td.col-xs-2.center
-                i.fa.fa-group.fa-3x.yellow(ng-if="!item.email")
-                img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
 
-            td.col-xs-8: h6
-                ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
-                | &nbsp;&nbsp;{{ item.display || item._id }}
+        //- Adding a group
+        #newgroup
+            button.btn.btn-primary.btn-block.btn-sm(
+                ng-show="!showCreateGroup"
+                ng-click="showCreateGroup = true"
+            ) Create a new group +
 
-            td.col-xs-2.call-buttons(
-                ng-show="item.display && selectedChat._id === item._id && !activeCall && item.display && item.presence !== 'unavailable'"
+            .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
+                input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+                button.btn.btn-primary.btn-block.btn-sm(
+                    ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
+                ) Create
+                button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+                    | Cancel
+
+
+        //- Display group and buddy list
+        #buddies.scrollable: table.table
+            tr.clickable(
+                ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
+                ng-if="item && item._id !== account._id"
+                ng-class="{ 'selectedRecent': selectedChat._id === item._id }"
+                ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
             )
-                    //- audio call
-                    button.btn.btn-primary.btn-xs.btn-block(
-                        ng-click="audioCall(item._id)"
-                    ): i.fa.fa-phone
-                    //- video call
-                    button.btn.btn-primary.btn-xs.btn-block(
-                        ng-click="videoCall(item._id)"
-                    ): i.fa.fa-video-camera
+                td.col-xs-2.center
+                    i.fa.fa-group.fa-3x.yellow(ng-if="!item.email")
+                    img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
 
-            
-            td.col-xs-3.right(ng-show="!item.display || selectedChat._id !== item._id")
-                small.help-block.text-primary(ng-show="item.unread") {{ item.unread }} new
+                td.col-xs-8: h6
+                    ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
+                    | &nbsp;&nbsp;{{ item.display || item._id }}
+
+                td.col-xs-2.call-buttons(
+                    ng-show="item.display && selectedChat._id === item._id && !activeCall && item.display && item.presence !== 'unavailable'"
+                )
+                        //- audio call
+                        button.btn.btn-primary.btn-xs.btn-block(
+                            ng-click="audioCall(item._id)"
+                        ): i.fa.fa-phone
+                        //- video call
+                        button.btn.btn-primary.btn-xs.btn-block(
+                            ng-click="videoCall(item._id)"
+                        ): i.fa.fa-video-camera
+
+                
+                td.col-xs-3.right(ng-show="!item.display || selectedChat._id !== item._id")
+                    small.help-block
+                        ap-date(date="{{ item.messages[item.messages.length - 1].created }}")
+                    small.help-block.text-primary(ng-show="item.unread") {{ item.unread }} new

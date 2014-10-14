@@ -6,11 +6,12 @@ exports = module.exports = [
     '$window',
     '$rootScope',
     '$scope',
+    '$timeout',
 
     'Account',
     'respoke',
 
-    function ($log, $location, $window, $rootScope, $scope, Account, respoke) {
+    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, respoke) {
         respoke.log.setLevel('debug');
         $rootScope.justLoggedIn = false;
         $rootScope.justLoggedOut = false;
@@ -131,7 +132,10 @@ exports = module.exports = [
 
         $rootScope.setPresence = function (strPresence) {
             $rootScope.client.setPresence({ presence: strPresence });
-            $rootScope.recents[$rootScope.account._id].presence = strPresence;
+            $rootScope.recents[$rootScope.account._id].presence = '';
+            $timeout(function () {
+                $rootScope.recents[$rootScope.account._id].presence = strPresence;
+            });
         };
 
         $scope.setDisplayName = function (name) {
