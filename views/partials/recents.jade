@@ -110,7 +110,7 @@
     #buddies.scrollable: table.table
         tr.clickable(
             ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
-            ng-if="item._id !== account._id"
+            ng-if="item && item._id !== account._id"
             ng-class="{ 'offline': item.presence === 'unavailable', 'selectedRecent': selectedChat._id === item._id }"
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
