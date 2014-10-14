@@ -1,9 +1,8 @@
-.panel.right(ng-class="{ 'full': showFullChat }")
+.panel.right.animated(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
     
     ap-chat#chat(
         ap-drop="onDropUpload"
         ap-onscrolltop="loadBackMessages"
-        ng-class="{ 'fadeOutRightBig': justLoggedOut }"
     )
         
         table#chat-table.table(ng-show="!showSettings")
