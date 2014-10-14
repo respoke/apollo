@@ -2,7 +2,8 @@
     
     //- User account and settings
     .row
-        .col-xs-3(ng-show="!activeCall"): img.img-responsive(ng-src="{{ gravatar(account.email) }}")
+        .col-xs-3(ng-show="!activeCall")
+            img#selfie.img-responsive.img-circle(ng-src="{{ gravatar(account.email) }}")
         .col-xs-9(ng-show="!activeCall")
             //- Display name
             h5(
@@ -84,6 +85,13 @@
             )
 
     br
+
+    input#recents-query.form-control(
+        type="text" 
+        placeholder="Search for friends and conversations"
+        ng-model="recentQuery"
+    )
+
     //- Adding a group
     #newgroup
         button.btn.btn-primary.btn-block.btn-sm(
@@ -99,12 +107,6 @@
             button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
                 | Cancel
 
-
-    input.form-control(
-        type="text" 
-        placeholder="Search for friends and conversations"
-        ng-model="recentQuery"
-    )
 
     //- Display group and buddy list
     #buddies.scrollable: table.table
@@ -135,5 +137,5 @@
                     ): i.fa.fa-video-camera
 
             
-            td.col-xs-3(ng-show="!item.display || selectedChat._id !== item._id")
+            td.col-xs-3.right(ng-show="!item.display || selectedChat._id !== item._id")
                 small.help-block.text-primary(ng-show="item.unread") {{ item.unread }} new

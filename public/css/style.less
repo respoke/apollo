@@ -84,6 +84,7 @@ input[type="text"].form-control, textarea.form-control {
 
     &.left {
         left: 0;
+        background-color: rgba(0,0,0,.7);
         width: 200px;
         &.full {
             width: 360px;
@@ -135,7 +136,7 @@ input[type="text"].form-control, textarea.form-control {
 }
 
 .selectedRecent {
-    background: @medLterBase;
+    background: black;
 }
 
 .clickable {
@@ -259,4 +260,15 @@ input[type="text"].form-control, textarea.form-control {
         border: none;
         border-bottom: 1px solid @medLterBase;
     }
+}
+#recents-query {
+    background: transparent;
+    &:focus {
+        background: white;
+    }
+    transition: background .3s ease;
+}
+#selfie {
+    margin-top: 6px;
+    margin-left: 6px;
 }
