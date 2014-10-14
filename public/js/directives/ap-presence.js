@@ -1,7 +1,6 @@
 'use strict';
 /**
- * The chat window.
- * The parent scope **must** implement the object `selectedChat`.
+ * Presence indication by circle color.
  */
 exports = module.exports = [
     '$rootScope',

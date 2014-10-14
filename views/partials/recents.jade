@@ -117,12 +117,14 @@
             td.col-xs-2.center
                 i.fa.fa-group.fa-3x(ng-if="!item.email")
                 img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
-            td.col-xs-7
-                h6
-                    ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
-                    | &nbsp;&nbsp;{{ item.display || item._id }}
-            td.col-xs-3(ng-show="item.display && selectedChat._id === item._id")
-                div(ng-show="!activeCall && item.display && item.presence !== 'unavailable'")               
+
+            td.col-xs-8: h6
+                ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
+                | &nbsp;&nbsp;{{ item.display || item._id }}
+
+            td.col-xs-2.call-buttons(
+                ng-show="item.display && selectedChat._id === item._id && !activeCall && item.display && item.presence !== 'unavailable'"
+            )
                     //- audio call
                     button.btn.btn-primary.btn-xs.btn-block(
                         ng-click="audioCall(item._id)"
@@ -134,7 +136,4 @@
 
             
             td.col-xs-3(ng-show="!item.display || selectedChat._id !== item._id")
-                small
-                    small.help-block 
-                        | {{ item.messages.length ? moment(item.messages[ item.messages.length -1 ].created).fromNow() : "" }}
-                    small.help-block.text-primary(ng-show="item.unread") {{ item.unread }} new
+                small.help-block.text-primary(ng-show="item.unread") {{ item.unread }} new
