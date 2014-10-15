@@ -11,4 +11,20 @@ block content
             include partials/chat
 
         #video-call-controls(ng-show="activeCall")
-            button.btn.btn-danger(ng-click="hangup()"): i.fa.fa-phone.fa-rotate-135
+            button.btn.btn-sm.btn-default(ng-click="hangup()")
+                i.fa.fa-phone.fa-rotate-135.fa-2x
+            | &nbsp;
+            button.btn.btn-sm(
+                ng-click="activeCall.toggleAudio()"
+                ng-class="{ 'btn-primary': !audioIsMuted, 'btn-default': audioIsMuted }"
+            )
+                i.fa.fa-microphone.fa-2x(ng-show="!audioIsMuted")
+                i.fa.fa-microphone-slash.fa-2x(ng-show="audioIsMuted")
+            | &nbsp;
+            button.btn.btn-sm(
+                ng-click="activeCall.toggleVideo()"
+                ng-class="{ 'btn-primary': !videoIsMuted, 'btn-default': videoIsMuted }"
+            )
+                i.fa.fa-video-camera.fa-2x(ng-show="!videoIsMuted")
+                i.fa.fa-ban.fa-2x(ng-show="videoIsMuted")
+

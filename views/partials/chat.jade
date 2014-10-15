@@ -1,4 +1,7 @@
-.panel.right.animated(ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }")
+.panel.right.animated(
+    ng-show="client.isConnected()"
+    ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }"
+)
     
     ap-chat#chat(
         ap-drop="onDropUpload"
@@ -31,7 +34,7 @@
     .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings")
         button.btn.btn-default(
             ap-upload="onDropUpload"
-        ): i.fa.fa-long-arrow-up
+        ): i.fa.fa-upload
         textarea#textInput(
             ng-model="textInput"
             placeholder="Type text, markdown, paste images, or drag files"
@@ -40,7 +43,46 @@
             ap-drop="onDropUpload"
         )
 
-    .notify.middle.left(ng-show="pendingUploads")
-        i.fa.fa-long-arrow-up
-        | &nbsp;&nbsp;
-        | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...
+
+
+    //- Notifications
+
+    .notify(ng-show="(activeCall && !hideCallPanel) || pendingUploads")
+        
+        //- File upload
+        .middle.left(ng-show="pendingUploads")
+            i.fa.fa-long-arrow-up
+            | &nbsp;&nbsp;
+            | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...
+
+        //- Call
+        #audio-call-controls.middle.row(ng-show="activeCall && !hideCallPanel")
+            .col-xs-1
+                img.img-circle.animated.slowly.infinite(
+                    ng-src="{{ gravatar( recents[activeCall.remoteEndpoint.id].email ) }}"
+                    class="{{ incomingCall ? 'pulse' : '' }}"
+                )
+
+            .col-xs-6
+                span(ng-show="!incomingCall && !callIsRinging") On a call with
+                span(ng-show="callIsRinging") Placing a call to
+                strong {{ recents[activeCall.remoteEndpoint.id].display }}
+                span(ng-show="incomingCall") is calling you
+
+            .col-xs-5.align-right
+                //- hang up
+                button.btn.btn-default.btn-sm(ng-click="hangup()") Hang up
+                
+                //- answer
+                button.btn.btn-default.btn-sm(
+                    ng-click="answer();"
+                    ng-show="incomingCall"
+                ) Answer
+
+                //- Join video call
+                a.btn.btn-primary.btn-sm(
+                    href="/private"
+                    ng-show="activeCall.hasVideo"
+                    target="_blank") Join video call
+            
+                

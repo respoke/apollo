@@ -393,42 +393,18 @@ exports = module.exports = [
                 $rootScope.audio.callIncoming.loop = false;
                 $rootScope.audio.callIncoming.currentTime = 0;
                 $scope.callIsRinging = false;
-                // temp workaround
-                try {
-                    $window.respokeLocalStream.stop();
-                } catch (ignored) { }
             }
         };
 
         var videoCallConstraints = {
             constraints: {audio: true, video: true},
-            // your video
-            onLocalMedia: function (evt) {
-                // workaround because transporter's evt.stream is not a true 
-                // MediaStream
-                getUserMedia({
-                    video: { 
-                        optional: [{ sourceId: evt.stream.getVideoTracks()[0].id }]
-                    }
-                }, function (stream) {
-                    $window.respokeLocalStream = stream;
-                }, function (err) {
-                    $log.debug(err);
-                });
-            },
             // their video
             onConnect: function (evt) {
                 $log.debug('call connected',
                            evt.target.hasAudio, evt.target.hasVideo, evt);
 
-                if ($scope.activeCall.hasVideo) {
-                    $window.activeCall = $scope.activeCall;
-                    $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
-                    $window.respokeRemoteStream = evt.stream;
-                }
-                else {
-                    $scope.activeCall.removeStream({ id: $window.respokeLocalStream.id });
-                }
+                $window.activeCall = $scope.activeCall;
+                $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
                 $scope.$apply();
             },
             onHangup: function (evt) {
@@ -477,8 +453,6 @@ exports = module.exports = [
             $scope.activeCall.listen('hangup', function () {
                 $log.debug('got hangup');
                 $scope.activeCall = null;
-                // temporary workaround
-                $window.respokeLocalStream.stop();
             });
             $scope.activeCall.listen('answer', function () {
                 $log.debug('call answered');

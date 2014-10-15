@@ -31,13 +31,11 @@ exports = module.exports = [
         }
 
         $rootScope.recents = $window.recents = {};
-        $rootScope.connected = false;
         $rootScope.notifications = [];
         $rootScope.account = {};
         $rootScope.client = $window.client = respoke.createClient();
         $rootScope.client.listen('connect', function () {
             $log.debug('connected');
-            $rootScope.connected = true;
             $rootScope.$apply();
 
             $rootScope.client.join({
@@ -52,7 +50,7 @@ exports = module.exports = [
 
         });
         $rootScope.client.listen('disconnect', function () {
-            $rootScope.connected = false;
+            $rootScope.$apply();
         });
         
         Account.getMe(function (err, account) {
