@@ -1,5 +1,6 @@
 /* global angular */
 /* global respoke */
+
 var apollo = angular.module('apollo', ['ngRoute']);
 
 var clientConfig = require('./client-config');
@@ -15,7 +16,7 @@ apollo.controller('ChatController', require('./controllers/ChatController'));
 require('./services/rest-factories.js')(apollo);
 
 apollo.factory('respoke', function () {
-    return respoke;
+    return clientConfig.respoke || respoke;
 });
 apollo.factory('moment', function () {
     return require('moment');

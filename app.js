@@ -18,6 +18,7 @@ var browserify = require('browserify-middleware');
 
 // local configuration settings
 var config = require('./config');
+var clientConfig = require('./public/js/client-config');
 // app utilities
 var appUtilities = require('./lib/app-utilities');
 // mongoose ODM models
@@ -74,6 +75,9 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use('/js', browserify('./public/js'));
 app.use(express.static(path.join(__dirname, 'public')));
+if (config.respokeLocalPath) {
+    app.use(express.static(config.respokeLocalPath));
+}
 app.use(jadeStatic({
     baseDir: path.join(__dirname, '/views/partials'),
     baseUrl: '/partials',
@@ -87,6 +91,7 @@ app.use(jadeStatic({
 app.use(function (req, res, next) {
     res.locals = req.locals || {};
     res.locals.config = config;
+    res.locals.clientConfig = clientConfig;
     
     req.db = models;
     req.email = nodemailer.createTransport(config.smtp);

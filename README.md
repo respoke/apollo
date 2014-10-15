@@ -14,11 +14,11 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 
 1. Perform the following commands in a terminal:
 
-    git clone https://github.com/respoke/apollo`
-    cd apollo`
-    npm install`
+    git clone https://github.com/respoke/apollo
+    cd apollo
+    npm install
 
-1. Edit settings in the two config files:
+1. Edit settings in the **two config files**:
     - Server configuration: `./config.example.js` and copy to `./config.js`
     - Browser configuration: `./public/js/client-config.example.js` and copy to `./public/js/client-config.js`
 
