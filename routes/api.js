@@ -206,7 +206,12 @@ router.post('/accounts', function (req, res, next) {
 
         req.respoke.groups.publish({
             groupId: config.systemGroupId,
-            message: 'newaccount-' + account._id
+            message: JSON.stringify({
+                meta: {
+                    type: 'newaccount',
+                    value: account._id
+                }
+            })
         }, function (err) {
             if (err) {
                 debug('failed to send new account notification', err);
@@ -261,7 +266,12 @@ router.post('/groups', middleware.isAuthorized, function (req, res, next) {
 
         req.respoke.groups.publish({
             groupId: config.systemGroupId,
-            message: 'newgroup-' + group._id
+            message: JSON.stringify({
+                meta: {
+                    type: 'newgroup',
+                    value: group._id
+                }
+            })
         }, function (err) {
             if (err) {
                 debug('failed to send new account notification', err);
@@ -284,7 +294,12 @@ router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) 
         // kick everyone out first
         req.respoke.groups.publish({
             groupId: config.systemGroupId,
-            message: 'removegroup-' + group._id
+            message: JSON.stringify({
+                meta: {
+                    type: 'removegroup',
+                    value:  group._id
+                }
+            })
         }, function (err) {
             if (err) {
                 debug('failed to send new account notification', err);

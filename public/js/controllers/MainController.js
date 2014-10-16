@@ -136,6 +136,7 @@ exports = module.exports = [
         function buildAccount(account) {
             $rootScope.recents[account._id] = account;
             $rootScope.recents[account._id].messages = [];
+            $rootScope.recents[account._id].chatstate = {};
             $rootScope.recents[account._id].presence = "unavailable";
             $rootScope.recents[account._id].unread = 0;
             return setPresenceListener(account._id);
@@ -162,6 +163,7 @@ exports = module.exports = [
                         : [];
                     $rootScope.recents['group-' + group._id] = group;
                     $rootScope.recents['group-' + group._id].messages = msgs;
+                    $rootScope.recents['group-' + group._id].chatstate = {};
                     $rootScope.$apply();
                 },
                 onError: function (evt) {
@@ -189,13 +191,26 @@ exports = module.exports = [
         // receiving messages
         $rootScope.client.ignore('message');
         $rootScope.client.listen('message', function (evt) {
-            // System messages
-            if (evt.group && evt.group.id === $rootScope.systemGroupId) {
-                $log.debug('system message', evt);
 
-                var msg = evt.message.message.split('-');
-                var msgType = msg[0];
-                var msgValue = msg[1];
+            $log.debug('message before', evt.message.message);
+            try {
+                evt.message.message = JSON.parse(evt.message.message);
+            } catch (ignored) {
+                $log.debug('invalid message content received', evt);
+            }
+            $log.debug('message after', evt.message.message);
+            var fromSystemGroup = evt.group && evt.group.id === $rootScope.systemGroupId;
+            var hasMetaContent = evt.message.message.meta && evt.message.message.meta.type;
+            var msgType;
+            var msgValue;
+            if (hasMetaContent) {
+                msgType = evt.message.message.meta.type;
+                msgValue = evt.message.message.meta.value;
+            }
+
+            // System messages
+            if (fromSystemGroup && hasMetaContent) {
+                $log.debug('system message', evt);
 
                 switch (msgType) {
                     case 'newaccount':
@@ -235,6 +250,28 @@ exports = module.exports = [
 
             var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
 
+            $log.debug('hasMetaContent', hasMetaContent);
+            $log.debug('msgType', msgType);
+            $log.debug('msgValue', msgValue);
+            // User meta messages
+            if (hasMetaContent) {
+                if (msgType === 'chatstate') {
+                    // clear the existing chat state first, if it is there.
+                    var chatstate = $rootScope.recents[itemId].chatstate[evt.message.endpointId];
+                    if (chatstate && chatstate.$timeout) {
+                        $timeout.cancel(chatstate.$timeout);
+                    }
+                    $rootScope.recents[itemId].chatstate[evt.message.endpointId] = {
+                        value: msgValue,
+                        $timeout: $timeout(function () {
+                            $rootScope.recents[itemId].chatstate[evt.message.endpointId] = null;
+                        }, 3000)
+                    };
+                    $rootScope.$apply();
+                    $timeout(scrollChatToBottom);
+                }
+                return;
+            }
 
             // Normal messages
 
@@ -246,6 +283,8 @@ exports = module.exports = [
                     content: evt.message.message,
                     created: new Date()
                 });
+                // clear chatstate
+                $rootScope.recents[itemId].chatstate[evt.message.endpointId] = null;
             }
             else {
                 $rootScope.recents[itemId].messages.push({

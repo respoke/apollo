@@ -244,7 +244,8 @@ var MessageSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
-        default: ''
+        default: '',
+        description: 'A JSON string'
     },
     file: {
         type: ObjectId,
@@ -257,13 +258,24 @@ var MessageSchema = new mongoose.Schema({
 });
 MessageSchema.pre('validate', function (next) {
     if (!this.from) {
-        return next(new Error("The 'from' field is required."));
+        return next(new Error("The message 'from' field is required."));
     }
     if (!this.to && !this.group) {
-        return next(new Error("Either 'group' or 'to' is required."));
+        return next(new Error("Either message 'group' or 'to' is required."));
     }
     if (!this.content && !this.file) {
-        return next(new Error("The 'content' field is required."));
+        return next(new Error("Message 'content' is required."));
+    }
+    if (this.content) {
+        try {
+            var test = JSON.parse(this.content);
+            if (!test.text && !this.file) {
+                return next(new Error("Message content.text is missing."));
+            }
+        }
+        catch (ignored) {
+            return next(new Error("Message 'content' is not a valid JSON string."));
+        }
     }
     next();
 });

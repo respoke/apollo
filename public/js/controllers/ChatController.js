@@ -16,6 +16,34 @@ exports = module.exports = [
 
     function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, renderFile) {
         $scope.pendingUploads = 0;
+        $scope.recentlySentTyping = null;
+
+        $scope.isTyping = function () {
+            if ($scope.recentlySentTyping) {
+                return;
+            }
+            $scope.recentlySentTyping = $timeout(function () {
+                $scope.recentlySentTyping = null;
+            }, 3000);
+            var grp = $scope.selectedChat.display ? undefined : $scope.selectedChat._id;
+            var endpt = $scope.selectedChat.display ? $scope.selectedChat._id : undefined;
+            Message.create({
+                to: endpt,
+                group: grp,
+                content: {
+                    meta: {
+                        type: 'chatstate',
+                        value: 'composing'
+                    }
+                },
+                offRecord: true
+            }, function (err, sentMessage) {
+                if (err) {
+                    $log.debug(err);
+                    return;
+                }
+            });
+        };
 
         $scope.sendMessage = function (txt, fileId) {
             $log.debug('sendMessage', txt);
@@ -23,7 +51,9 @@ exports = module.exports = [
                 return;
             }
             var msg = {
-                content: txt
+                content: {
+                    text: txt
+                }
             };
             // is it a private message?
             if ($scope.selectedChat.display) {
@@ -41,7 +71,9 @@ exports = module.exports = [
                 msg.file = fileId;
             }
             $scope.selectedChat.messages.push({
-                content: txt,
+                content: {
+                    text: txt
+                },
                 from: $rootScope.account,
                 created: new Date()
             });

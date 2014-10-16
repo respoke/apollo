@@ -23,9 +23,18 @@
 
                 td
                     h6 {{ message.from.display }}
-                    ap-message(ap-content="message.content" ap-file="message.file")
+                    ap-message(ap-content="message.content.text" ap-file="message.file")
                 td.align-right(width="90px")
                     small: small.help-block: ap-date(date="{{message.created}}")
+            tr.chatstate
+                td(colspan="3" width="100%")
+                    p.center
+                        img.img-responsive.img-circle(
+                            ng-repeat="(key, obj) in selectedChat.chatstate" ng-if="obj"
+                            style="width: 24px"
+                            ng-src="{{ gravatar(recents[key].email) }}"
+                            ng-class="{ 'animated pulse infinite': obj.value === 'composing' }"
+                        )
 
         //- Settings panel
         #settings.animated.fadeIn(ng-show="showSettings")
@@ -41,6 +50,7 @@
             ap-enter="sendMessage(textInput); textInput = '';"
             ap-paste="onPasteUpload"
             ap-drop="onDropUpload"
+            ng-keyup="isTyping()"
         )
 
 

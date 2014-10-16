@@ -84,6 +84,8 @@ exports = module.exports = function (app) {
         function ($http, $rootScope, $log) {
             return {
                 create: function (message, callback) {
+                    // message.content is a JSON string
+                    message.content = JSON.stringify(message.content);
 
                     if (message.group) {
                         $rootScope.client.getGroup({ id: message.group })
@@ -123,7 +125,17 @@ exports = module.exports = function (app) {
                         reqUrl += id;
                     }
                     $http.get(reqUrl)
-                    .success(success(callback)).error(fail(callback));
+                    .success(function (data) {
+                        // message content is JSON
+                        if (data && data.length) {
+                            for (var i=0; i < data.length; i++) {
+                                try {
+                                    data[i].content = JSON.parse(data[i].content);
+                                } catch (ignored) { }
+                            }
+                        }
+                        callback(null, data);
+                    }).error(fail(callback));
                 }
             };
         }

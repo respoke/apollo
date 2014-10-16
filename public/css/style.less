@@ -166,9 +166,24 @@ input[type="text"].form-control, textarea.form-control {
             overflow-y: auto;
 
             table.table {
-                background: rgba(0,0,0,.3);
+                background: transparent;
+
                 tr, td {
+                    background: rgba(0,0,0,.3);
                     border: none;
+                }
+                tr.chatstate, tr.chatstate td {
+                    background: @plainTransGray;
+                    margin: 0;
+                    padding: 0;
+                }
+                tr.chatstate td p {
+                    padding: 0;
+                    margin: 0;
+                    img {
+                        margin: 8px;
+                        display: inline-block;
+                    }
                 }
                 td:nth-child(2) {
                     padding-left: 13px;
