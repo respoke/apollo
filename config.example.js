@@ -22,7 +22,7 @@ config.respokeJS = 'https://cdn.respoke.io/respoke.min.js';
 // (primarily for development purposes)
 // 
 //      config.respokeJS = '/respoke.min.js';
-//      config.respokeLocalPath = __dirname + '/../respoke-folder/';
+//      config.respokeLocalPath = __dirname + '/../mercury/javascript/transporter/';
 //
 config.respokeLocalPath = null;
 
