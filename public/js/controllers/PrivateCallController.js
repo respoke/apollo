@@ -44,8 +44,7 @@ exports = module.exports = [
         $window.opener.activeCall.listen('hangup', cleanUpCall);
 
         $window.opener.activeCall.outgoingMedia.ignore('mute');
-        $window.opener.activeCall.unmuteAudio();
-        $window.opener.activeCall.unmuteVideo();
+        console.log($scope.activeCall.outgoingMedia)
         $window.opener.activeCall.outgoingMedia.listen('mute', function (evt) {
             $log.debug('local mute event', evt);
             if (evt.type === 'audio') {

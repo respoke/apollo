@@ -14,17 +14,19 @@ block content
             button.btn.btn-sm.btn-default(ng-click="hangup()")
                 i.fa.fa-phone.fa-rotate-135.fa-2x
             | &nbsp;
-            button.btn.btn-sm(
+            button#toggle-audio.btn.btn-sm(
                 ng-click="activeCall.toggleAudio()"
-                ng-class="{ 'btn-primary': !audioIsMuted, 'btn-default': audioIsMuted }"
+                ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isAudioMuted(), 'btn-default': activeCall.outgoingMedia.isAudioMuted() }"
             )
-                i.fa.fa-microphone.fa-2x(ng-show="!audioIsMuted")
-                i.fa.fa-microphone-slash.fa-2x(ng-show="audioIsMuted")
+                i.fa.fa-microphone.fa-2x(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
+                i.fa.fa-microphone-slash.fa-2x(ng-show="activeCall.outgoingMedia.isAudioMuted()")
             | &nbsp;
-            button.btn.btn-sm(
+            button#toggle-video.btn.btn-sm(
                 ng-click="activeCall.toggleVideo()"
-                ng-class="{ 'btn-primary': !videoIsMuted, 'btn-default': videoIsMuted }"
+                ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isVideoMuted(), 'btn-default': activeCall.outgoingMedia.isVideoMuted() }"
             )
-                i.fa.fa-video-camera.fa-2x(ng-show="!videoIsMuted")
-                i.fa.fa-ban.fa-2x(ng-show="videoIsMuted")
+                i.fa.fa-ban.fa-2x(ng-show="activeCall.outgoingMedia.isVideoMuted()")
+                i.fa.fa-video-camera(
+                    ng-class="{ 'fa-2x': !activeCall.outgoingMedia.isVideoMuted() }"
+                )
 

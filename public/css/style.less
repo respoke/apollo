@@ -54,6 +54,7 @@ html, body {
     -o-animation-duration: .3s;
     animation-duration: .3s;
 }
+
 input[type="text"].form-control, textarea.form-control {
     border-radius: 0;
 }
@@ -279,6 +280,25 @@ input[type="text"].form-control, textarea.form-control {
         left: 20px;
         bottom: 20px;
         z-index: 200;
+
+        button#toggle-audio {
+            width: 45px;
+        }
+
+        button#toggle-video {
+            width: 46px;
+
+            &.btn-default {
+                .fa-video-camera {
+                    position: absolute;
+                    right: 3px;
+                    top: 2px;
+                }
+                .fa-ban {
+                    margin-left: -10px;
+                }
+            }
+        }
     }
     #respokeLocalVideo {
         position: fixed;

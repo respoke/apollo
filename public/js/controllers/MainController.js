@@ -287,37 +287,6 @@ exports = module.exports = [
             $rootScope.$apply();
 
         });
-        
-        // receive calls
-        $rootScope.client.ignore('call');
-        $rootScope.client.listen('call', function (evt) {
-
-            // when we are the caller, no need to display the incoming call
-            if (evt.call.caller) {
-                return;
-            }
-            // ignore if already joined the call on another connection
-            if ($rootScope.recents[$rootScope.account._id].presence === 'call') {
-                $log.debug('ignoring call since already on call');
-                return;
-            }
-            // only allow one call at a time.
-            if ($scope.activeCall) {
-                $rootScope.notifications.push(
-                    $rootScope.recents[evt.endpoint.id].display
-                    + ' tried to call you.'
-                );
-                evt.call.hangup();
-                $scope.$apply();
-                return;
-            }
-
-            $scope.activeCall = evt.call;
-            $scope.incomingCall = evt.endpoint.id;
-            $rootScope.audio.callIncoming.play();
-            $rootScope.audio.callIncoming.loop = true;
-            $scope.$apply();
-        });
 
         $scope.createGroup = function (groupName) {
             Group.create({
@@ -381,19 +350,19 @@ exports = module.exports = [
             }, 600);
         };
 
-        $scope.hangup = function () {
-            if ($scope.activeCall) {
-                if ($scope.activeCall.hangup) {
-                    $scope.activeCall.hangup();
-                }
+        var stopRinging = function () {
+            $rootScope.audio.callIncoming.pause();
+            $rootScope.audio.callIncoming.loop = false;
+            $rootScope.audio.callIncoming.currentTime = 0;
+            $scope.incomingCall = "";
+            $scope.callIsRinging = false;
+        };
+
+        var cleanupCall = function () {
+            stopRinging();
+            $timeout(function () {
                 $scope.activeCall = null;
-                // in case we were being rung
-                $scope.incomingCall = "";
-                $rootScope.audio.callIncoming.pause();
-                $rootScope.audio.callIncoming.loop = false;
-                $rootScope.audio.callIncoming.currentTime = 0;
-                $scope.callIsRinging = false;
-            }
+            });
         };
 
         var videoCallConstraints = {
@@ -405,26 +374,67 @@ exports = module.exports = [
 
                 $window.activeCall = $scope.activeCall;
                 $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
+                stopRinging();
                 $scope.$apply();
             },
             onHangup: function (evt) {
                 $log.debug('got hangup');
+                cleanupCall();
+            }
+        };
+
+        var onCallReceived = function (evt) {
+
+            // when we are the caller, no need to display the incoming call
+            if (evt.call.caller) {
+                return;
+            }
+            // ignore if already joined the call on another connection
+            if ($rootScope.recents[$rootScope.account._id].presence === 'call') {
+                $log.debug('ignoring call since already on call');
+                return;
+            }
+            // only allow one call at a time.
+            if ($scope.activeCall) {
+                $rootScope.notifications.push(
+                    $rootScope.recents[evt.endpoint.id].display
+                    + ' tried to call you.'
+                );
+                $log.debug(
+                    'instantly hanging up on incoming call because we are already on a call'
+                );
+                evt.call.hangup();
+                $scope.$apply();
+                return;
+            }
+
+            $scope.activeCall = evt.call;
+            $scope.incomingCall = evt.endpoint.id;
+            $rootScope.audio.callIncoming.play();
+            $rootScope.audio.callIncoming.loop = true;
+            $scope.$apply();
+        };
+
+        // receive calls
+        $rootScope.client.ignore('call');
+        $rootScope.client.listen('call', onCallReceived);
+
+        $scope.hangup = function () {
+            if ($scope.activeCall) {
+                if ($scope.activeCall.hangup) {
+                    $scope.activeCall.hangup();
+                }
                 $scope.activeCall = null;
-                $scope.callIsRinging = false;
+                // in case we were being rung
+                stopRinging();
             }
         };
 
         $scope.answer = function () {
             if ($scope.activeCall) {
-                
                 // answer call
                 $scope.activeCall.answer(videoCallConstraints);
-                $rootScope.audio.callIncoming.pause();
-                $rootScope.audio.callIncoming.loop = false;
-                $rootScope.audio.callIncoming.currentTime = 0;
-                $timeout(function () {
-                    $scope.incomingCall = "";
-                });
+                stopRinging();
             }
         };
 
@@ -440,7 +450,6 @@ exports = module.exports = [
             });
             $scope.activeCall.listen('answer', function () {
                 $log.debug('call answered');
-                $scope.callIsRinging = false;
             });
         };
 
@@ -453,10 +462,10 @@ exports = module.exports = [
             $scope.activeCall.listen('hangup', function () {
                 $log.debug('got hangup');
                 $scope.activeCall = null;
+                cleanupCall();
             });
             $scope.activeCall.listen('answer', function () {
                 $log.debug('call answered');
-                $scope.callIsRinging = false;
             });
         };
 
