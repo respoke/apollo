@@ -124,10 +124,6 @@ exports = module.exports = [
         };
 
         $scope.onDropUpload = function (files) {
-            if ($scope.pendingUploads) {
-                $rootScope.notifications.push('Wait for uploads to finish.');
-                return;
-            }
             $log.debug('drag and drop ', files.length, 'files');
             files.forEach(function (data) {
                 $log.debug(data.name, data.contentType);
@@ -142,10 +138,6 @@ exports = module.exports = [
 
         $scope.onPasteUpload = function (data) {
             $log.debug('paste upload', data.contentType);
-            if ($scope.pendingUploads) {
-                $rootScope.notifications.push('Wait for uploads to finish.');
-                return;
-            }
             $scope.pendingUploads++;
             File.create({
                 contentType: data.contentType,
