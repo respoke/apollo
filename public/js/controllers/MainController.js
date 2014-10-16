@@ -108,7 +108,7 @@ exports = module.exports = [
 
             var listeners = accounts.map(buildAccount);
 
-            if ($rootScope.client.connectionId) {
+            if ($rootScope.client.isConnected()) {
                 listeners.forEach(function (listener) {
                     listener();
                 });
@@ -122,7 +122,7 @@ exports = module.exports = [
             }
         });
         
-        if ($rootScope.client.connectionId) {
+        if ($rootScope.client.isConnected()) {
             $rootScope.client.setPresence({ presence: 'available' });
             listenOwnPresence();
         }
@@ -176,7 +176,7 @@ exports = module.exports = [
                 return;
             }
             // already connected
-            if ($rootScope.client.connectionId) {
+            if ($rootScope.client.isConnected()) {
                 groups.forEach(bindGroup);
             }
             else {

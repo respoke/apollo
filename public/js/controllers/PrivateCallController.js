@@ -16,8 +16,6 @@ exports = module.exports = [
         }
 
         $scope.hideCallPanel = true;
-        $scope.audioIsMuted = false;
-        $scope.videoIsMuted = false;
 
         // prevent global scope from creating a second connection to respoke
         $rootScope.doNotConnectRespoke = true;
@@ -42,19 +40,6 @@ exports = module.exports = [
         };
         
         $window.opener.activeCall.listen('hangup', cleanUpCall);
-
-        $window.opener.activeCall.outgoingMedia.ignore('mute');
-        console.log($scope.activeCall.outgoingMedia)
-        $window.opener.activeCall.outgoingMedia.listen('mute', function (evt) {
-            $log.debug('local mute event', evt);
-            if (evt.type === 'audio') {
-                $scope.audioIsMuted = evt.muted;
-            }
-            else if (evt.type === 'video') {
-                $scope.videoIsMuted = evt.muted;
-            }
-            $scope.$apply();
-        });
 
         $window.pixies.stop();
         respokeVideo.setLocalVideo($scope.activeCall.outgoingMedia.stream);
