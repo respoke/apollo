@@ -93,10 +93,17 @@ exports = module.exports = [
             }
             Account.getToken(function (err, respokeAuth) {
                 if (err) {
+                    $log.error('failed attempt to get token', err);
                     $rootScope.notifications.push(err);
                     if (!$scope.tokenRefreshInterval) {
                         $scope.tokenRefreshInterval = 1000;
                     }
+                    $scope.tokenRefreshInterval = $scope.tokenRefreshInterval * 2;
+                    $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
+                    return;
+                }
+                if (!respokeAuth.token) {
+                    $log.error('token request to server did not return token', respokeAuth);
                     $scope.tokenRefreshInterval = $scope.tokenRefreshInterval * 2;
                     $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
                     return;

@@ -3,6 +3,8 @@
     h1.lightweight.pulse.infinite.slowly #{config.name}
     br
     br
+    br
+    br
     button.btn.btn-xs.btn-default(ng-click="respokeConnect()") Reconnect
 
 .panel.left.animated.fadeInRightBig(
@@ -17,7 +19,6 @@
             img#selfie.img-responsive.img-circle.clickable(
                 ap-avatar email="account.email"
                 data-toggle="dropdown"
-                ng-show="recents[account._id]"
                 class="{{ recents[account._id].presence ? 'animated pulse slower ' + recents[account._id].presence : '' }}"
             )
             ul.dropdown-menu.animated.fadeInLeft.faster

@@ -110,13 +110,17 @@ exports = module.exports = [
 
             if ($rootScope.client.isConnected()) {
                 listeners.forEach(function (listener) {
-                    listener();
+                    if (listener) {
+                        listener();
+                    }
                 });
             }
             else {
                 $rootScope.client.listen('connect', function addPresenceListeners() {
                     listeners.forEach(function (listener) {
-                        listener();
+                        if (listener) {
+                            listener();
+                        }
                     });
                 });
             }
@@ -134,6 +138,9 @@ exports = module.exports = [
         }
 
         function buildAccount(account) {
+            if (account._id === $rootScope.account._id) {
+                return null;
+            }
             $rootScope.recents[account._id] = account;
             $rootScope.recents[account._id].messages = [];
             $rootScope.recents[account._id].chatstate = {};
@@ -141,6 +148,7 @@ exports = module.exports = [
             $rootScope.recents[account._id].unread = 0;
             return setPresenceListener(account._id);
         }
+        
         function setPresenceListener(endpt) {
             return function () {
                 $rootScope.recents[endpt].endpoint = $rootScope.client.getEndpoint({ id: endpt });
