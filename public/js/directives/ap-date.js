@@ -1,3 +1,4 @@
+'use strict';
 // TODO: why is this now a filter?
 exports = module.exports = ['moment', function (moment) {
     return {
@@ -38,7 +39,7 @@ exports = module.exports = ['moment', function (moment) {
                     scope.readableDate = date.format('MMM Do');
                 }
                 else {
-                    scope.readableDate = date.format('MMM Do, YYYY')
+                    scope.readableDate = date.format('MMM Do, YYYY');
                 }
             };
             if (scope.watch) {

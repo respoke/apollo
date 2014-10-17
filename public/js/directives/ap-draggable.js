@@ -1,3 +1,4 @@
+'use strict';
 exports = module.exports = ['$window', function ($window) {
     return {
         restrict: 'A',

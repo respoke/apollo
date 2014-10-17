@@ -1,3 +1,4 @@
+'use strict';
 exports = module.exports = ['crypto', function (crypto) {
     return {
         restrict: 'A',

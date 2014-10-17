@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth,apollo-passport node app.js",
-    "jshint": "node_modules/.bin/jshint app.js models.js lib/*.js public/js/**/*.js"
+    "jshint": "node_modules/.bin/jshint app.js models.js lib/*.js public/js/**/*.js --exclude=public/js/plugins/**/*"
   },
   "dependencies": {
     "async": "^0.9.0",

@@ -95,7 +95,7 @@ exports = module.exports = [
                         $scope.tokenRefreshInterval = 1000;
                     }
                     $scope.tokenRefreshInterval = $scope.tokenRefreshInterval * 2;
-                    $timeout(respokeConnect, $scope.tokenRefreshInterval);
+                    $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
                     return;
                 }
                 $scope.tokenRefreshInterval = 0;

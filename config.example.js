@@ -10,8 +10,8 @@ config.port = process.env.PORT || 3000;
 config.salt = 'change-this-please-1234';
 
 // configuration for application level messages
-config.systemGroup = 'apollo-system-messages';
-config.systemEndpoint = 'apollo-system-endpoint';
+config.systemGroupId = 'apollo-system-messages';
+config.systemEndpointId = 'apollo-system-endpoint';
 
 // Where the application lives, with no trailing slash
 config.baseURL = 'http://localhost:' + config.port;

@@ -1,3 +1,4 @@
+'use strict';
 /**
  * marked - a markdown parser
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
@@ -5,6 +6,12 @@
  *
  * Changes by @ruffrey
  */
+
+exports = module.exports = function markdownRenderer(input, next) {
+    var err = null;
+    var output = marked(input);
+    next(err, output);
+};
 
 /**
  * Block-Level Grammar
@@ -1086,7 +1093,7 @@ function merge(obj) {
 function marked(src, opt, callback) {
     // no autoplay on audio or video
     if (/\<(audio|video).+(autoplay).+(\/.+\>|\/\>)/i.test(src)) {
-       src = src.replace(/autoplay/ig, '');
+        src = src.replace(/autoplay/ig, '');
     }
     // always display controls
     src = src.replace(/(\<)(audio|video)([a-z\s\=\'\"\/\.\-\_]{0,})(\>)/ig, '$1$2 controls$3$4');;
@@ -1158,7 +1165,7 @@ function marked(src, opt, callback) {
     }
     try {
         if (opt) opt = merge({}, marked.defaults, opt);
-        
+
         return Parser.parse(Lexer.lex(src, opt), opt);
     } catch (e) {
         e.message += '\nPlease report this to https://github.com/chjj/marked.';
@@ -1211,9 +1218,3 @@ marked.InlineLexer = InlineLexer;
 marked.inlineLexer = InlineLexer.output;
 
 marked.parse = marked;
-
-exports = module.exports = function markdownRenderer(input, next) {
-    var err = null;
-    var output = marked(input);
-    next(err, output);
-};
