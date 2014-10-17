@@ -462,13 +462,22 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                     return;
                 }
 
+                var content;
+                try {
+                    content = JSON.parse(req.body.content);
+                }
+                catch (ex) {
+                    debug('Failed parsing message.content for offline notif send', req.body, ex);
+                    return;
+                }
+
                 var emailContent = {
                     from: config.email.from,
                     replyTo: req.user.email,
                     to: account.email,
                     subject: '[' + config.name + '] ' 
                         + req.user.display + ' sent you a message while you were offline',
-                    text: req.user.display + ' said:\n\n' + req.body.content
+                    text: req.user.display + ' said:\n\n' + content.text
                         + '\n---\nUnsubscribe from these messages in the '
                         + config.name + ' settings. '
                         + config.baseURL
@@ -476,7 +485,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
 
                 if (account.settings.htmlEmails) {
                     emailContent.html = req.user.display + ' said:<br /><br />' 
-                        + req.body.content
+                        + content.text
                         + '<hr /><a href="' + config.baseURL + '">'
                         + 'Unsubscribe from these messages in the '
                         + config.name + ' settings</a>';
