@@ -59,8 +59,7 @@ exports = module.exports = [
                 return;
             }
             $log.debug('getMe', account);
-            $rootScope.account = account;
-            $rootScope.recents[account._id] = account;
+            $rootScope.account = $rootScope.recents[account._id] = account;
             if (!account || !account._id) {
                 $location.path('/welcome');
                 return;
