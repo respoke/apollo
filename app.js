@@ -24,11 +24,6 @@ var appUtilities = require('./lib/app-utilities');
 // mongoose ODM models
 var models = require('./models');
 
-// App routes and controllers
-var routes = require('./routes/index');
-var api = require('./routes/api');
-var auth = require('./routes/auth');
-
 var app = express();
 
 // Respoke setup
@@ -112,9 +107,9 @@ passport.deserializeUser(function(id, done) {
 });
 
 // Bind routes
-app.use('/', routes);
-app.use('/api', api);
-app.use('/auth', auth);
+app.use('/', require('./routes/home'));
+app.use('/api', require('./routes/api'));
+app.use('/auth', require('./routes/auth'));
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
