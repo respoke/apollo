@@ -1,5 +1,4 @@
 'use strict';
-var crypto = require('crypto');
 exports = module.exports = [
     '$log',
     '$location',
@@ -49,16 +48,13 @@ exports = module.exports = [
             });
 
         });
-        $rootScope.client.listen('disconnect', function () {
-            $rootScope.$apply();
-        });
         
         Account.getMe(function (err, account) {
             if (err) {
-                $log.error(err);
+                $log.error('getMe', err);
                 return;
             }
-            $log.debug('account', account);
+            $log.debug('getMe', account);
             $rootScope.account = account;
             $rootScope.recents[account._id] = account;
             if (!account || !account._id) {
@@ -93,7 +89,9 @@ exports = module.exports = [
                     return;
                 }
                 $log.debug('respoke auth', respokeAuth);
+                $rootScope.client.ignore('disconnect');
                 $rootScope.client.listen('disconnect', function () {
+                    $rootScope.$apply();
                     $scope.respokeConnect();
                 });
                 

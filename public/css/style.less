@@ -68,7 +68,8 @@ input[type="text"].form-control, textarea.form-control {
     left: 0;
     right: 0;
     bottom: 0;
-    #pixie {
+    canvas#pixie {
+        z-index: 0;
         height: 100%;
         width: 100%;
     }
@@ -95,7 +96,15 @@ input[type="text"].form-control, textarea.form-control {
         left: 360px;
     }
 }
-
+.main {
+    z-index: 70;
+}
+.on-top {
+    z-index: 10000!important;
+}
+.relative {
+    position: relative;
+}
 .panel {
     .translationReset();
     position: fixed;

@@ -9,12 +9,10 @@
  * situations like the user scrolling up - away from the bottom.
  */
 exports = module.exports = ['$rootScope', function ($rootScope) {
-    var chat;
     var scrollChatToBottom = function (force) {
-        if (!chat) {
-            chat = document.getElementById('chat');
-        }
-        if (force || !$rootScope.autoScrollDisabled) {
+        var chat = document.getElementById('chat');
+        console.log(chat.scrollHeight, scrollHeight);
+        if (force || chat.scrollHeight < 1000 || !$rootScope.autoScrollDisabled) {
             chat.scrollTop = chat.scrollHeight;
         }
     };
