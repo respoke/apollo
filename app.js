@@ -15,6 +15,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('./auth-strategies')();
 var browserify = require('browserify-middleware');
+var middleware = require('./lib/middleware');
 
 // local configuration settings
 var config = require('./config');
@@ -47,14 +48,11 @@ respoke.on('error', function (err) {
     debug('failed to connect to respoke', err);
 });
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
-// sessions
+
+// Sessions in mongo
 app.use(session({
     secret: config.mongoSessions.secret,
     store: new MongoStore({
@@ -64,9 +62,13 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
+
+// Request parsers
 app.use(bodyParser.json({ limit: config.maxUploadSize }));
 app.use(bodyParser.urlencoded({ extended: false, limit: config.maxUploadSize }));
 app.use(cookieParser());
+
+// Serving static assets
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use('/js', browserify('./public/js'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -81,6 +83,10 @@ app.use(jadeStatic({
         config: config
     }
 }));
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 // Attaching app locals and utils to request
 app.use(function (req, res, next) {
@@ -99,52 +105,20 @@ app.use(function (req, res, next) {
 // Passport sessions and user population on req.user
 app.use(passport.initialize());
 app.use(passport.session());
-passport.serializeUser(function(account, done) {
+passport.serializeUser(function (account, done) {
     done(null, account._id);
 });
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function (id, done) {
     models.Account.findById(id, done);
 });
 
-// Bind routes
+// Bind application routes
 app.use('/', require('./routes/home'));
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
+app.use(middleware.fourOhFour);
+app.use(middleware.errorHandler);
 
-// Catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-// Error handler
-// will respond with JSON or HTML depending upon request
-app.use(function(err, req, res, next) {
-    err.status = err.status || res.statusCode || 500;
-
-    var errOut = {
-        error: err,
-        message: err.message,
-        status: err.status
-    };
-    var prefersJson = req.accepts(['html', 'json']);
-
-    if (process.env.NODE_ENV !== 'production') {
-        errOut.stack = err.stack;
-    }
-
-    res.status(err.status);
-
-    if (prefersJson === 'json') {
-        res.send(errOut);
-        return;
-    }
-    else {
-        res.render('error', errOut);
-    }
-    
-});
 
 module.exports = app;
 
