@@ -53,19 +53,23 @@ exports = module.exports = [
 
         });
         
-        Account.getMe(function (err, account) {
-            if (err) {
-                $log.error('getMe', err);
-                return;
-            }
-            $log.debug('getMe', account);
-            $rootScope.account = $rootScope.recents[account._id] = account;
-            if (!account || !account._id) {
-                $location.path('/welcome');
-                return;
-            }
-            $scope.respokeConnect();
-        });
+        $scope.loadAccount = function (callback) {
+            Account.getMe(function (err, account) {
+                if (err) {
+                    $log.error('getMe', err);
+                    return;
+                }
+                $log.debug('getMe', account);
+                $rootScope.account = $rootScope.recents[account._id] = account;
+                if (!account || !account._id) {
+                    $location.path('/welcome');
+                    return;
+                }
+                if (callback) {
+                    callback();
+                }
+            });
+        };
         
         $scope.signin = {
             email: "",
@@ -103,6 +107,7 @@ exports = module.exports = [
                 $rootScope.client.ignore('disconnect');
                 $rootScope.client.listen('disconnect', function () {
                     $rootScope.$apply();
+                    $scope.loadAccount();
                     $scope.respokeConnect();
                 });
                 
@@ -128,6 +133,9 @@ exports = module.exports = [
                 });
             });
         };
+
+        // execute
+        $scope.loadAccount($scope.respokeConnect);
 
         $rootScope.setPresence = function (strPresence) {
             $rootScope.client.setPresence({ presence: strPresence });
