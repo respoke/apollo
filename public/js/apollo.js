@@ -30,6 +30,9 @@ apollo.factory('messageRenderingMiddleware', function () {
 apollo.factory('renderFile', function () {
     return clientConfig.renderFile;
 });
+apollo.factory('crypto', function () {
+    return require('crypto');
+});
 apollo.factory('scrollChatToBottom', require('./lib/scroll-chat-to-bottom'));
 apollo.factory('paddTopScroll', require('./lib/padd-top-scroll'));
 apollo.factory('respokeVideo', require('./lib/respoke-video'));
@@ -49,6 +52,7 @@ apollo.directive('apToggleSetting', require('./directives/ap-toggle-setting'));
 apollo.directive('apMessage', require('./directives/ap-message.js'));
 apollo.directive('apPresence', require('./directives/ap-presence.js'));
 apollo.directive('apDate', require('./directives/ap-date.js'));
+apollo.directive('apAvatar', require('./directives/ap-avatar.js'));
 
 // Routes for main /#/
 apollo.config(['$routeProvider', function ($routeProvider) {

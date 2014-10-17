@@ -12,7 +12,7 @@
         #avatar-section.col-xs-3
             //- Presence
             img#selfie.img-responsive.img-circle.clickable(
-                ng-src="{{ gravatar(account.email) }}"
+                ap-avatar email="account.email"
                 data-toggle="dropdown"
                 ng-show="recents[account._id]"
                 class="{{ recents[account._id].presence ? 'animated pulse slower ' + recents[account._id].presence : '' }}"
@@ -88,7 +88,10 @@
         )
             td.col-xs-2.center
                 i.fa.fa-group.fa-3x.yellow(ng-if="!item.email")
-                img.img-responsive.img-circle(ng-if="item.email" ng-src="{{ gravatar(item.email) }}")
+                img.img-responsive.img-circle(
+                    ng-if="item.email"
+                    ap-avatar email="item.email"
+                )
 
             td.col-xs-8: h6
                 ap-presence(presence="{{ item.presence }}" ng-if="item.presence")

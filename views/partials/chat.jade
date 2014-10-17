@@ -16,7 +16,7 @@
                 td(width="60px")
                     img.img-responsive.img-circle(
                         style="width: 48px"
-                        ng-src="{{ gravatar(message.from.email) }}"
+                        ap-avatar email="message.from.email"
                         ng-click="switchChat(message.from._id)"
                         ng-class="{ clickable: message.from._id !== account._id }"
                     )
@@ -70,7 +70,7 @@
         #audio-call-controls.middle.row(ng-show="activeCall && !hideCallPanel")
             .col-xs-1
                 img.img-circle.animated.slowly.infinite(
-                    ng-src="{{ gravatar( recents[activeCall.remoteEndpoint.id].email ) }}"
+                    ap-avatar email="recents[activeCall.remoteEndpoint.id].email"
                     class="{{ incomingCall ? 'pulse' : '' }}"
                 )
 

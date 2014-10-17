@@ -82,14 +82,6 @@ exports = module.exports = [
         };
         $scope.resetPass;
 
-        $scope.gravatar = function(email) {
-            if (!email) {
-                return;
-            }
-            var gravatarBase = 'https://secure.gravatar.com/avatar/';
-            return gravatarBase + crypto.createHash('md5').update(email).digest("hex");
-        };
-
         $scope.respokeConnect = function () {
             if ($rootScope.doNotConnectRespoke) {
                 $log.debug('refusing to connect to respoke due to $rootScope.doNotConnectRespoke');
