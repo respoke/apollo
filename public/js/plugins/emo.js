@@ -5,9 +5,9 @@
  *  :)  :-)  :(  :-(  :'(
  * All font-awesome icons are `:name` which will output `<i class="fa fa-name"></i>`.
  */
-exports = module.exports = function emojiIconRenderer(input, callback) {
+exports = module.exports = function emojiIconRenderer(input, next) {
     var err = null;
-    callback(
+    next(
         err,
         input
             .replace(/\:\)|\:\-\)/g, '<i class="fa fa-smile-o"></i>')

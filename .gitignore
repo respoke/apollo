@@ -2,9 +2,6 @@
 config.js
 public/js/client-config.js
 
-# User plugins
-public/js/plugins/
-
 # OS
 .DS_Store
 thumbs.db

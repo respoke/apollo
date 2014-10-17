@@ -28,7 +28,9 @@ apollo.factory('messageRenderingMiddleware', function () {
     return clientConfig.messageRenderingMiddleware;
 });
 apollo.factory('renderFile', function () {
-    return clientConfig.renderFile;
+    return clientConfig.renderFile || function (fileObject, callback) {
+        callback();
+    };
 });
 apollo.factory('crypto', function () {
     return require('crypto');

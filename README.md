@@ -34,3 +34,21 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 You should be able to input your google auth credentials in `./config.js`, set `config.google.enable = true` and it will work.
 
 This does require creating a google project in their developer console. [This blog post](http://scotch.io/tutorials/javascript/easy-node-authentication-google) gives an overview of basic concepts for google oauth 2.0.
+
+### Custom message parsing plugins
+
+Apollo lets you add your own plugins to parse message contents. You might want to turn a certain string into a link, or fetch an image when a particular string is in a message, embed a video, etc.
+
+Message parsing plugins are middleware are executed asyncronously, in series according to the `clientConfig.messageRenderingMiddleware` array in your `./public/js/client-config.js` file.
+
+Example middleware:
+
+    function (messageInputText, next) {
+
+        // replace all instances of "Billy" with "Cheeseface"
+        var err = null;
+
+        next(err, messageInputText.replace(/Billy/g, "Cheeseface"));
+
+    }
+

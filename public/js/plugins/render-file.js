@@ -3,11 +3,11 @@
  * Default file renderer. Outputs some markdown and special symbol formats
  * for showing file icons (rendered by `emo`).
  * This can support async operations.
- * `callback(err, strFileTextOrHtml)`
+ * `next(err, strFileTextOrHtml)`
  */
-exports = module.exports = function (file, callback) {
+exports = module.exports = function (file, next) {
     if (!file) {
-        return callback();
+        return next();
     }
 
     var fileURL = '/files/' + file._id;
@@ -52,5 +52,5 @@ exports = module.exports = function (file, callback) {
     messageText = iconSymbol + '&nbsp;' + messageText + embed;
 
     var err = null;
-    callback(err, messageText);
+    next(err, messageText);
 };

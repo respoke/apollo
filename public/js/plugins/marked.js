@@ -1212,8 +1212,8 @@ marked.inlineLexer = InlineLexer.output;
 
 marked.parse = marked;
 
-exports = module.exports = function markdownRenderer(input, callback) {
+exports = module.exports = function markdownRenderer(input, next) {
     var err = null;
     var output = marked(input);
-    callback(err, output);
+    next(err, output);
 };
