@@ -11,8 +11,8 @@
 exports = module.exports = ['$rootScope', function ($rootScope) {
     var scrollChatToBottom = function (force) {
         var chat = document.getElementById('chat');
-        console.log(chat.scrollHeight, chat.scrollTop);
-        if (force || chat.scrollHeight < 1000 || !$rootScope.autoScrollDisabled) {
+
+        if (force || chat.scrollHeight < 2000 || !$rootScope.autoScrollDisabled) {
             chat.scrollTop = chat.scrollHeight;
         }
     };

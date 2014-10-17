@@ -39,7 +39,7 @@
             img.img-responsive.img-circle(
                 ng-repeat="(key, obj) in selectedChat.chatstate" ng-if="obj"
                 style="width: 24px"
-                ng-src="{{ gravatar(recents[key].email) }}"
+                ap-avatar email="recents[key].email"
                 ng-class="{ 'animated pulse infinite': obj.value === 'composing' }"
             )
         button.btn.btn-default(
