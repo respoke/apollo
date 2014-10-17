@@ -16,6 +16,10 @@ exports = module.exports = [
         $rootScope.justLoggedOut = false;
         $scope.authFailureMessage = $location.search().authFailure;
 
+        // When failing to get a token from the server, the interval will count up
+        // during respokeConnect() and continue to request tokens.
+        $scope.tokenRefreshInterval = 0;
+
         $rootScope.systemGroupId = '';
         $rootScope.systemEndpointId = '';
 
@@ -79,6 +83,7 @@ exports = module.exports = [
         $scope.resetPass;
 
         $scope.respokeConnect = function () {
+            $log.debug('respokeConnect');
             if ($rootScope.doNotConnectRespoke) {
                 $log.debug('refusing to connect to respoke due to $rootScope.doNotConnectRespoke');
                 return;
@@ -86,8 +91,15 @@ exports = module.exports = [
             Account.getToken(function (err, respokeAuth) {
                 if (err) {
                     $rootScope.notifications.push(err);
+                    if (!$scope.tokenRefreshInterval) {
+                        $scope.tokenRefreshInterval = 1000;
+                    }
+                    $scope.tokenRefreshInterval = $scope.tokenRefreshInterval * 2;
+                    $timeout(respokeConnect, $scope.tokenRefreshInterval);
                     return;
                 }
+                $scope.tokenRefreshInterval = 0;
+
                 $log.debug('respoke auth', respokeAuth);
                 $rootScope.client.ignore('disconnect');
                 $rootScope.client.listen('disconnect', function () {

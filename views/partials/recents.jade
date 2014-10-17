@@ -1,7 +1,8 @@
 .animated.center.on-top.relative(ng-show="!client.isConnected()")
     br
     h3.lightweight.pulse.infinite.slowly Loading #{config.name}...
-    button.btn.btn-xs.btn-default(ng-click="connectRespoke()") Retry
+    br
+    button.btn.btn-xs.btn-default(ng-click="respokeConnect()") Retry
 
 .panel.left.animated.fadeInRightBig(
     ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }"
