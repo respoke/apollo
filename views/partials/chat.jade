@@ -37,7 +37,7 @@
     .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings")
         .chatstate
             //- display when someone is typing
-            img.img-responsive.img-circle(
+            img.img-circle(
                 ng-repeat="(key, obj) in selectedChat.chatstate" ng-if="obj"
                 style="width: 24px"
                 ap-avatar email="recents[key].email"
