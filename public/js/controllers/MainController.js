@@ -423,10 +423,6 @@ exports = module.exports = [
                 $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
                 stopRinging();
                 $scope.$apply();
-            },
-            onHangup: function (evt) {
-                $log.debug('got hangup');
-                cleanupCall();
             }
         };
 
@@ -456,6 +452,10 @@ exports = module.exports = [
             }
 
             $scope.activeCall = evt.call;
+            $scope.activeCall.listen('hangup', function (evt) {
+                $log.debug('got hangup');
+                cleanupCall();
+            });
             $scope.incomingCall = evt.endpoint.id;
             $rootScope.audio.callIncoming.play();
             $rootScope.audio.callIncoming.loop = true;
