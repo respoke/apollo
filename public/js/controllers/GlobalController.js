@@ -217,6 +217,8 @@ exports = module.exports = [
                 // do not log them in. need to confirm account first.
                 $rootScope.notifications.push("Success! Check your email to confirm your account.");
                 $scope.signup = {};
+                $rootScope.account = account;
+                $rootScope.recents[account._id] = account;
             });
         };
 

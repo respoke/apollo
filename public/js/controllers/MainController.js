@@ -247,7 +247,7 @@ exports = module.exports = [
                     break;
                     case 'removegroup':
                         if ($rootScope.recents['group-' + msgValue]) {
-                            if ($scope.selectedChat._id === 'group-' + msgValue) {
+                            if ($scope.selectedChat && $scope.selectedChat._id === 'group-' + msgValue) {
                                 $rootScope.notifications.push(
                                     "Group " + msgValue + " was just deleted by the owner."
                                 );
