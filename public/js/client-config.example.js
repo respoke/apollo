@@ -6,7 +6,7 @@ var renderFile = require('./plugins/render-file');
 
 var clientConfig = {};
 
-clientConfig.jiraBaseWithSlash = 'https://jira.digium.com/browse/';
+// clientConfig.jiraBaseWithSlash = 'https://jira.digium.com/browse/';
 
 // When rendering a message, you can pass it through async middleware.
 // Middleware should accept two arguments, a string of content, and the function `next`.
@@ -16,7 +16,7 @@ clientConfig.jiraBaseWithSlash = 'https://jira.digium.com/browse/';
 // If the function `next(err)` returns an error, the middleware execution stops and the 
 // error is displayed instead of the message.
 clientConfig.messageRenderingMiddleware = [
-    jira(clientConfig.jiraBaseWithSlash),
+    // jira(clientConfig.jiraBaseWithSlash),
     emo,
     marked
 ];

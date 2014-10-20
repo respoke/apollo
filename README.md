@@ -39,7 +39,7 @@ This does require creating a google project in their developer console. [This bl
 
 Apollo lets you add your own plugins to parse message contents. You might want to turn a certain string into a link, or fetch an image when a particular string is in a message, embed a video, etc.
 
-Message parsing plugins are middleware are executed asyncronously, in series according to the `clientConfig.messageRenderingMiddleware` array in your `./public/js/client-config.js` file.
+Message parsing plugins are middleware and executed **asyncronously in series** according to the `clientConfig.messageRenderingMiddleware` array in your `./public/js/client-config.js` file.
 
 Example middleware:
 
