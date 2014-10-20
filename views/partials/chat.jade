@@ -36,11 +36,12 @@
 
     .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings")
         .chatstate
+            //- display when someone is typing
             img.img-responsive.img-circle(
                 ng-repeat="(key, obj) in selectedChat.chatstate" ng-if="obj"
                 style="width: 24px"
                 ap-avatar email="recents[key].email"
-                ng-class="{ 'animated pulse infinite': obj.value === 'composing' }"
+                ng-class="{ 'animated swing infinite': obj.value === 'composing' }"
             )
         button.btn.btn-default(
             ap-upload="onDropUpload"
