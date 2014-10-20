@@ -57,6 +57,13 @@ exports = module.exports = [
         $scope.messagesDuringBlur = 0;
         $scope.windowInFocus = true;
 
+        $scope.isAllowedToCall = function (item) {
+            var isPersonAndOnline = item.presence !== 'unavailable';
+            var isNotSelected = $scope.selectedChat && $scope.selectedChat._id === item._id;
+            var isNotOnCall = !$scope.activeCall;
+            return isPersonAndOnline && isNotSelected && isNotOnCall;
+        };
+
         var listenOwnPresence = function () {
             // listen for own presence
             $rootScope.client.listen('presence', function (evt) {

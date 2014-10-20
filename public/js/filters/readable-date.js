@@ -21,7 +21,7 @@ exports = module.exports = ['moment', function (moment) {
             return 'just now';
         }
         else if (diff < oneHour) {
-            return date.fromNow();
+            return date.fromNow(true);
         }
         else if (diff < oneDay) {
             return date.format('h:mm a');
