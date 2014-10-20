@@ -69,16 +69,10 @@
 
         //- Call
         #audio-call-controls.middle.row(ng-show="activeCall && !hideCallPanel")
-            .col-xs-1
-                img.img-circle.animated.slowly.infinite(
-                    ap-avatar email="recents[activeCall.remoteEndpoint.id].email"
-                    class="{{ incomingCall ? 'pulse' : '' }}"
-                )
-
-            .col-xs-6
+            .col-xs-7
                 span(ng-show="!incomingCall && !callIsRinging") On a call with
                 span(ng-show="callIsRinging") Placing a call to
-                strong {{ recents[activeCall.remoteEndpoint.id].display }}
+                strong(style="display:block") {{ recents[activeCall.remoteEndpoint.id].display }}
                 span(ng-show="incomingCall") is calling you
 
             .col-xs-5.align-right

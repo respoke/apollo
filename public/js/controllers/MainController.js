@@ -35,7 +35,6 @@ exports = module.exports = [
     ) {
         // make available to the view
         $scope.moment = moment;
-        $scope.account = $rootScope.account;
 
         $scope.showFullChat = true;
         $scope.showSettings = false;
@@ -434,7 +433,7 @@ exports = module.exports = [
         };
 
         var onCallReceived = function (evt) {
-
+            $log.debug('call incoming', evt);
             // when we are the caller, no need to display the incoming call
             if (evt.call.caller) {
                 return;
