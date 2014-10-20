@@ -15,6 +15,7 @@ exports = module.exports = [
                 var videoElement = doc.createElement('video');
                 videoElement.src = $window.URL.createObjectURL(stream);
                 videoElement.play();
+                videoElement.muted = true;
                 localVideoParent.appendChild(videoElement);
             },
             setRemoteVideo: function (stream) {
@@ -23,6 +24,7 @@ exports = module.exports = [
                 var videoElement = doc.createElement('video');
                 videoElement.src = $window.URL.createObjectURL(stream);
                 videoElement.play();
+                videoElement.muted = true;
                 remoteVideoParent.appendChild(videoElement);
             },
             cleanup: function () {

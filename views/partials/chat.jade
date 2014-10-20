@@ -14,7 +14,7 @@
             tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
                 //- avatar for remote party
                 td(width="60px")
-                    img.img-responsive.img-circle(
+                    img.img-circle(
                         style="width: 48px"
                         ap-avatar email="message.from.email"
                         ng-click="switchChat(message.from._id)"
