@@ -13,18 +13,20 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 ## Usage
 
 1. Perform the following commands in a terminal:
-
+    ```bash
     git clone https://github.com/respoke/apollo
     cd apollo
     npm install
+    ```
 
 1. Edit settings in the **two config files**:
     - Server configuration: `./config.example.js` and copy to `./config.js`
     - Browser configuration: `./public/js/client-config.example.js` and copy to `./public/js/client-config.js`
 
 1. Start the app via terminal:
-    
+    ```bash    
     npm start
+    ```
 
 1. Apollo will be running at [http://localhost:3000/](http://localhost:3000/).
 
