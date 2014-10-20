@@ -25,7 +25,7 @@
                     h6 {{ message.from.display }}
                     ap-message(ap-content="message.content.text" ap-file="message.file")
                 td.align-right(width="90px")
-                    small: small.help-block: ap-date(date="{{message.created}}")
+                    small: small.help-block: {{ message.created | readableDate }}
             tr.chatstate
                 td(colspan="3" width="100%")
                     

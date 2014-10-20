@@ -41,6 +41,7 @@ apollo.factory('respokeVideo', require('./lib/respoke-video'));
 apollo.factory('multiFileProcessor', require('./lib/multi-file-processor'));
 
 // Filters
+apollo.filter('readableDate', require('./filters/readable-date'));
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));
 
 // Directives
@@ -53,7 +54,6 @@ apollo.directive('apUpload', require('./directives/ap-upload'));
 apollo.directive('apToggleSetting', require('./directives/ap-toggle-setting'));
 apollo.directive('apMessage', require('./directives/ap-message.js'));
 apollo.directive('apPresence', require('./directives/ap-presence.js'));
-apollo.directive('apDate', require('./directives/ap-date.js'));
 apollo.directive('apAvatar', require('./directives/ap-avatar.js'));
 
 // Routes for main /#/
