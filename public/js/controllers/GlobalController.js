@@ -55,7 +55,7 @@ exports = module.exports = [
         // keep the audio a little low - these sounds are pretty loud.
         for (var a in $rootScope.audio) {
             if ($rootScope.audio[a].volume) {
-                $rootScope.audio[a].volume = 0.15;
+                $rootScope.audio[a].volume = 0.1;
             }
         }
 

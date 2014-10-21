@@ -57,7 +57,7 @@ exports = module.exports = [
         $scope.windowInFocus = true;
 
         $scope.isAllowedToCall = function (item) {
-            var isPersonAndOnline = item.presence !== 'unavailable';
+            var isPersonAndOnline = item.display && item.presence !== 'unavailable';
             var isNotSelected = $scope.selectedChat && $scope.selectedChat._id === item._id;
             var isNotOnCall = !$scope.activeCall;
             return isPersonAndOnline && isNotSelected && isNotOnCall;
