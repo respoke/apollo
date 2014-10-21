@@ -264,9 +264,6 @@ exports = module.exports = [
 
             var itemId = evt.group ? 'group-' + evt.group.id : evt.message.endpointId;
 
-            $log.debug('hasMetaContent', hasMetaContent);
-            $log.debug('msgType', msgType);
-            $log.debug('msgValue', msgValue);
             // User meta messages
             if (hasMetaContent) {
                 if (msgType === 'chatstate') {
@@ -282,7 +279,6 @@ exports = module.exports = [
                         }, 3000)
                     };
                     $rootScope.$apply();
-                    $timeout(scrollChatToBottom);
                 }
                 return;
             }
