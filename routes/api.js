@@ -483,9 +483,9 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                 };
 
                 if (account.settings.htmlEmails) {
-                    emailContent.html = req.user.display + ' said:<br /><br />' 
+                    emailContent.html = '<em>' + req.user.display + '</em>&nbsp;&nbsp;&nbsp;' 
                         + content.text
-                        + '<hr /><a href="' + config.baseURL + '">'
+                        + '<br />---<br /><a href="' + config.baseURL + '">'
                         + 'Unsubscribe from these messages in the '
                         + config.name + ' settings</a>';
                 }
@@ -500,8 +500,8 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
             });
         }
 
-        // send offline mention email
-        if (req.body.offlineMentions) {
+        // send offline mention email, but only for groups.
+        if (req.body.group && req.body.offlineMentions) {
             var mentions = req.body.offlineMentions instanceof Array ? req.body.offlineMentions : req.body.offlineMentions.split(',');
 
             req.db.Account.find().where('_id').in(mentions).exec(function (err, accounts) {
@@ -511,7 +511,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                 }
 
                 accounts.forEach(function sendNotifEmail(account) {
-                    if (!account || !account.settings.offlineNotifications) {
+                    if (!account) {
                         return;
                     }
                     var whereMentioned = req.body.group || ' in a conversation';
@@ -519,20 +519,19 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                         from: config.email.from,
                         replyTo: req.user.email,
                         to: account.email,
-                        subject: '[' + config.name + '] ' 
+                        subject: '[' + config.name + '] '
                             + req.user.display + ' mentioned you in ' + whereMentioned,
                         text: req.user.display + ' said:\n\n' + content.text
-                            + '\n---\nUnsubscribe from these messages in the '
-                            + config.name + ' settings. '
+                            + '\n---\n'
+                            + config.name + '   '
                             + config.baseURL
                     };
 
                     if (account.settings.htmlEmails) {
-                        emailContent.html = req.user.display + ' said:<br /><br />' 
+                        emailContent.html = '<em>' + req.user.display + '</em>&nbsp;&nbsp;&nbsp;' 
                             + content.text
-                            + '<hr /><a href="' + config.baseURL + '">'
-                            + 'Unsubscribe from these messages in the '
-                            + config.name + ' settings</a>';
+                            + '<br />---<br /><a href="' + config.baseURL + '">'
+                            + config.name + '</a>';
                     }
 
                     req.email.sendMail(emailContent, function (err) {

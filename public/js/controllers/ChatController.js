@@ -82,9 +82,10 @@ exports = module.exports = [
             if (mentions) {
                 msg.offlineMentions = [];
                 mentions.forEach(function (ment) {
-                    var person = $rootScope.recents[ment.replace(/[\[\~\]]/g, '')];
+                    var cleanId = ment.replace(/[\[\~\]]/g, '');
+                    var person = $rootScope.recents[cleanId];
                     if (person && person.presence === 'unavailable') {
-                        msg.offlineMentions.push(ment);
+                        msg.offlineMentions.push(cleanId);
                     }
                 });
             }
