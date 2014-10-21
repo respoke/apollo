@@ -13,10 +13,11 @@ exports = module.exports = [
     'File',
     'paddTopScroll',
     'scrollChatToBottom',
+    'emoMacros',
     'renderFile',
     '$q',
 
-    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, scrollChatToBottom, renderFile, $q) {
+    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, scrollChatToBottom, emoMacros, renderFile, $q) {
         $scope.pendingUploads = 0;
         $scope.recentlySentTyping = null;
 
@@ -25,20 +26,7 @@ exports = module.exports = [
         $rootScope.searchMacros = function (term) {
             term = term.toLowerCase();
             return $q(function (resolve) {
-                var macros = [
-                    { display: '<i class="fa fa-smile-o"></i>',     name: 'smile', _id: ':)' },
-                    { display: '<i class="fa fa-heart"></i>',       name: 'heart', _id: ':heart:' },
-                    { display: '<i class="fa fa-frown-o"></i>',     name: 'frown', _id: ':(' },
-                    { display: '<i class="fa fa-thumbs-up"></i>',   name: 'thumbs up', _id: ':thumbs-up:' },
-                    { display: '<i class="fa fa-thumbs-down"></i>', name: 'thumbs down', _id: ':thumbs-down:' },
-                    { display: '<i class="fa fa-fire"></i>',        name: 'fire', _id: ':fire:' },
-                    { display: '<i class="fa fa-magic"></i>',       name: 'magic', _id: ':magic:' },
-                    { display: '<i class="fa fa-rocket"></i>',      name: 'rocket', _id: ':rocket:' },
-                    { display: '<i class="fa fa-check"></i>',       name: 'check ok', _id: ':check:' },
-                    { display: '<i class="fa fa-male"></i>',        name: 'male', _id: ':male:' },
-                    { display: '<i class="fa fa-female"></i>',      name: 'female', _id: ':female:' },
-                    { display: '<i class="fa fa-bolt"></i>',        name: 'lightning bolt', _id: ':bolt:' },
-                ].filter(function (mac) {
+                var macros = emoMacros.filter(function (mac) {
                     if (mac._id.indexOf(term) !== -1) {
                         return true;
                     }

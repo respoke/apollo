@@ -32,6 +32,9 @@ apollo.factory('renderFile', function () {
         callback();
     };
 });
+apollo.factory('emoMacros', function () {
+    return clientConfig.emoMacros;
+});
 apollo.factory('crypto', function () {
     return require('crypto');
 });
