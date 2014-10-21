@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Take multiple file objects which were dragged or selected in an upload dialog,
- * and turn them into something this app can upload (base64).
+ * and return them as base64 encoded strings.
  */
 exports = module.exports = function () {
         return function (files, callback) {

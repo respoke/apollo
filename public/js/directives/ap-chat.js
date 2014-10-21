@@ -1,7 +1,7 @@
 'use strict';
 /**
  * The chat window.
- * The parent scope **must** implement the object `selectedChat`.
+ * TODO: fix it so not this: The parent scope **must** implement the object `selectedChat`.
  */
 exports = module.exports = [
     '$rootScope',

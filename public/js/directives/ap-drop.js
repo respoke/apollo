@@ -1,7 +1,7 @@
 'use strict';
 /* global $ */
 /**
- * Drag and drop multiple files for multi-file upload
+ * Drag and drop multiple files for multi-file upload.
  */
 exports = module.exports = ['multiFileProcessor', function (multiFileProcessor) {
     return {

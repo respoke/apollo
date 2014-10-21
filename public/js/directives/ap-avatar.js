@@ -1,4 +1,11 @@
 'use strict';
+/**
+ * A directive for showing a gravatar on an image.
+ * Usage:
+ * 
+ *      <img ap-avatar email="billy@respoke.io" />
+ *
+ */
 exports = module.exports = ['crypto', function (crypto) {
     return {
         restrict: 'A',

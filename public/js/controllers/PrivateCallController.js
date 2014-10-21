@@ -7,8 +7,9 @@ exports = module.exports = [
 
     'respokeVideo',
     'moment',
+    'scrollChatToBottom',
 
-    function ($log, $rootScope, $scope, $window, respokeVideo, moment) {
+    function ($log, $rootScope, $scope, $window, respokeVideo, moment, scrollChatToBottom) {
 
         if (!$window.opener || !$window.opener.activeCall) {
             $scope.errorMessage = "The call is already over.";
@@ -38,6 +39,12 @@ exports = module.exports = [
 
             $scope.errorMessage = "The call has ended.";
         };
+
+        var privateChatMessageListener = function (evt) {
+            scrollChatToBottom();
+        };
+        $window.opener.activeCall.ignore(privateChatMessageListener);
+        $window.opener.activeCall.listen('message', privateChatMessageListener);
         
         $window.opener.activeCall.listen('hangup', cleanUpCall);
 

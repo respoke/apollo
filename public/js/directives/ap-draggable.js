@@ -1,4 +1,8 @@
 'use strict';
+/**
+ * Makes an element draggable. That element should have the css property
+ * 'position' set to fixed.
+ */
 exports = module.exports = ['$window', function ($window) {
     return {
         restrict: 'A',

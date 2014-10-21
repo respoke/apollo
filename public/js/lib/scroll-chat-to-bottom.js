@@ -7,6 +7,9 @@
  * 
  * Scrolling gets disabled in root scope, for example, in 
  * situations like the user scrolling up - away from the bottom.
+ * 
+ * This thing is not perfect. Honestly, it sucks, and has been 
+ * built and rebuilt many times.
  */
 exports = module.exports = ['$rootScope', function ($rootScope) {
     var scrollChatToBottom = function (force) {
