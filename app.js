@@ -47,7 +47,7 @@ respoke.on('connect', function () {
 respoke.on('error', function (err) {
     debug('failed to connect to respoke', err);
 });
-
+global.respoke = respoke;
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));

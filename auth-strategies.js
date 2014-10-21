@@ -58,8 +58,9 @@ function strategize() {
                     // Create one if doesnt exist
                     if (!account) {
                         debug('new google account', email);
+                        var newId = email.split('@')[0];
                         new Account({
-                            _id: (email).toLowerCase().replace(/[^a-z]/g, ''),
+                            _id: newId,
                             email: email,
                             google: profile.id,
                             display: display
@@ -69,6 +70,23 @@ function strategize() {
                                 return;
                             }
                             done(null, saved);
+
+                            if (global.respoke) {
+                                global.respoke.groups.publish({
+                                    groupId: config.systemGroupId,
+                                    message: JSON.stringify({
+                                        meta: {
+                                            type: 'newaccount',
+                                            value: saved._id
+                                        }
+                                    })
+                                }, function (err) {
+                                    if (err) {
+                                        debug('failed to send new account notification', err);
+                                    }
+                                });
+                            }
+
                         });
                         return;
                     }
