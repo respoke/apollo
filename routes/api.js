@@ -446,7 +446,15 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
         }
         res.send(message);
 
-        // send offline indication email
+        var content;
+        try {
+            content = JSON.parse(req.body.content);
+        }
+        catch (ex) {
+            return;
+        }
+
+        // send offline notification email
         if (req.body.recipientOffline) {
             if (req.body.file) {
                 return;
@@ -459,15 +467,6 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                     return;
                 }
                 if (!account.settings.offlineNotifications) {
-                    return;
-                }
-
-                var content;
-                try {
-                    content = JSON.parse(req.body.content);
-                }
-                catch (ex) {
-                    debug('Failed parsing message.content for offline notif send', req.body, ex);
                     return;
                 }
 
@@ -496,7 +495,53 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                         debug(err);
                         return;
                     }
-                    debug('offline email sent', req.user.email, account.email);
+                    debug('offline conversation email sent', req.user.email, account.email);
+                });
+            });
+        }
+
+        // send offline mention email
+        if (req.body.offlineMentions) {
+            var mentions = req.body.offlineMentions instanceof Array ? req.body.offlineMentions : req.body.offlineMentions.split(',');
+
+            req.db.Account.find().where('_id').in(mentions).exec(function (err, accounts) {
+                if (err) {
+                    debug(err);
+                    return;
+                }
+
+                accounts.forEach(function sendNotifEmail(account) {
+                    if (!account || !account.settings.offlineNotifications) {
+                        return;
+                    }
+                    var whereMentioned = req.body.group || ' in a conversation';
+                    var emailContent = {
+                        from: config.email.from,
+                        replyTo: req.user.email,
+                        to: account.email,
+                        subject: '[' + config.name + '] ' 
+                            + req.user.display + ' mentioned you in ' + whereMentioned,
+                        text: req.user.display + ' said:\n\n' + content.text
+                            + '\n---\nUnsubscribe from these messages in the '
+                            + config.name + ' settings. '
+                            + config.baseURL
+                    };
+
+                    if (account.settings.htmlEmails) {
+                        emailContent.html = req.user.display + ' said:<br /><br />' 
+                            + content.text
+                            + '<hr /><a href="' + config.baseURL + '">'
+                            + 'Unsubscribe from these messages in the '
+                            + config.name + ' settings</a>';
+                    }
+
+                    req.email.sendMail(emailContent, function (err) {
+                        if (err) {
+                            debug(err);
+                            return;
+                        }
+                        debug('offline mention email sent', req.user.email, account.email);
+                    });
                 });
             });
         }

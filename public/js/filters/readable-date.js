@@ -1,3 +1,4 @@
+'use strict';
 exports = module.exports = ['moment', function (moment) {
     var oneMinute = 1000 * 60;
     var oneHour = 60 * oneMinute;
@@ -35,5 +36,5 @@ exports = module.exports = ['moment', function (moment) {
         else {
             return date.format('MMM Do, YYYY');
         }
-    }
+    };
 }];

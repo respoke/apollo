@@ -1,0 +1,5 @@
+ul#mention-list.list-group
+    li.list-group-item(mentio-menu-item="person" ng-repeat="person in items")
+        span(
+            ng-bind-html="person.display | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"
+        )

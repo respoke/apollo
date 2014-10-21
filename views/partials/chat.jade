@@ -25,7 +25,7 @@
                     h6 {{ message.from.display }}
                     ap-message(ap-content="message.content.text" ap-file="message.file")
                 td.align-right(width="90px")
-                    small: small.help-block: {{ message.created | readableDate }}
+                    small: small.help-block {{ message.created | readableDate }}
             tr.chatstate
                 td(colspan="3" width="100%")
                     
@@ -43,6 +43,15 @@
                 ap-avatar email="recents[key].email"
                 ng-class="{ 'animated swing infinite': obj.value === 'composing' }"
             )
+        mentio-menu#mentions(
+            mentio-typed-text="typedTerm"
+            mentio-search="getMentionList(term)"
+            mentio-select="selectedMention(item)"
+            mentio-for="'textInput'"
+            mentio-trigger-char="'@'"
+            mentio-template-url="/partials/mentions.html"
+            mentio-items="allRecents | filter:label:typedTerm"
+        )
         button.btn.btn-default(
             ap-upload="onDropUpload"
         ): i.fa.fa-upload
@@ -53,6 +62,9 @@
             ap-paste="onPasteUpload"
             ap-drop="onDropUpload"
             ng-keyup="isTyping()"
+            
+            mentio
+            autocomplete="off"
         )
 
 

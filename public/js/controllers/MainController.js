@@ -318,10 +318,10 @@ exports = module.exports = [
             ) {
                 $log.debug('group sound', evt.group, $rootScope.account.settings.groupMessageSounds);
                 if (evt.group && $rootScope.account.settings.groupMessageSounds) {
-                    $rootScope.audio.messageGroup.play();
+                    $rootScope.audio.playNext();
                 }
                 else if (!evt.group && $rootScope.account.settings.privateMessageSounds) {
-                    $rootScope.audio.messagePrivate.play();
+                    $rootScope.audio.playNext();
                 }
             }
 

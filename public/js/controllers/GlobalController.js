@@ -9,8 +9,9 @@ exports = module.exports = [
 
     'Account',
     'respoke',
+    '$q',
 
-    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, respoke) {
+    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, respoke, $q) {
         respoke.log.setLevel('debug');
         $rootScope.justLoggedIn = false;
         $rootScope.justLoggedOut = false;
@@ -24,16 +25,61 @@ exports = module.exports = [
         $rootScope.systemEndpointId = '';
 
         $rootScope.audio = {
-            messagePrivate: new Audio('/audio/message-private.ogg'),
-            messageGroup: new Audio('/audio/message-group.ogg'),
+            'notif-0': new Audio('/audio/notif-0.ogg'),
+            'notif-1': new Audio('/audio/notif-1.ogg'),
+            'notif-2': new Audio('/audio/notif-2.ogg'),
+            'notif-3': new Audio('/audio/notif-3.ogg'),
+            'notif-4': new Audio('/audio/notif-0.ogg'),
+            'notif-5': new Audio('/audio/notif-1.ogg'),
+            'notif-6': new Audio('/audio/notif-2.ogg'),
+            'notif-7': new Audio('/audio/notif-3.ogg'),
+            'notif-8': new Audio('/audio/notif-4.ogg'),
+            'notif-9': new Audio('/audio/notif-3.ogg'),
+            'notif-10': new Audio('/audio/notif-2.ogg'),
+            'notif-11': new Audio('/audio/notif-3.ogg'),
+            'notif-12': new Audio('/audio/notif-4.ogg'),
+            'notif-13': new Audio('/audio/notif-3.ogg'),
+            'notif-14': new Audio('/audio/notif-2.ogg'),
+            'notif-15': new Audio('/audio/notif-3.ogg'),
+            last: 0,
+            playNext: function () {
+                var aud = $rootScope.audio;
+                aud['notif-' + aud.last].play();
+                aud.last++;
+                if (aud.last > 15) {
+                    aud.last = 0;
+                }
+            },
+
             callIncoming: new Audio('/audio/call-incoming.ogg')
         };
         // keep the audio a little low - these sounds are pretty loud.
         for (var a in $rootScope.audio) {
-            $rootScope.audio[a].volume = 0.3;
+            if ($rootScope.audio[a].volume) {
+                $rootScope.audio[a].volume = 0.1;
+            }
         }
 
         $rootScope.recents = $window.recents = {};
+        $rootScope.allRecents = [];
+        $rootScope.getMentionList = function (term) {
+            var allRecents = [];
+            term = term.toLowerCase();
+            Object.keys($rootScope.recents).forEach(function (_id) {
+                var item = $rootScope.recents[_id];
+                var isPerson = item && _id.indexOf('group-') === -1 && _id !== $rootScope.account._id;
+                if (isPerson && item.display.toLowerCase().indexOf(term) !== -1) {
+                    allRecents.push({ display: item.display, _id: _id });
+                }
+            });
+            $rootScope.allRecents = allRecents;
+            return $q(function (resolve, reject) {
+                resolve(allRecents);
+            });
+        };
+        $rootScope.selectedMention = function (item) {
+            return '[~' + item._id + ']';
+        };
         $rootScope.notifications = [];
         $rootScope.account = {};
         $rootScope.client = $window.client = respoke.createClient();

@@ -1,7 +1,7 @@
 /* global angular */
 /* global respoke */
-
-var apollo = angular.module('apollo', ['ngRoute']);
+require('./lib/mentio.js')(angular);
+var apollo = angular.module('apollo', ['ngRoute', 'mentio']);
 
 var clientConfig = require('./client-config');
 

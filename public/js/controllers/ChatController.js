@@ -12,9 +12,10 @@ exports = module.exports = [
     'Message',
     'File',
     'paddTopScroll',
+    'scrollChatToBottom',
     'renderFile',
 
-    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, renderFile) {
+    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, scrollChatToBottom, renderFile) {
         $scope.pendingUploads = 0;
         $scope.recentlySentTyping = null;
 
@@ -77,12 +78,23 @@ exports = module.exports = [
                 from: $rootScope.account,
                 created: new Date()
             });
+            var mentions = txt.match(/\[\~([a-z0-9]+)\]/g);
+            if (mentions) {
+                msg.offlineMentions = [];
+                mentions.forEach(function (ment) {
+                    var person = $rootScope.recents[ment.replace(/[\[\~\]]/g, '')];
+                    if (person && person.presence === 'unavailable') {
+                        msg.offlineMentions.push(ment);
+                    }
+                });
+            }
             Message.create(msg, function (err, sentMessage) {
                 if (err) {
                     $rootScope.notifications.push(err);
                     $scope.selectedChat.messages.pop();
                     return;
                 }
+                scrollChatToBottom(true);
             });
         };
 
