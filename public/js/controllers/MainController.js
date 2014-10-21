@@ -386,7 +386,6 @@ exports = module.exports = [
                     messages.reverse();
                     $scope.selectedChat.messages = messages;
                     scrollChatToBottom(true);
-                    focusInput();
                 });
             }
             else if ($scope.selectedChat.messages.length > 100) {
@@ -396,6 +395,7 @@ exports = module.exports = [
             // bummer, but we just have to do this
             $timeout(function () {
                 scrollChatToBottom(true);
+                focusInput();
             }, 600);
         };
 
