@@ -514,13 +514,13 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                     if (!account) {
                         return;
                     }
-                    var whereMentioned = req.body.group || ' in a conversation';
+
                     var emailContent = {
                         from: config.email.from,
                         replyTo: req.user.email,
                         to: account.email,
                         subject: '[' + config.name + '] '
-                            + req.user.display + ' mentioned you in ' + whereMentioned,
+                            + req.user.display + ' mentioned you in ' + req.body.group,
                         text: req.user.display + ' said:\n\n' + content.text
                             + '\n---\n'
                             + config.name + '   '
