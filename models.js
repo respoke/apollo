@@ -99,6 +99,7 @@ AccountSchema.pre('validate', function (next) {
     if (this.isNew && !this.google) {
         this.conf = 'confirm-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4();
         this._id = this._id.toLowerCase();
+        debug('new account conf', config.baseURL + '/conf/' + this._id + '/' + this.conf);
     }
 
     if (this.isDirectModified('password')) {
