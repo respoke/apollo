@@ -71,6 +71,7 @@ function strategize() {
                             }
                             done(null, saved);
 
+                            // TODO: try to not be a jerk and do this
                             if (global.respoke) {
                                 global.respoke.groups.publish({
                                     groupId: config.systemGroupId,
