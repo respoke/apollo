@@ -43,6 +43,15 @@
                 ap-avatar email="recents[key].email"
                 ng-class="{ 'animated swing infinite': obj.value === 'composing' }"
             )
+        mentio-menu#macros(
+            mentio-typed-text="typedTerm"
+            mentio-search="searchMacros(term)"
+            mentio-select="selectedMacro(item)"
+            mentio-for="'textInput'"
+            mentio-trigger-char="'#'"
+            mentio-template-url="/partials/macros.html"
+            mentio-items="macros | filter:label:typedTerm"
+        )
         mentio-menu#mentions(
             mentio-typed-text="typedTerm"
             mentio-search="getMentionList(term)"
@@ -50,7 +59,7 @@
             mentio-for="'textInput'"
             mentio-trigger-char="'@'"
             mentio-template-url="/partials/mentions.html"
-            mentio-items="allRecents | filter:label:typedTerm"
+            mentio-items="allRecents"
         )
         button.btn.btn-default(
             ap-upload="onDropUpload"

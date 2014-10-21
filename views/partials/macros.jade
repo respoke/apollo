@@ -3,4 +3,5 @@ ul.mention-list.list-group
         span(
             ng-bind-html="item.display | unsafe"
         )
-        em   [~{{ item._id }}]
+        |  {{ item.name }}
+        em   {{ item._id }}

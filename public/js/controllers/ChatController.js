@@ -14,10 +14,64 @@ exports = module.exports = [
     'paddTopScroll',
     'scrollChatToBottom',
     'renderFile',
+    '$q',
 
-    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, scrollChatToBottom, renderFile) {
+    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, scrollChatToBottom, renderFile, $q) {
         $scope.pendingUploads = 0;
         $scope.recentlySentTyping = null;
+
+
+        $rootScope.macros = [];
+        $rootScope.searchMacros = function (term) {
+            term = term.toLowerCase();
+            return $q(function (resolve) {
+                var macros = [
+                    { display: '<i class="fa fa-smile-o"></i>',     name: 'smile', _id: ':)' },
+                    { display: '<i class="fa fa-heart"></i>',       name: 'heart', _id: ':heart:' },
+                    { display: '<i class="fa fa-frown-o"></i>',     name: 'frown', _id: ':(' },
+                    { display: '<i class="fa fa-thumbs-up"></i>',   name: 'thumbs up', _id: ':thumbs-up:' },
+                    { display: '<i class="fa fa-thumbs-down"></i>', name: 'thumbs down', _id: ':thumbs-down:' },
+                    { display: '<i class="fa fa-fire"></i>',        name: 'fire', _id: ':fire:' },
+                    { display: '<i class="fa fa-magic"></i>',       name: 'magic', _id: ':magic:' },
+                    { display: '<i class="fa fa-rocket"></i>',      name: 'rocket', _id: ':rocket:' },
+                    { display: '<i class="fa fa-check"></i>',       name: 'check ok', _id: ':check:' },
+                    { display: '<i class="fa fa-male"></i>',        name: 'male', _id: ':male:' },
+                    { display: '<i class="fa fa-female"></i>',      name: 'female', _id: ':female:' },
+                    { display: '<i class="fa fa-bolt"></i>',        name: 'lightning bolt', _id: ':bolt:' },
+                ].filter(function (mac) {
+                    if (mac._id.indexOf(term) !== -1) {
+                        return true;
+                    }
+                });
+                $rootScope.macros = macros;
+                resolve($rootScope.macros);
+            });
+        };
+        $rootScope.selectedMacro = function (item) {
+            return item._id;
+        };
+
+
+        $rootScope.allRecents = [];
+        $rootScope.getMentionList = function (term) {
+            var allRecents = [];
+            term = term.toLowerCase();
+            Object.keys($rootScope.recents).forEach(function (_id) {
+                var item = $rootScope.recents[_id];
+                var isPerson = item && _id.indexOf('group-') === -1 && _id !== $rootScope.account._id;
+                if (isPerson && (item.display.toLowerCase().indexOf(term) !== -1 || item._id.toLowerCase().indexOf(term) !== -1)) {
+                    allRecents.push({ display: item.display, _id: _id });
+                }
+            });
+            $rootScope.allRecents = allRecents;
+            return $q(function (resolve, reject) {
+                resolve(allRecents);
+            });
+        };
+        $rootScope.selectedMention = function (item) {
+            return '[~' + item._id + ']';
+        };
+
 
         $scope.isTyping = function () {
             if ($scope.recentlySentTyping) {

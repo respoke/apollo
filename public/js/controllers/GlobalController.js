@@ -9,9 +9,8 @@ exports = module.exports = [
 
     'Account',
     'respoke',
-    '$q',
 
-    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, respoke, $q) {
+    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, respoke) {
         respoke.log.setLevel('debug');
         $rootScope.justLoggedIn = false;
         $rootScope.justLoggedOut = false;
@@ -61,25 +60,6 @@ exports = module.exports = [
         }
 
         $rootScope.recents = $window.recents = {};
-        $rootScope.allRecents = [];
-        $rootScope.getMentionList = function (term) {
-            var allRecents = [];
-            term = term.toLowerCase();
-            Object.keys($rootScope.recents).forEach(function (_id) {
-                var item = $rootScope.recents[_id];
-                var isPerson = item && _id.indexOf('group-') === -1 && _id !== $rootScope.account._id;
-                if (isPerson && item.display.toLowerCase().indexOf(term) !== -1) {
-                    allRecents.push({ display: item.display, _id: _id });
-                }
-            });
-            $rootScope.allRecents = allRecents;
-            return $q(function (resolve, reject) {
-                resolve(allRecents);
-            });
-        };
-        $rootScope.selectedMention = function (item) {
-            return '[~' + item._id + ']';
-        };
         $rootScope.notifications = [];
         $rootScope.account = {};
         $rootScope.client = $window.client = respoke.createClient();
