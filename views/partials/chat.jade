@@ -11,7 +11,7 @@
         table#chat-table.table(ng-show="!showSettings")
 
             //- Messages
-            tr.animated.fadeIn(ng-repeat="message in selectedChat.messages")
+            tr.animated.fadeInUp.faster(ng-repeat="message in selectedChat.messages" ng-init="notSameFrom = message.from._id !== selectedChat.messages[$index -1].from._id")
                 //- avatar for remote party
                 td(width="60px")
                     img.img-circle(
@@ -19,15 +19,14 @@
                         ap-avatar email="message.from.email"
                         ng-click="switchChat(message.from._id)"
                         ng-class="{ clickable: message.from._id !== account._id }"
+                        ng-if="notSameFrom"
                     )
 
                 td
-                    h6 {{ message.from.display }}
+                    h6(ng-if="notSameFrom") {{ message.from.display }}
                     ap-message(ap-content="message.content.text" ap-file="message.file")
                 td.align-right(width="90px")
                     small: small.help-block {{ message.created | readableDate }}
-            tr.chatstate
-                td(colspan="3" width="100%")
                     
 
         //- Settings panel
@@ -35,14 +34,17 @@
             include settings.jade
 
     .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings")
+        
+        //- display when someone is typing
         .chatstate
-            //- display when someone is typing
             img.img-circle(
                 ng-repeat="(key, obj) in selectedChat.chatstate" ng-if="obj"
                 style="width: 24px"
                 ap-avatar email="recents[key].email"
                 ng-class="{ 'animated swing infinite': obj.value === 'composing' }"
             )
+
+        //- Macros
         mentio-menu#macros(
             mentio-typed-text="typedTerm"
             mentio-search="searchMacros(term)"
@@ -52,6 +54,8 @@
             mentio-template-url="/partials/macros.html"
             mentio-items="macros | filter:label:typedTerm"
         )
+
+        //- Mentioning somebody with @
         mentio-menu#mentions(
             mentio-typed-text="typedTerm"
             mentio-search="getMentionList(term)"
