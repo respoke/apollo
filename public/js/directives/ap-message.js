@@ -1,14 +1,19 @@
+/* global $ */
 'use strict';
+/**
+ * A chat message, intended to be inside of the ap-chat directive.
+ */
 exports = module.exports = [
     
-    '$sce',
+    '$sce', // secure context environment for overriding html
+    '$rootScope',
 
     // from client-config.js
     'messageRenderingMiddleware',
     'scrollChatToBottom',
     '$timeout',
 
-    function ($sce, middleware, scrollChatToBottom, $timeout) {
+    function ($sce, $rootScope, middleware, scrollChatToBottom, $timeout) {
         // First, validate that the middleware functionas are valid
         var invalidMiddlware = new Error("ap-message middleware must be an array of functions");
         if (!middleware || !(middleware instanceof Array)) {
@@ -41,7 +46,19 @@ exports = module.exports = [
                     if (mwIndex < middleware.length) {
                         middleware[mwIndex](scope.content, next);
                     }
+                    // when middleware is done
                     else {
+                        $timeout(function () {
+                            var mentions = $(element).find('.mentioned');
+                            mentions.each(function () {
+                                var _id = ($(this).data('mention') || '').replace('@', '');
+                                console.log('mention item', _id, this);
+                                if (_id && $rootScope.recents[_id]) {
+                                    $(this).text('@' + $rootScope.recents[_id].display);
+                                }
+                            });
+                        });
+
                         $timeout(function () {
                             var imgs = element.find('img');
                             if (imgs.length) {
