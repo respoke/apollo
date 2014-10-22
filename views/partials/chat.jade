@@ -13,9 +13,8 @@
             //- Messages
             tr.animated.fadeInUp.faster(ng-repeat="message in selectedChat.messages" ng-init="notSameFrom = message.from._id !== selectedChat.messages[$index -1].from._id")
                 //- avatar for remote party
-                td(width="60px")
+                td
                     img.img-circle(
-                        style="width: 48px"
                         ap-avatar email="message.from.email"
                         ng-click="switchChat(message.from._id)"
                         ng-class="{ clickable: message.from._id !== account._id }"
