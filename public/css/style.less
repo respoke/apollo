@@ -188,7 +188,6 @@ input[type="text"].form-control, textarea.form-control {
                 tr, td {
                     border: none;
                 }
-
                 td:nth-child(2) {
                     padding-left: 13px;
                     font-weight: 400;
@@ -286,6 +285,30 @@ input[type="text"].form-control, textarea.form-control {
     border-radius: 0;
 }
 
+#buddies {
+
+    table.table {
+        td:first-child {
+            /* to produce 20px from edge */
+            padding-left: 18px;
+            img {
+                height: 38px;
+                width: 38px;
+            }
+        }
+        td:nth-child(2) {
+            h6 {
+                padding: 0;
+                font-size: 14px;
+                ap-presence {
+                    width: 10px;
+                    height: 10px;
+                }
+            }
+        }
+    }
+}
+
 #video-call-container {
     #chat-title {
         padding-left: 20px;
@@ -378,20 +401,6 @@ input[type="text"].form-control, textarea.form-control {
     }
     transition: background .3s ease;
 }
-#selfie {
-    margin-top: 6px;
-    margin-left: 6px;
-    border: 4px solid transparent;
-    &.available {
-        border: 4px solid @success;
-    }
-    &.away {
-        border: 4px solid @danger;
-    }
-    &.busy {
-        border: 4px solid @warning;
-    }
-}
 .notify {
     position: relative;
     padding: 13px;
@@ -399,17 +408,41 @@ input[type="text"].form-control, textarea.form-control {
     background: @salmon;
     font-size: 18px;
 }
+
+
+#avatar-section {
+    #selfie {
+        margin-top: 19px;
+        margin-left: 19px;
+
+        /* height and width is 50, plus border that shrinks it */
+        height: 53px;
+        width: 53px;
+        border: 3px solid transparent;
+
+        &.available {
+            border: 4px solid @success;
+        }
+        &.away {
+            border: 4px solid @danger;
+        }
+        &.busy {
+            border: 4px solid @warning;
+        }
+    }
+
+}
 #me-section {
     h3 {
-        margin-top: 8px;
+        margin-top: 14px;
         padding-bottom: 0px;
         margin-bottom: 1px;
         padding-left: 8px;
     }
-
-}
-#avatar-section {
-    min-height: 73px;
+    h6 {
+        margin-bottom: 0;
+        margin-top: 0;
+    }
 }
 
 table a:not(.btn), .table a:not(.btn) {
@@ -425,6 +458,9 @@ table a:not(.btn), .table a:not(.btn) {
 #not-connected {
     .btn {
         opacity: .3;
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
         &:hover {
             opacity: 1;
         }

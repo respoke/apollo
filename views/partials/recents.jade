@@ -16,12 +16,12 @@
     .row
         #avatar-section.col-xs-3
             //- Presence
-            img#selfie.img-responsive.img-circle.clickable(
+            img#selfie.img-circle.clickable(
                 ap-avatar email="account.email"
                 data-toggle="dropdown"
-                class="{{ recents[account._id].presence ? 'animated pulse slower ' + recents[account._id].presence : '' }}"
+                class="{{ recents[account._id].presence ? 'animated fadeInDown faster ' + recents[account._id].presence : '' }}"
             )
-            ul.dropdown-menu.animated.fadeInLeft.faster
+            ul.dropdown-menu.animated.fadeInDown.faster
                 li: a(
                     tabindex="-1"
                     ng-click="setPresence('available')"
@@ -91,8 +91,8 @@
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
             td.col-xs-2.center
-                i.fa.fa-group.fa-3x.yellow(ng-if="!item.email")
-                img.img-responsive.img-circle(
+                i.fa.fa-group.fa-2x.yellow(ng-if="!item.email")
+                img.img-circle(
                     ng-if="item.email"
                     ap-avatar email="item.email"
                 )
