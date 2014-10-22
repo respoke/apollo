@@ -43,7 +43,6 @@ clientConfig.emoMacros = [
     {display: '<i class="fa fa-star-half-o"></i>',  name: 'star half', _id: ':star-half-o:'},
     {display: '<i class="fa fa-star-o"></i>',       name: 'star empty', _id: ':star-o:'},
     {display: '<i class="fa fa-fire"></i>',         name: 'fire', _id: ':fire:'},
-    {display: '<i class="fa fa-fire"></i>',         name: 'fire', _id: ':fire:'},
     {display: '<i class="fa fa-magic"></i>',        name: 'magic', _id: ':magic:'},
     {display: '<i class="fa fa-rocket"></i>',       name: 'rocket', _id: ':rocket:'},
     {display: '<i class="fa fa-space-shuttle"></i>',name: 'space shuttle', _id: ':space-shuttle:'},
