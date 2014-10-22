@@ -1,0 +1,19 @@
+{
+  "main": "passthrough.html",
+  "name": "Apollo",
+  "description": "Team collaboration built on Respoke",
+  "version": "0.1.0",
+  "node-remote": "*",
+  "window": {
+    "title": "Apollo",
+    "icon": "link.png",
+    "toolbar": false,
+    "frame": true,
+    "width": 900,
+    "height": 500,
+    "position": "mouse",
+    "min_width": 500,
+    "min_height": 400,
+    "resizable": true
+  }
+}

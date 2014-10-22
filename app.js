@@ -19,6 +19,7 @@ var middleware = require('./lib/middleware');
 
 // local configuration settings
 var config = require('./config');
+var mailTransport = nodemailer.createTransport(config.smtp);;
 var clientConfig = require('./public/js/client-config');
 // app utilities
 var appUtilities = require('./lib/app-utilities');
@@ -49,6 +50,21 @@ respoke.on('error', function (err) {
 });
 global.respoke = respoke;
 
+// Attaching app locals and utils to request
+app.use(function (req, res, next) {
+    // res.set('Access-Control-Allow-Origin', '*');
+    res.locals = req.locals || {};
+    res.locals.config = config;
+    res.locals.clientConfig = clientConfig;
+    
+    req.db = models;
+    req.email = mailTransport;
+    req.utils = appUtilities;
+    req.respoke = respoke;
+
+    next();
+});
+
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 
@@ -70,7 +86,13 @@ app.use(cookieParser());
 
 // Serving static assets
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
-app.use('/js', browserify('./public/js'));
+app.use('/js', browserify('./public/js', {
+    options: {
+        browserifyOptions: {
+            ignoreMissing: true
+        }
+    }
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 if (config.respokeLocalPath) {
     app.use(express.static(config.respokeLocalPath));
@@ -87,20 +109,6 @@ app.use(jadeStatic({
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
-// Attaching app locals and utils to request
-app.use(function (req, res, next) {
-    res.locals = req.locals || {};
-    res.locals.config = config;
-    res.locals.clientConfig = clientConfig;
-    
-    req.db = models;
-    req.email = nodemailer.createTransport(config.smtp);
-    req.utils = appUtilities;
-    req.respoke = respoke;
-
-    next();
-});
 
 // Passport sessions and user population on req.user
 app.use(passport.initialize());

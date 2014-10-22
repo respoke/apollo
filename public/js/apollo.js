@@ -72,3 +72,20 @@ apollo.config(['$routeProvider', function ($routeProvider) {
             redirectTo: '/'
         });
 }]);
+// setting Apollo API base url 
+apollo.config(function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($q) {
+        return {
+            request: function (config) {
+                if (!clientConfig.apolloBaseUrl) {
+                    return config;
+                }
+                if (config.url && config.url[0] !== '/') {
+                    config.url = '/' + config.url;
+                }
+                config.url = clientConfig.apolloBaseUrl + config.url;
+                return config || $q.when(config);
+            }
+        }
+    });
+});
