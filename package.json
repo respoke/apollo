@@ -19,7 +19,6 @@
     "email-validation": "^0.1.1",
     "express": "~4.9.0",
     "express-session": "^1.8.2",
-    "highlight.js": "^8.2.0",
     "jade": "~1.6.0",
     "less-middleware": "1.0.x",
     "moment": "^2.8.3",
@@ -29,7 +28,6 @@
     "passport": "^0.2.1",
     "passport-google-oauth": "^0.1.5",
     "serve-favicon": "~2.1.3",
-    "showdown": "^0.3.1",
     "uuid": "^2.0.1"
   },
   "domains": [
@@ -42,6 +40,7 @@
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.1.0",
     "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-compress": "^0.12.0",
     "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-jade": "^0.13.0",
     "grunt-node-webkit-builder": "^0.2.3",

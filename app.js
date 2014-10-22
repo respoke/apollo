@@ -2,7 +2,7 @@
 var express = require('express');
 var path = require('path');
 var nodemailer = require('nodemailer');
-var Respoke = require('respoke');
+var Respoke = require('./lib/node-respoke');
 var debug = require('debug')('apollo-app');
 
 // Express middleware

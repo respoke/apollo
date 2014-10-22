@@ -1,0 +1,82 @@
+{
+  "name": "respoke",
+  "version": "0.0.2",
+  "description": "respoke client",
+  "main": "index.js",
+  "scripts": {
+    "test": "istanbul cover _mocha spec/**/*.spec.js",
+    "functional": "mocha spec/functional/**/*.spec.js",
+    "unit": "mocha spec/unit/**/*.spec.js",
+    "debug-test": "DEBUG=respoke-client,respoke-admin npm test",
+    "docs": "grunt docs",
+    "build-readme": "grunt build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/respoke/node-respoke"
+  },
+  "keywords": [
+    "respoke"
+  ],
+  "author": {
+    "name": "Respoke",
+    "email": "support@respoke.io",
+    "url": "https://www.respoke.io"
+  },
+  "contributors": [
+    {
+      "name": "Erin Spiceland",
+      "email": "yes@erin.codes"
+    },
+    {
+      "name": "Dan Jenkins",
+      "email": "me@dan-jenkins.co.uk"
+    },
+    {
+      "name": "Jeff Parrish",
+      "email": "jeffhparrish@gmail.com"
+    },
+    {
+      "name": "Chad McElligott",
+      "email": "chad.mcelligott@gmail.com"
+    },
+    {
+      "name": "David M. Lee, II",
+      "email": "leedm777@yahoo.com"
+    },
+    {
+      "name": "Matthew Turney",
+      "email": "pho3nixf1re84@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/respoke/node-respoke/issues"
+  },
+  "homepage": "https://github.com/respoke/node-respoke",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-copy": "^0.6.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-gh-pages": "^0.9.1",
+    "grunt-http-server": "^1.0.0",
+    "grunt-open": "^0.2.3",
+    "istanbul": "^0.3.2",
+    "jsdoxy": "^0.7.4",
+    "mocha": "^1.21.4",
+    "nock": "^0.48.0",
+    "should": "^4.0.4",
+    "sinon": "^1.10.3",
+    "uuid": "^1.4.1"
+  },
+  "dependencies": {
+    "debug": "^1.0.4",
+    "es6-promise": "^1.0.0",
+    "lodash": "^2.4.1",
+    "nodeify": "^1.0.0",
+    "request": "^2.40.0",
+    "socket.io-client": "^0.9.x"
+  }
+}
