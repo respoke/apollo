@@ -99,7 +99,7 @@
 
             td.col-xs-7: h6
                 ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
-                | &nbsp;&nbsp;{{ item.display || item._id }}
+                | &nbsp;{{ item.display || item._id }}
 
             td.col-xs-3.call-buttons(
                 ng-show="isAllowedToCall(item)"
