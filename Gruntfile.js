@@ -23,7 +23,7 @@ exports = module.exports = function (grunt) {
         },
         nodewebkit: {
             options: {
-                platforms: ['osx', 'win', 'linux32', 'linux64'],
+                platforms: ['osx'],//, 'win', 'linux32', 'linux64'],
                 buildDir: './public/release',
             },
             src: ['./public/release/app/**/*']

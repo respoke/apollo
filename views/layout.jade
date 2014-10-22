@@ -8,16 +8,24 @@ html
     link(id="favicon" rel="shortcut icon" href="/favicon.ico")
     script.
         // node webkit
-        try {
+        if (window.nwDispatcher) {
+
             var gui = window.nwDispatcher.requireNwGui();
             var win = gui.Window.get();
+
+            win.removeAllListeners('new-win-policy');
+            win.on('new-win-policy', function (frame, url, policy) {
+                gui.Shell.openExternal(url);
+                policy.ignore();
+            });
+
             var nativeMenuBar = new gui.Menu({ type: "menubar" });
             try {
                 nativeMenuBar.createMacBuiltin("");
             }
             catch (notOSX) { }
             win.menu = nativeMenuBar;
-        } catch (notNodeWebkit) { }
+        }
     script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular.min.js")
     script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular-route.min.js")
     script(src=config.respokeJS)
