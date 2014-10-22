@@ -10,26 +10,26 @@ exports = module.exports = function (grunt) {
         copy: {
             nwk: {
                 files: {
-                    './build/app/package.json': './nodewebkit.json',
-                    './build/app/passthrough.html': './public/passthrough.html'
+                    './release/app/package.json': './nodewebkit.json',
+                    './release/app/passthrough.html': './public/passthrough.html'
                 }
             }
         },
         clean: {
             nwk: {
-                src: ['./build/**/*']
+                src: ['./release/**/*']
             }
         },
         nodewebkit: {
             options: {
-                platforms: ['osx'],//, 'linux32', 'linux64'],
-                buildDir: './build',
+                platforms: ['osx', 'win', 'linux32', 'linux64'],
+                buildDir: './release',
             },
-            src: ['./build/app/**/*']
+            src: ['./release/app/**/*']
         }
     });
 
-    grunt.registerTask('build', [
+    grunt.registerTask('release', [
         'clean',
         'copy:nwk',
         'nodewebkit'

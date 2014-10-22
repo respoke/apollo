@@ -86,13 +86,7 @@ app.use(cookieParser());
 
 // Serving static assets
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
-app.use('/js', browserify('./public/js', {
-    options: {
-        browserifyOptions: {
-            ignoreMissing: true
-        }
-    }
-}));
+app.use('/js', browserify('./public/js'));
 app.use(express.static(path.join(__dirname, 'public')));
 if (config.respokeLocalPath) {
     app.use(express.static(config.respokeLocalPath));
