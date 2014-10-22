@@ -74,7 +74,7 @@ apollo.config(['$routeProvider', function ($routeProvider) {
 }]);
 // setting Apollo API base url 
 apollo.config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q) {
+    $httpProvider.interceptors.push(['$q', function ($q) {
         return {
             request: function (config) {
                 if (!clientConfig.apolloBaseUrl) {
@@ -87,5 +87,5 @@ apollo.config(['$httpProvider', function ($httpProvider) {
                 return config || $q.when(config);
             }
         }
-    });
+    }]);
 }]);
