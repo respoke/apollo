@@ -136,7 +136,9 @@ input[type="text"].form-control, textarea.form-control {
             bottom: 0;
             padding: 13px;
             padding-top: 17px;
+            padding-left: 48px;
             background: @plainTransGray;
+            
             .chatstate {
                 position: absolute;
                 top: -14px;
@@ -146,14 +148,15 @@ input[type="text"].form-control, textarea.form-control {
                 }
             }
             /* The next two elements are mashed together. */
-            button.btn {
-                width: 13%;
+            button#upload-button {
+                position: fixed;
+                margin-left: -38px !important;
+                width: 38px;
                 height: 52px;
                 margin: 0;
                 border-radius: 8px;
                 border-top-right-radius: 0px;
                 border-bottom-right-radius: 0px;
-                float: left;
             }
             textarea {
                 resize: none;
@@ -162,7 +165,7 @@ input[type="text"].form-control, textarea.form-control {
                 border-top-left-radius: 0px;
                 border-bottom-left-radius: 0px;
                 padding: 8px;
-                width: 87%;
+                width: 100%;
                 height: 52px;
                 font-size: 12px;
             }
@@ -178,7 +181,7 @@ input[type="text"].form-control, textarea.form-control {
             width: 100%;
             top: 0;
             right: 2px;
-            bottom: 60px;
+            bottom: 76px;
             left: 0;
             overflow-y: auto;
 
