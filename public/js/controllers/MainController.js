@@ -434,11 +434,6 @@ exports = module.exports = [
             if (evt.call.caller) {
                 return;
             }
-            // ignore if already joined the call on another connection
-            if ($rootScope.recents[$rootScope.account._id].presence === 'call') {
-                $log.debug('ignoring call since already on call');
-                return;
-            }
             // only allow one call at a time.
             if ($scope.activeCall) {
                 $rootScope.notifications.push(
