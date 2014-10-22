@@ -54,3 +54,15 @@ Example middleware:
 
     }
 
+### Desktop app
+
+##### Requirements
+
+* [Grunt](http://gruntjs.com)
+
+If you would like to build the desktop app, proceed with the following steps.
+
+1. Edit `./nodewebkit.json` and change thesettings to meet your needs.
+1. Set the url to your deployed Apollo application in `./public/passthrough.example.html` under the `<meta http-equiv . . .>` tag. Save it as `./public/passthrough.html`.
+1. From the Apollo directory, run `grunt release`.
+1. The applications will be in the `./release/<app name>` folder.
