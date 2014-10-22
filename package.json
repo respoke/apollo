@@ -38,6 +38,11 @@
     "node": "0.10.31"
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.1.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-jade": "^0.13.0",
+    "grunt-node-webkit-builder": "^0.2.3",
     "jshint": "^2.5.6"
   }
 }
