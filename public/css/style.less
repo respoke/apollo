@@ -121,7 +121,7 @@ input[type="text"].form-control, textarea.form-control {
 
     &.left {
         left: 0;
-        background-color: rgba(0,0,0,.7);
+        background-color: @medBaseGray;
         width: 200px;
         &.full {
             width: 360px;
@@ -329,6 +329,10 @@ input[type="text"].form-control, textarea.form-control {
 #buddies {
 
     table.table {
+        background: transparent;
+        tr, td {
+            border: none;
+        }
         tr>td:first-child {
             /* to produce 20px from edge */
             padding-left: 18px;
@@ -442,10 +446,13 @@ input[type="text"].form-control, textarea.form-control {
 }
 #recents-query {
     background: transparent;
+    border: 0;
+    padding-left: 21px;
+    transition: background .2s ease;
+
     &:focus {
         background: white;
-    }
-    transition: background .3s ease;
+    }    
 }
 .notify {
     position: relative;
@@ -483,11 +490,12 @@ input[type="text"].form-control, textarea.form-control {
         margin-top: 14px;
         padding-bottom: 0px;
         margin-bottom: 1px;
-        padding-left: 8px;
+        padding-left: 0px;
     }
     h6 {
         margin-bottom: 0;
         margin-top: 0;
+        padding-left: 2px;
     }
 }
 
