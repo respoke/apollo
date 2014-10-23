@@ -134,14 +134,13 @@ input[type="text"].form-control, textarea.form-control {
             left: 0;
             right: 0;
             bottom: 0;
-            padding: 13px;
-            padding-top: 17px;
-            padding-left: 48px;
+            padding: 13px 21px 8px 73px;
             background: @plainTransGray;
             
             .chatstate {
                 position: absolute;
                 top: -14px;
+                left: -20px;
                 img {
                     float: left;
                     margin-left: 6px;
@@ -150,8 +149,8 @@ input[type="text"].form-control, textarea.form-control {
             /* The next two elements are mashed together. */
             button#upload-button {
                 position: fixed;
-                margin-left: -38px !important;
-                width: 38px;
+                margin-left: -51px!important;
+                width: 50px;
                 height: 52px;
                 margin: 0;
                 border-radius: 8px;
@@ -164,7 +163,7 @@ input[type="text"].form-control, textarea.form-control {
                 border-radius: 8px;
                 border-top-left-radius: 0px;
                 border-bottom-left-radius: 0px;
-                padding: 8px;
+                padding: 8px 10px 8px 18px;
                 width: 100%;
                 height: 52px;
                 font-size: 12px;
@@ -250,7 +249,7 @@ input[type="text"].form-control, textarea.form-control {
                 span.chat-date {
                     font-size: 10px;
                     font-weight: 400;
-                    padding-right: 20px;
+                    padding-right: 14px;
                     .textGradient();
                 }
             }
@@ -330,7 +329,7 @@ input[type="text"].form-control, textarea.form-control {
 #buddies {
 
     table.table {
-        td:first-child {
+        tr>td:first-child {
             /* to produce 20px from edge */
             padding-left: 18px;
 
@@ -340,13 +339,16 @@ input[type="text"].form-control, textarea.form-control {
                 width: 38px;
             }
         }
-        td:nth-child(2) {
+        tr>td:nth-child(2) {
             h6 {
                 padding: 0;
                 font-size: 14px;
-                ap-presence {
-                    width: 10px;
-                    height: 10px;
+                ap-presence .presence {
+                    padding: 0 10px 0 4px;
+                    i.fa-circle {
+                        font-size: 10px;
+                        vertical-align: middle;
+                    }
                 }
             }
         }
