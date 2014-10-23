@@ -14,12 +14,12 @@ exports = module.exports = function (count) {
         img.onload = function () { // once the image has loaded
             ctx.drawImage(this, 0, 0);
             ctx.font = '9px "helvetica", sans-serif';
-            ctx.fillStyle = '#F0EEDD';
-            if (count > 99) {
-                ctx.fillText('99+', 0, 9);
+            ctx.fillStyle = '#000000';
+            if (count > 9) {
+                ctx.fillText('+', 10, 9);
             }
             else if (count) {
-                ctx.fillText(count, 0, 9);
+                ctx.fillText(count, 10, 9);
             }
             link.href = canvas.toDataURL('image/png');
         };

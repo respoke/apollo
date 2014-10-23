@@ -1,10 +1,9 @@
 div(ng-controller="SettingsController")
-    i.fa.fa-remove.fa-3x.clickable.pull-left(ng-click="toggleSettings()")
 
-    //- Sign out
-    p.align-right
-        br
-        button.btn.btn-xs.btn-danger(
+    p
+        i#close-settings.fa.fa-remove.fa-3x.clickable(ng-click="toggleSettings()")
+        //- Sign out
+        button#signout.btn.btn-xs.btn-danger(
             ng-click="logout()"
         ) Sign out
 
