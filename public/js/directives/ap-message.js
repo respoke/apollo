@@ -52,7 +52,7 @@ exports = module.exports = [
                             var mentions = $(element).find('.mentioned');
                             mentions.each(function () {
                                 var _id = ($(this).data('mention') || '').replace('@', '');
-                                console.log('mention item', _id, this);
+
                                 if (_id && $rootScope.recents[_id]) {
                                     $(this).text('@' + $rootScope.recents[_id].display);
                                 }

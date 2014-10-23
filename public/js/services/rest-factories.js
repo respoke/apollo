@@ -112,7 +112,12 @@ exports = module.exports = function (app) {
                     if (!message.offRecord) {
                         $http
                         .post('/api/messages', message)
-                        .success(success()).error(fail());
+                        .success(success()).error(function (err) {
+                            if (err) {
+                                $log.error(err);
+                            }
+                            $rootScope.notifications.push('Failed to save message to the server.');
+                        });
                     }
 
                 },

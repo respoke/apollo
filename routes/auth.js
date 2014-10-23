@@ -19,9 +19,16 @@ router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
 
     req.respoke.auth.endpoint(authSettings, function (err, authData) {
         if (err) {
-            debug(err);
+            debug('auth.endpoint', err);
+            err.status = 500;
             return next(err);
         }
+
+        if (!authData || !authData.tokenId) {
+            debug('invalid response from Respoke auth.endpoint method', authData);
+            return next(new Error("Invalid response from server. Please try again later."));
+        }
+
         res.send({
             token: authData.tokenId,
             appId: req.respoke.appId,
