@@ -24,8 +24,8 @@
                 td
                     h6(ng-if="notSameFrom") {{ message.from.display }}
                     ap-message(ap-content="message.content.text" ap-file="message.file")
-                td.align-right(width="90px")
-                    small: small.help-block {{ message.created | readableDate }}
+                td.align-right(width="100px")
+                    span.chat-date {{ message.created | readableDate }}
                     
 
         //- Settings panel

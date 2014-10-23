@@ -10,6 +10,7 @@
 @plainTransGray: #565B61;
 
 @primary: #2a9fd6;
+@primaryFaded: #438DB0;
 
 @text: rgb(255, 255, 255);
 @fadedText: #969696;
@@ -41,13 +42,9 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f536d', endColorstr='#696a6c',GradientType=0 ); /* IE6-9 */
 }
 
-.processingGradient() {
-    background: @primary; /* Old browsers */
-    background: -moz-linear-gradient(left,  @panelGradientStart 0%, @primary 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @panelGradientStart), color-stop(100%, @primary)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left,  @panelGradientStart 0%, @primary 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left,  @panelGradientStart 0%, @primary 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left,  @panelGradientStart 0%, @primary 100%); /* IE10+ */
-    background: linear-gradient(to right,  @panelGradientStart 0%, @primary 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=@panelGradientStart, endColorstr=@primary,GradientType=0 ); /* IE6-9 */
+.textGradient() {
+    /* webkit only */
+    background: -webkit-linear-gradient(@fadedText, @primaryFaded);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

@@ -86,6 +86,9 @@ exports = module.exports = function (app) {
                 create: function (message, callback) {
                     // message.content is a JSON string
                     message.content = JSON.stringify(message.content);
+                    if (message.content.length > 4096) {
+                        return callback(new Error('Message is too long. Consider breaking it into smaller chunks.'));
+                    }
 
                     if (message.group) {
                         $rootScope.client.getGroup({ id: message.group })

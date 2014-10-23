@@ -205,6 +205,8 @@ input[type="text"].form-control, textarea.form-control {
                 td:nth-child(2) {
                     padding-left: 13px;
                     font-weight: 400;
+
+                    /* message from text */
                     h6 {
                         margin-top: 13px;
                         margin-bottom: 10;
@@ -223,27 +225,33 @@ input[type="text"].form-control, textarea.form-control {
                         pre {
                             margin-left: 10px;
                         }
+                        font-size: 14px;
+
+                        .mentioned {
+                            margin: 0;
+                            padding: 0;
+                            color: @salmon;
+                            font-weight: bold;
+
+                            &.me {
+                                text-style: oblique;
+                            }
+                        }
+
+                        img, video, audio {
+                            max-width: 100%;
+                            max-height: 200px;
+                        }
                     }
 
                     word-break: break-word;
-                    img, video, audio {
-                        max-width: 100%;
-                        max-height: 200px;
-                    }
-                    .message {
-                        font-size: 14px;
-                    }
+
                 }
-
-                .mentioned {
-                    margin: 0;
-                    padding: 0;
-                    color: @salmon;
-                    font-weight: bold;
-
-                    &.me {
-                        font-weight: bold;
-                    }
+                span.chat-date {
+                    font-size: 10px;
+                    font-weight: 400;
+                    padding-right: 20px;
+                    .textGradient();
                 }
             }
         }

@@ -11,6 +11,9 @@ exports = module.exports = function (grunt) {
         copy: {
             nwk: {
                 files: {
+                    './public/release/app/apollo.png': './public/img/apollo.png',
+                    './public/release/app/apollo.ico': './public/img/apollo.ico',
+                    './public/release/app/apollo.icns': './public/img/apollo.icns',
                     './public/release/app/package.json': './nodewebkit.json',
                     './public/release/app/passthrough.html': './public/passthrough.html'
                 }
@@ -25,6 +28,8 @@ exports = module.exports = function (grunt) {
             options: {
                 platforms: ['osx'],//, 'win', 'linux32', 'linux64'],
                 buildDir: './public/release',
+                macIcns: './public/release/app/apollo.icns',
+                winIco: './public/release/app/apollo.ico'
             },
             src: ['./public/release/app/**/*']
         },

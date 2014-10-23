@@ -434,6 +434,11 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 });
 
 router.post('/messages', middleware.isAuthorized, function (req, res, next) {
+    if (req.body.content && req.body.content.length > 4096) {
+        var err = new Error('Message is too long. Consider breaking it into smaller chunks.');
+        err.status = 400;
+        return next(err);
+    }
     new req.db.Message({
         from: req.user._id,
         to: req.body.to,

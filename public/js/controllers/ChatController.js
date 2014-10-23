@@ -93,6 +93,7 @@ exports = module.exports = [
             if (!txt) {
                 return;
             }
+            
             var msg = {
                 content: {
                     text: txt

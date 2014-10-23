@@ -6,11 +6,11 @@
   "node-remote": "*",
   "window": {
     "title": "Apollo",
-    "icon": "link.png",
+    "icon": "apollo.png",
     "toolbar": false,
     "frame": true,
     "width": 900,
-    "height": 500,
+    "height": 600,
     "position": "mouse",
     "min_width": 500,
     "min_height": 400,
