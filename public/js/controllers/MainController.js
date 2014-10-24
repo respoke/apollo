@@ -213,13 +213,12 @@ exports = module.exports = [
         $rootScope.client.ignore('message');
         $rootScope.client.listen('message', function (evt) {
 
-            $log.debug('message before', evt.message.message);
             try {
                 evt.message.message = JSON.parse(evt.message.message);
             } catch (ignored) {
                 $log.debug('invalid message content received', evt);
             }
-            $log.debug('message after', evt.message.message);
+            
             var fromSystemGroup = evt.group && evt.group.id === $rootScope.systemGroupId;
             var hasMetaContent = evt.message.message.meta && evt.message.message.meta.type;
             var msgType;
