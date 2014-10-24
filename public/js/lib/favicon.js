@@ -25,4 +25,9 @@ exports = module.exports = function (count) {
         };
         img.src = '/favicon.ico';
     }
+
+    // node webkit
+    if (typeof WIN !== 'undefined' && WIN.setBadgeLabel) {
+        WIN.setBadgeLabel(count || '');
+    }
 };

@@ -16,7 +16,7 @@
     .row
         #avatar-section.col-xs-3
             //- Presence
-            img#selfie.img-circle.clickable(
+            img#selfie.img-thumbnail.clickable(
                 ap-avatar email="account.email"
                 data-toggle="dropdown"
                 class="{{ recents[account._id].presence ? 'animated fadeInDown faster ' + recents[account._id].presence : '' }}"
@@ -60,26 +60,27 @@
 
     br
 
-    input#recents-query.form-control(
-        type="text" 
-        placeholder="Search for friends and conversations"
-        ng-model="recentQuery"
-    )
+    .input-group.input-group-sm
+        input#recents-query.form-control(
+            type="text" 
+            placeholder="Search for friends and groups"
+            ng-model="recentQuery"
+        )
+        span.input-group-btn
+            button#newgroup.btn.btn-default(
+                ng-click="showCreateGroup = !showCreateGroup"
+            )
+                i.fa.fa-plus(ng-show="!showCreateGroup")
+                i.fa.fa-remove(ng-show="showCreateGroup")
 
-    //- Creating a new group
-    #newgroup
+
+    .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
+        input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
         button.btn.btn-primary.btn-block.btn-sm(
-            ng-show="!showCreateGroup"
-            ng-click="showCreateGroup = true"
-        ) Create a new group +
-
-        .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
-            input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
-            button.btn.btn-primary.btn-block.btn-sm(
-                ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
-            ) Create
-            button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
-                | Cancel
+            ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
+        ) Create
+        button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+            | Cancel
 
 
     //- Display group and buddy list
@@ -92,12 +93,12 @@
         )
             td.col-xs-2.center
                 i.fa.fa-group.fa-2x.yellow(ng-if="!item.email")
-                img.img-circle(
+                img.img-thumbnail(
                     ng-if="item.email"
                     ap-avatar email="item.email"
                 )
 
-            td.col-xs-7: h6
+            td.col-xs-7: h6(ng-class="{{ !item.presence ? 'no-presence' : '' }}")
                 ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
                 | &nbsp;{{ item.display || item._id }}
 

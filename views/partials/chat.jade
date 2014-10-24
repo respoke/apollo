@@ -14,7 +14,7 @@
             tr.animated.fadeInUp.faster(ng-repeat="message in selectedChat.messages" ng-init="notSameFrom = message.from._id !== selectedChat.messages[$index -1].from._id")
                 //- avatar for remote party
                 td
-                    img.img-circle(
+                    img.img-thumbnail(
                         ap-avatar email="message.from.email"
                         ng-click="switchChat(message.from._id)"
                         ng-class="{ clickable: message.from._id !== account._id }"
@@ -36,11 +36,10 @@
         
         //- display when someone is typing
         .chatstate
-            img.img-circle(
+            img.img-thumbnail(
                 ng-repeat="(key, obj) in selectedChat.chatstate" ng-if="obj"
-                style="width: 24px"
                 ap-avatar email="recents[key].email"
-                ng-class="{ 'animated swing infinite': obj.value === 'composing' }"
+                ng-class="{ 'animated pulse infinite': obj.value === 'composing' }"
             )
 
         //- Macros

@@ -18,6 +18,10 @@
 .lightweight {
     font-weight: 100;
 }
+.img-thumbnail {
+    padding: 0;
+    border: 0;
+}
 
 html, body {
     height: 100%;
@@ -144,6 +148,8 @@ input[type="text"].form-control, textarea.form-control {
                 img {
                     float: left;
                     margin-left: 6px;
+                    width: 24px;
+                    height: 24px;
                 }
             }
             /* The next two elements are mashed together. */
@@ -193,12 +199,11 @@ input[type="text"].form-control, textarea.form-control {
                     padding-bottom: 0;
                 }
                 td:first-child {
-                    padding-left: 20px;
+                    padding-left: 23px;
                     padding-right: 0;
-                    width: 70px;
+                    width: 72px;
                     img {
                         width: 50px;
-                        height: 50px;
                     }
                 }
                 td:nth-child(2) {
@@ -249,7 +254,7 @@ input[type="text"].form-control, textarea.form-control {
                 span.chat-date {
                     font-size: 10px;
                     font-weight: 400;
-                    padding-right: 14px;
+                    padding-right: 16px;
                     .textGradient();
                 }
             }
@@ -322,11 +327,10 @@ input[type="text"].form-control, textarea.form-control {
     }
 }
 
-#buddies .btn, #newgroup .btn {
-    border-radius: 0;
-}
-
 #buddies {
+    .btn {
+        border-radius: 0;
+    }
 
     table.table {
         background: transparent;
@@ -338,15 +342,12 @@ input[type="text"].form-control, textarea.form-control {
             padding-left: 18px;
 
             vertical-align: middle;
-            img {
-                height: 38px;
-                width: 38px;
-            }
         }
         tr>td:nth-child(2) {
             h6 {
                 padding: 0;
                 font-size: 14px;
+
                 ap-presence .presence {
                     padding: 0 10px 0 4px;
                     i.fa-circle {
@@ -354,6 +355,9 @@ input[type="text"].form-control, textarea.form-control {
                         vertical-align: middle;
                     }
                 }
+            }
+            h6.no-presence {
+                padding-left: 22px;
             }
         }
     }
@@ -442,6 +446,12 @@ input[type="text"].form-control, textarea.form-control {
         margin: 0;
         border: none;
         border-bottom: 1px solid @medLterBase;
+    }
+}
+.panel span.input-group-btn {
+    padding: 0;
+    #newgroup {
+        border-radius: 0;
     }
 }
 #recents-query {

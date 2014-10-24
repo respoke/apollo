@@ -87,7 +87,8 @@ exports = module.exports = [
             return false;
         };
 
-        $window.addEventListener('focus', function () {
+
+        function onWindowFocus() {
             $scope.windowInFocus = true;
             $scope.messagesDuringBlur = 0;
             favicon($scope.messagesDuringBlur);
@@ -101,10 +102,16 @@ exports = module.exports = [
             }
             // force chat scrolling to the bottom, because it will not scroll
             // when the window is out of focus on some browsers
-        });
-        $window.addEventListener('blur', function () {
+        }
+        function onWindowBlur() {
             $scope.windowInFocus = false;
-        });
+        }
+        $window.addEventListener('focus', onWindowFocus);
+        $window.addEventListener('blur', onWindowBlur);
+        if (typeof WIN !== 'undefined') {
+            WIN.on('blur', onWindowBlur);
+            WIN.on('focus', onWindowFocus);
+        }
 
         Account.get(function (err, accounts) {
             if (err) {
