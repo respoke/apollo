@@ -15,12 +15,12 @@ html
 
             WIN.removeAllListeners('new-win-policy');
             WIN.on('new-win-policy', function (frame, url, policy) {
-                //- console.log('new win policy', frame, url, policy);
-                //- var isNotNotif = url.indexOf('/nw-desktop-notifications.html') === -1;
-                //- if (isNotNotif) {
-                    GUI.Shell.openExternal(url);
-                    policy.ignore(); 
-                //- }
+                if (url.indexOf('/private') !== -1) {
+                    policy.forceNewPopup();
+                    return;
+                }
+                GUI.Shell.openExternal(url);
+                policy.ignore(); 
             });
 
             var nativeMenuBar = new GUI.Menu({ type: "menubar" });
