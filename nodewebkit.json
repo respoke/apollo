@@ -7,8 +7,8 @@
   "window": {
     "title": "Apollo",
     "icon": "apollo.png",
-    "toolbar": true,
-    "frame": true,
+    "toolbar": false,
+    "frame": false,
     "width": 900,
     "height": 600,
     "position": "mouse",

@@ -95,7 +95,8 @@
             .col-xs-7
                 span(ng-show="!incomingCall && !callIsRinging") On a call with
                 span(ng-show="callIsRinging") Placing a call to
-                strong(style="display:block") {{ recents[activeCall.remoteEndpoint.id].display }}
+                span(style="display:block")
+                    strong {{ recents[activeCall.remoteEndpoint.id].display }}
                 span(ng-show="incomingCall") is calling you
 
             .col-xs-5.align-right
