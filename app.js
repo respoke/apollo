@@ -71,10 +71,7 @@ app.use(logger('dev'));
 // Sessions in mongo
 app.use(session({
     secret: config.mongoSessions.secret,
-    store: new MongoStore({
-        db: config.mongoSessions.db,
-        url: config.mongoURI
-    }),
+    store: new MongoStore(config.mongoSessions),
     saveUninitialized: true,
     resave: true
 }));

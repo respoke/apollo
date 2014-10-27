@@ -31,7 +31,6 @@ config.mongoURI = 'mongodb://localhost/apollo';
 
 // session store
 config.mongoSessions = {
-    db: 'apollosessions',
     secret: 'change-this-1234'
 };
 

@@ -15,7 +15,7 @@ html
 
             WIN.removeAllListeners('new-win-policy');
             WIN.on('new-win-policy', function (frame, url, policy) {
-                if (url.indexOf('/private') !== -1) {
+                if (url.indexOf('/private') !== -1 || url.indexOf('#{config.baseURL}') !== -1) {
                     policy.forceNewPopup();
                     return;
                 }
