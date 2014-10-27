@@ -44,13 +44,23 @@ exports = module.exports = [
         $rootScope.getMentionList = function (term) {
             var allRecents = [];
             term = term.toLowerCase();
-            Object.keys($rootScope.recents).forEach(function (_id) {
-                var item = $rootScope.recents[_id];
-                var isPerson = item && _id.indexOf('group-') === -1 && _id !== $rootScope.account._id;
-                if (isPerson && (item.display.toLowerCase().indexOf(term) !== -1 || item._id.toLowerCase().indexOf(term) !== -1)) {
-                    allRecents.push({ display: item.display, _id: _id });
-                }
-            });
+            // when you're in a private chat, you can only mention the
+            // person in the chat
+            if ($scope.selectedChat && $scope.selectedChat.display) {
+                allRecents.push({
+                    display: $scope.selectedChat.display,
+                    _id: $scope.selectedChat._id
+                });
+            }
+            else {
+                Object.keys($rootScope.recents).forEach(function (_id) {
+                    var item = $rootScope.recents[_id];
+                    var isPerson = item && _id.indexOf('group-') === -1 && _id !== $rootScope.account._id;
+                    if (isPerson && (item.display.toLowerCase().indexOf(term) !== -1 || item._id.toLowerCase().indexOf(term) !== -1)) {
+                        allRecents.push({ display: item.display, _id: _id });
+                    }
+                });
+            }
             $rootScope.allRecents = allRecents;
             return $q(function (resolve, reject) {
                 resolve(allRecents);
@@ -93,7 +103,7 @@ exports = module.exports = [
             if (!txt) {
                 return;
             }
-            
+
             var msg = {
                 content: {
                     text: txt
@@ -169,7 +179,7 @@ exports = module.exports = [
                     return;
                 }
                 // Messages are sorted descending from the server, to capture
-                // the latest ones. So to get the most recent on the bottom, 
+                // the latest ones. So to get the most recent on the bottom,
                 // the array gets reversed.
                 messages.reverse();
                 $scope.selectedChat.messages = messages.concat($scope.selectedChat.messages);
@@ -207,7 +217,7 @@ exports = module.exports = [
                 $rootScope.notifications.push(err);
                 return;
             }
-            
+
             renderFile(file, function (err, messageText) {
                 if (err) {
                     $rootScope.notifications.push(err);
