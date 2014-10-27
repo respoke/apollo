@@ -78,7 +78,7 @@ exports = module.exports = [
             });
 
         });
-        
+
         $scope.loadAccount = function (callback) {
             Account.getMe(function (err, account) {
                 if (err) {
@@ -96,7 +96,7 @@ exports = module.exports = [
                 }
             });
         };
-        
+
         $scope.signin = {
             email: "",
             password: ""
@@ -114,7 +114,6 @@ exports = module.exports = [
         $scope.respokeConnect = function () {
             $log.debug('respokeConnect');
             if ($rootScope.doNotConnectRespoke) {
-                $log.debug('refusing to connect to respoke due to $rootScope.doNotConnectRespoke');
                 return;
             }
             Account.getToken(function (err, respokeAuth) {
@@ -140,10 +139,9 @@ exports = module.exports = [
                 $rootScope.client.ignore('disconnect');
                 $rootScope.client.listen('disconnect', function () {
                     $rootScope.$apply();
-                    $scope.loadAccount();
-                    $scope.respokeConnect();
+                    $scope.loadAccount($scope.respokeConnect);
                 });
-                
+
                 $rootScope.systemGroupId = respokeAuth.systemGroupId;
                 $rootScope.systemEndpointId = respokeAuth.systemEndpointId;
 
@@ -199,8 +197,8 @@ exports = module.exports = [
                 $rootScope.notifications.push("Missing password");
                 return;
             }
-            
-            Account.login({ 
+
+            Account.login({
                 email: $scope.signin.email,
                 password: $scope.signin.password
             }, function (err, data) {
@@ -272,7 +270,7 @@ exports = module.exports = [
                 $rootScope.notifications.push("Passwords must match.");
                 return;
             }
-            
+
             Account.resetPassword(
                 $scope.resetPass._id,
                 $scope.resetPass.conf,

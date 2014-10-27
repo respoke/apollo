@@ -138,7 +138,7 @@ exports = module.exports = [
                 });
             }
         });
-        
+
         if ($rootScope.client.isConnected()) {
             $rootScope.client.setPresence({ presence: 'available' });
             listenOwnPresence();
@@ -159,9 +159,10 @@ exports = module.exports = [
             $rootScope.recents[account._id].chatstate = {};
             $rootScope.recents[account._id].presence = "unavailable";
             $rootScope.recents[account._id].unread = 0;
+            $scope.fetchChat($rootScope.recents[account._id]);
             return setPresenceListener(account._id);
         }
-        
+
         function setPresenceListener(endpt) {
             return function () {
                 $rootScope.recents[endpt].endpoint = $rootScope.client.getEndpoint({ id: endpt });
@@ -172,7 +173,7 @@ exports = module.exports = [
                 });
             };
         }
-    
+
         function bindGroup(group) {
             $rootScope.client.join({
                 id: group._id,
@@ -185,6 +186,7 @@ exports = module.exports = [
                     $rootScope.recents['group-' + group._id] = group;
                     $rootScope.recents['group-' + group._id].messages = msgs;
                     $rootScope.recents['group-' + group._id].chatstate = {};
+                    $scope.fetchChat($rootScope.recents['group-' + group._id]);
                     $rootScope.$apply();
                 },
                 onError: function (evt) {
@@ -193,6 +195,7 @@ exports = module.exports = [
             });
         }
 
+        // All groups are retrieved. Messages are populated for them.
         Group.get(function (err, groups) {
             if (err) {
                 $rootScope.notifications.push(err);
@@ -218,7 +221,7 @@ exports = module.exports = [
             } catch (ignored) {
                 $log.debug('invalid message content received', evt);
             }
-            
+
             var fromSystemGroup = evt.group && evt.group.id === $rootScope.systemGroupId;
             var hasMetaContent = evt.message.message.meta && evt.message.message.meta.type;
             var msgType;
@@ -362,11 +365,11 @@ exports = module.exports = [
                 return;
             }
             $scope.toggleSettings(false);
-            // reset the current chat unreads to zero
+            // reset the current chat unread message count to zero
             if ($scope.selectedChat) {
                 $scope.selectedChat.unread = 0;
             }
-            
+
             // switch the chat
             $scope.selectedChat = $rootScope.recents[id];
             // reset the NEW chat unreads to zero
@@ -374,25 +377,7 @@ exports = module.exports = [
 
             // fetch messages if there arent very many
             if ($scope.selectedChat.messages.length < 25) {
-                var qs;
-                if ($scope.selectedChat.display) {
-                    qs = '?account=' + $scope.selectedChat._id;
-                }
-                else {
-                    qs = '?group=' + $scope.selectedChat._id;
-                }
-                Message.get(qs, function (err, messages) {
-                    if (err) {
-                        $rootScope.notifications.push(err);
-                        return;
-                    }
-                    // Messages are sorted descending from the server, to capture
-                    // the latest ones. So to get the most recent on the bottom, 
-                    // the array gets reversed.
-                    messages.reverse();
-                    $scope.selectedChat.messages = messages;
-                    scrollChatToBottom(true);
-                });
+                $scope.fetchChat($scope.selectedChat);
             }
             else if ($scope.selectedChat.messages.length > 100) {
                 var overLimit = $scope.selectedChat.messages.length - 100;
@@ -403,6 +388,30 @@ exports = module.exports = [
                 scrollChatToBottom(true);
                 focusInput();
             }, 600);
+        };
+
+        $scope.fetchChat = function (item) {
+            var qs;
+            if (item.display) {
+                qs = '?account=' + item._id;
+            }
+            else {
+                qs = '?group=' + item._id;
+            }
+            Message.get(qs, function (err, messages) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                // Messages are sorted descending from the server, to capture
+                // the latest ones. So to get the most recent on the bottom,
+                // the array gets reversed.
+                messages.reverse();
+                item.messages = messages;
+                if ($scope.selectedChat && $scope.selectedChat._id === item._id) {
+                    scrollChatToBottom(true);
+                }
+            });
         };
 
         var stopRinging = function () {
