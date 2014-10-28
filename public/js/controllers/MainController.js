@@ -242,6 +242,9 @@ exports = module.exports = [
                 msgType = evt.message.message.meta.type;
                 msgValue = evt.message.message.meta.value;
             }
+            else {
+                msgValue = evt.message.message.text;
+            }
 
             // System messages
             if (fromSystemGroup && hasMetaContent) {
@@ -326,19 +329,25 @@ exports = module.exports = [
                 });
             }
 
+            // if you're mentioned, you get notified by sound
+            var reMe = new RegExp("\\[\\~" + $rootScope.account._id + "\\]");
+            var wasMentioned = msgValue && msgValue.match(reMe);
+            if (wasMentioned) {
+                $rootScope.audio.mention.play();
+            }
             // Playing sounds
             // they do not play when you have focus on the window and are viewing the chat
-            if (
+            else if (
                 !$scope.windowInFocus
                 || !$scope.selectedChat
                 || itemId !== $scope.selectedChat._id
             ) {
                 $log.debug('group sound', evt.group, $rootScope.account.settings.groupMessageSounds);
                 if (evt.group && $rootScope.account.settings.groupMessageSounds) {
-                    $rootScope.audio.playNext();
+                    $rootScope.audio.message.play();
                 }
                 else if (!evt.group && $rootScope.account.settings.privateMessageSounds) {
-                    $rootScope.audio.playNext();
+                    $rootScope.audio.message.play();
                 }
             }
 
@@ -430,6 +439,19 @@ exports = module.exports = [
             $rootScope.audio.callIncoming.pause();
             $rootScope.audio.callIncoming.loop = false;
             $rootScope.audio.callIncoming.currentTime = 0;
+
+            $rootScope.audio.videoIncoming.pause();
+            $rootScope.audio.videoIncoming.loop = false;
+            $rootScope.audio.videoIncoming.currentTime = 0;
+
+            $rootScope.audio.videoOutgoing.pause();
+            $rootScope.audio.videoOutgoing.loop = false;
+            $rootScope.audio.videoOutgoing.currentTime = 0;
+
+            $rootScope.audio.callOutgoing.pause();
+            $rootScope.audio.callOutgoing.loop = false;
+            $rootScope.audio.callOutgoing.currentTime = 0;
+
             $scope.incomingCall = "";
             $scope.callIsRinging = false;
         };
@@ -471,6 +493,7 @@ exports = module.exports = [
                     'instantly hanging up on incoming call because we are already on a call'
                 );
                 evt.call.hangup();
+                stopRinging();
                 $scope.$apply();
                 return;
             }
@@ -479,10 +502,17 @@ exports = module.exports = [
             $scope.activeCall.listen('hangup', function (evt) {
                 $log.debug('got hangup');
                 cleanupCall();
+                $rootScope.audio.callTimeout.play();
             });
             $scope.incomingCall = evt.endpoint.id;
-            $rootScope.audio.callIncoming.play();
-            $rootScope.audio.callIncoming.loop = true;
+            if ($scope.activeCall.incomingMedia.hasVideo()) {
+                $rootScope.audio.videoIncoming.play();
+                $rootScope.audio.videoIncoming.loop = true;
+            }
+            else {
+                $rootScope.audio.callIncoming.play();
+                $rootScope.audio.callIncoming.loop = true;
+            }
             $scope.$apply();
         };
 
@@ -498,6 +528,7 @@ exports = module.exports = [
                 $scope.activeCall = null;
                 // in case we were being rung
                 stopRinging();
+                $rootScope.audio.callTimeout.play();
             }
         };
 
@@ -514,12 +545,20 @@ exports = module.exports = [
             var endpoint = $rootScope.client.getEndpoint({ id: id });
             $scope.activeCall = endpoint.startAudioCall();
             $scope.callIsRinging = true;
+            $rootScope.audio.callOutgoing.play();
+            $rootScope.audio.callOutgoing.loop = true;
             $log.debug('activeCall', $scope.activeCall);
             $scope.activeCall.listen('hangup', function () {
                 $log.debug('got hangup');
+                stopRinging();
+                $rootScope.audio.callTimeout.play();
                 $scope.activeCall = null;
             });
-            $scope.activeCall.listen('answer', function () {
+            $scope.activeCall.listen('answer', function (e) {
+                if (e.target.caller) {
+                    return;
+                }
+                stopRinging();
                 $log.debug('call answered');
             });
         };
@@ -529,13 +568,20 @@ exports = module.exports = [
             var endpoint = $rootScope.client.getEndpoint({ id: id });
             $scope.activeCall = endpoint.startVideoCall(videoCallConstraints);
             $scope.callIsRinging = true;
+            $rootScope.audio.videoOutgoing.play();
+            $rootScope.audio.videoOutgoing.loop = true;
             $log.debug('activeCall', $scope.activeCall);
             $scope.activeCall.listen('hangup', function () {
                 $log.debug('got hangup');
                 $scope.activeCall = null;
                 cleanupCall();
+                $rootScope.audio.callTimeout.play();
             });
-            $scope.activeCall.listen('answer', function () {
+            $scope.activeCall.listen('answer', function (e) {
+                if (e.target.caller) {
+                    return;
+                }
+                stopRinging();
                 $log.debug('call answered');
             });
         };

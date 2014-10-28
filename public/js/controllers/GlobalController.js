@@ -24,33 +24,14 @@ exports = module.exports = [
         $rootScope.systemEndpointId = '';
 
         $rootScope.audio = {
-            'notif-0': new Audio('/audio/notif-0.ogg'),
-            'notif-1': new Audio('/audio/notif-1.ogg'),
-            'notif-2': new Audio('/audio/notif-2.ogg'),
-            'notif-3': new Audio('/audio/notif-3.ogg'),
-            'notif-4': new Audio('/audio/notif-0.ogg'),
-            'notif-5': new Audio('/audio/notif-1.ogg'),
-            'notif-6': new Audio('/audio/notif-2.ogg'),
-            'notif-7': new Audio('/audio/notif-3.ogg'),
-            'notif-8': new Audio('/audio/notif-4.ogg'),
-            'notif-9': new Audio('/audio/notif-3.ogg'),
-            'notif-10': new Audio('/audio/notif-2.ogg'),
-            'notif-11': new Audio('/audio/notif-3.ogg'),
-            'notif-12': new Audio('/audio/notif-4.ogg'),
-            'notif-13': new Audio('/audio/notif-3.ogg'),
-            'notif-14': new Audio('/audio/notif-2.ogg'),
-            'notif-15': new Audio('/audio/notif-3.ogg'),
-            last: 0,
-            playNext: function () {
-                var aud = $rootScope.audio;
-                aud['notif-' + aud.last].play();
-                aud.last++;
-                if (aud.last > 15) {
-                    aud.last = 0;
-                }
-            },
-
-            callIncoming: new Audio('/audio/call-incoming.ogg')
+            callIncoming: new Audio('/audio/call-incoming.ogg'),
+            callOutgoing: new Audio('/audio/call-outgoing.ogg'),
+            callTimeout: new Audio('/audio/call-timeout.ogg'),
+            error: new Audio('/audio/error.ogg'),
+            mention: new Audio('/audio/mention.ogg'),
+            message: new Audio('/audio/message.ogg'),
+            videoIncoming: new Audio('/audio/call-video-incoming.ogg'),
+            videoOutgoing: new Audio('/audio/call-video-outgoing.ogg'),
         };
         // keep the audio a little low - these sounds are pretty loud.
         for (var a in $rootScope.audio) {

@@ -2,7 +2,7 @@
   "main": "passthrough.html",
   "name": "Apollo",
   "description": "Team collaboration built on Respoke",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "node-remote": "*",
   "window": {
     "title": "Apollo",
