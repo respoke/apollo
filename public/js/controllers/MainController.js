@@ -113,6 +113,17 @@ exports = module.exports = [
             WIN.on('focus', onWindowFocus);
         }
 
+
+        function refetchAllChats() {
+            $log.debug('re-fetching all chat histories after reconnect');
+            Object.keys($rootScope.recents).forEach(function (id) {
+                $scope.fetchChat($rootScope.recents[id]);
+            });
+        }
+        $rootScope.client.ignore('connect', refetchAllChats);
+        $rootScope.client.listen('connect', refetchAllChats);
+
+
         Account.get(function (err, accounts) {
             if (err) {
                 $rootScope.notifications.push(err);
