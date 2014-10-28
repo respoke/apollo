@@ -483,6 +483,11 @@ exports = module.exports = [
             if (evt.call.caller) {
                 return;
             }
+            // nodewebkit
+            if (typeof showWin !== 'undefined') {
+                showWin();
+            }
+
             // only allow one call at a time.
             if ($scope.activeCall) {
                 $rootScope.notifications.push(

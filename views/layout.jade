@@ -29,6 +29,14 @@ html
             });
             
             WIN.removeAllListeners('close');
+            function showWin() {
+                WIN.show();
+                // Remove the tray
+                try {
+                    GUI.TRAY.remove();
+                } catch (noTray) { }
+                GUI.TRAY = null;
+            }
             WIN.on('close', function (e) {
                 if (e) {
                     WIN.close(true);
@@ -42,16 +50,7 @@ html
                     var menu = new GUI.Menu();
                     menu.append(new GUI.MenuItem({
                         label: 'Show ' + '#{config.name}',
-                        click: function () {
-                            WIN.show();
-                            // Remove the tray
-                            GUI.TRAY.remove();
-                            GUI.TRAY = null;
-
-                            var quitEntry = nativeMenuBar.items[0].submenu.items[nativeMenuBar.items[0].submenu.items.length -1];
-                            quitEntry.enabled = true;
-
-                        }
+                        click: showWin
                     }));
                     menu.append(new GUI.MenuItem({
                         label: 'Quit ' + '#{config.name}',
@@ -60,19 +59,26 @@ html
                         }
                     }));
                     GUI.TRAY.menu = menu;
-                    
-                    var quitEntry = nativeMenuBar.items[0].submenu.items[nativeMenuBar.items[0].submenu.items.length -1];
-                    quitEntry.enabled = false;
 
                 }
                 
                 WIN.hide();
                 // Load native UI library
             });
+            GUI.App.on('reopen', showWin);
 
             var nativeMenuBar = new GUI.Menu({ type: "menubar" });
             try {
                 nativeMenuBar.createMacBuiltin("");
+                nativeMenuBar.items[0].submenu.removeAt(nativeMenuBar.items[0].submenu.items.length - 1);
+                nativeMenuBar.items[0].submenu.append(new GUI.MenuItem({
+                    modifiers: 'cmd',
+                    key: 'q',
+                    label: 'Quit #{config.name}',
+                    click: function () {
+                        GUI.App.quit();
+                    }
+                }));
             }
             catch (notOSX) { }
             
@@ -110,6 +116,10 @@ html
                 click: function () {
                     GUI.Window.get().window.location.reload();
                 }
+            }));
+            nativeMenuBar.items[2].submenu.insert(new GUI.MenuItem({
+                label: 'Main Chat Window',
+                click: showWin
             }));
             WIN.menu = nativeMenuBar;
         }
