@@ -24,7 +24,7 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
     - Browser configuration: `./public/js/client-config.example.js` and copy to `./public/js/client-config.js`
 
 1. Start the app via terminal:
-    ```bash    
+    ```bash
     npm start
     ```
 
@@ -66,4 +66,4 @@ If you would like to build the desktop app, proceed with the following steps.
 1. Set the url to your deployed Apollo application in `./public/passthrough.example.html` under the `<meta http-equiv . . .>` tag. Save it as `./public/passthrough.html`.
 1. From the Apollo directory, run `grunt release`.
 1. The applications will be in the `./public/release/<your app name>` folder.
-1. It is recommended to compress them by running `grunt compress`.
+1. It is recommended to compress them by running `grunt pack`.

@@ -8,11 +8,11 @@ html
     link#favicon(rel="shortcut icon" href="/favicon.ico")
     script.
         // node webkit stuff.
-        if (window.nwDispatcher) {
+        if (window.nwDispatcher && window.location.pathname === '/') {
 
             var GUI = window.nwDispatcher.requireNwGui();
             var WIN = GUI.Window.get();
-            GUI.TRAY = null;
+            GUI.App.TRAY = null;
 
             WIN.removeAllListeners('new-win-policy');
             WIN.on('new-win-policy', function (frame, url, policy) {
@@ -32,10 +32,12 @@ html
             function showWin() {
                 WIN.show();
                 // Remove the tray
-                try {
-                    GUI.TRAY.remove();
-                } catch (noTray) { }
-                GUI.TRAY = null;
+                if (GUI.App.TRAY) {
+                    try {
+                        GUI.App.TRAY.remove();
+                    } catch (noTray) { }
+                    GUI.App.TRAY = null;
+                }
             }
             WIN.on('close', function (e) {
                 if (e) {
@@ -43,8 +45,8 @@ html
                     return;
                 }
                 
-                if (!GUI.TRAY) {
-                    GUI.TRAY = new GUI.Tray({ title: '#{config.name}' });
+                if (!GUI.App.TRAY) {
+                    GUI.App.TRAY = new GUI.Tray({ title: '#{config.name}' });
 
                     // Give it a menu
                     var menu = new GUI.Menu();
@@ -58,13 +60,14 @@ html
                             GUI.App.quit();
                         }
                     }));
-                    GUI.TRAY.menu = menu;
+                    GUI.App.TRAY.menu = menu;
 
                 }
                 
                 WIN.hide();
                 // Load native UI library
             });
+            GUI.App.removeAllListeners('reopen');
             GUI.App.on('reopen', showWin);
 
             var nativeMenuBar = new GUI.Menu({ type: "menubar" });

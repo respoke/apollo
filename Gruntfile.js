@@ -22,6 +22,9 @@ exports = module.exports = function (grunt) {
         clean: {
             nwk: {
                 src: ['./public/release/**/*']
+            },
+            pack: {
+                src: ['./public/release/Apollo/', './public/release/app/']
             }
         },
         nodewebkit: {
@@ -74,5 +77,11 @@ exports = module.exports = function (grunt) {
         'clean',
         'copy:nwk',
         'nodewebkit'
+    ]);
+
+    grunt.registerTask('pack', [
+        // 'compress',
+        'compress:osx',
+        'clean:pack'
     ]);
 };

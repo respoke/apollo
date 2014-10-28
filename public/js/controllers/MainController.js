@@ -203,6 +203,9 @@ exports = module.exports = [
                 },
                 onError: function (evt) {
                     $log.debug('FAIL joining ' + group._id, evt);
+                },
+                join: function (evt) {
+                    setPresenceListener(evt.connection.endpoint)();
                 }
             });
         }
@@ -462,19 +465,21 @@ exports = module.exports = [
                 $scope.activeCall = null;
             });
         };
+        var onCallConnect = function (evt) {
+            $log.debug('call connected', evt);
 
+            $window.activeCall = $scope.activeCall;
+            $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
+            stopRinging();
+            $scope.$apply();
+        };
+        var audioCallConstraints = {
+            constraints: {audio: true, video: false},
+            onConnect: onCallConnect
+        };
         var videoCallConstraints = {
             constraints: {audio: true, video: true},
-            // their video
-            onConnect: function (evt) {
-                $log.debug('call connected',
-                           evt.target.hasAudio, evt.target.hasVideo, evt);
-
-                $window.activeCall = $scope.activeCall;
-                $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
-                stopRinging();
-                $scope.$apply();
-            }
+            onConnect: onCallConnect
         };
 
         var onCallReceived = function (evt) {
@@ -484,7 +489,7 @@ exports = module.exports = [
                 return;
             }
             // nodewebkit
-            if (typeof showWin !== 'undefined') {
+            if (window.nwDispatcher) {
                 showWin();
             }
 
@@ -540,15 +545,20 @@ exports = module.exports = [
         $scope.answer = function () {
             if ($scope.activeCall) {
                 // answer call
-                $scope.activeCall.answer(videoCallConstraints);
-                stopRinging();
+                if ($scope.activeCall.incomingMedia.hasVideo()) {
+                    $scope.activeCall.answer(videoCallConstraints);
+                }
+                else {
+                    $scope.activeCall.answer(audioCallConstraints);
+                }
             }
+            stopRinging();
         };
 
         $scope.audioCall = function (id) {
             $log.debug('audio call requested with ', id);
             var endpoint = $rootScope.client.getEndpoint({ id: id });
-            $scope.activeCall = endpoint.startAudioCall();
+            $scope.activeCall = endpoint.startAudioCall(audioCallConstraints);
             $scope.callIsRinging = true;
             $rootScope.audio.callOutgoing.play();
             $rootScope.audio.callOutgoing.loop = true;
@@ -560,11 +570,7 @@ exports = module.exports = [
                 $scope.activeCall = null;
             });
             $scope.activeCall.listen('answer', function (e) {
-                if (e.target.caller) {
-                    return;
-                }
-                stopRinging();
-                $log.debug('call answered');
+                $log.debug('call answered', e);
             });
         };
 
@@ -583,11 +589,7 @@ exports = module.exports = [
                 $rootScope.audio.callTimeout.play();
             });
             $scope.activeCall.listen('answer', function (e) {
-                if (e.target.caller) {
-                    return;
-                }
-                stopRinging();
-                $log.debug('call answered');
+                $log.debug('call answered', e);
             });
         };
 
