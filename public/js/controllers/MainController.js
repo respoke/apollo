@@ -102,6 +102,7 @@ exports = module.exports = [
             }
             // force chat scrolling to the bottom, because it will not scroll
             // when the window is out of focus on some browsers
+            focusInput();
         }
         function onWindowBlur() {
             $scope.windowInFocus = false;
