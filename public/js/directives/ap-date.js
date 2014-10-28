@@ -1,4 +1,8 @@
 'use strict';
+/**
+ * This used to be a filter, however custom filters in angular to not update automatically
+ * during $digest, so it was refactored into an attribute directive.
+ */
 exports = module.exports = ['moment', function (moment) {
     var oneMinute = 1000 * 60;
     var oneHour = 60 * oneMinute;
@@ -6,7 +10,7 @@ exports = module.exports = ['moment', function (moment) {
     var oneWeek = 7 * oneDay;
     var oneYear = 52 * oneWeek; // ok it's not perfect
 
-    return function (item) {
+    function makeReadableDate(item) {
         if (!item) {
             return item;
         }
@@ -36,5 +40,16 @@ exports = module.exports = ['moment', function (moment) {
         else {
             return date.format('MMM Do, YYYY');
         }
+    }
+
+    return {
+        restrict: 'A',
+        scope: {
+            'date': '=apDate'
+        },
+        controller: ['$scope', function ($scope) {
+            $scope.makeReadableDate = makeReadableDate;
+        }],
+        template: '{{ makeReadableDate(date) }}'
     };
 }];

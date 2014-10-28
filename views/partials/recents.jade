@@ -116,8 +116,10 @@
 
 
             td.col-xs-3(ng-show="!isAllowedToCall(item)")
-                small.help-block.align-right(ng-show="!item.unread && item._id !== selectedChat._id")
-                    | {{ item.messages[item.messages.length - 1].created | readableDate }}
+                small.help-block.align-right(
+                    ng-show="!item.unread && item._id !== selectedChat._id"
+                    ap-date="item.messages[item.messages.length - 1].created"
+                )
                 small.help-block.text-primary.align-right(
                     ng-show="item.unread && item._id !== selectedChat._id"
                 ): strong {{ item.unread }} new

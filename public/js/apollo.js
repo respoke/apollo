@@ -44,10 +44,10 @@ apollo.factory('respokeVideo', require('./lib/respoke-video'));
 apollo.factory('multiFileProcessor', require('./lib/multi-file-processor'));
 
 // Filters
-apollo.filter('readableDate', require('./filters/readable-date'));
 apollo.filter('orderRecents', require('./filters/sort-order-recents'));
 
 // Directives
+apollo.directive('apDate', require('./directives/ap-date'));
 apollo.directive('apDraggable', require('./directives/ap-draggable'));
 apollo.directive('apChat', require('./directives/ap-chat'));
 apollo.directive('apEnter', require('./directives/ap-enter'));
@@ -72,7 +72,7 @@ apollo.config(['$routeProvider', function ($routeProvider) {
             redirectTo: '/'
         });
 }]);
-// setting Apollo API base url 
+// setting Apollo API base url
 apollo.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(['$q', function ($q) {
         return {
