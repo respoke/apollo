@@ -33,7 +33,8 @@ exports = module.exports = function (grunt) {
                 platforms: ['osx'],//, 'win', 'linux32', 'linux64'],
                 buildDir: './public/release',
                 macIcns: './public/release/app/apollo.icns',
-                winIco: './public/release/app/apollo.ico'
+                winIco: './public/release/app/apollo.ico',
+                cacheDir: __dirname + '/../nodewebkit-cache'
             },
             src: ['./public/release/app/**/*']
         },
