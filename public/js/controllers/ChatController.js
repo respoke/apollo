@@ -17,7 +17,20 @@ exports = module.exports = [
     'renderFile',
     '$q',
 
-    function ($log, $rootScope, $scope, $timeout, Account, Message, File, paddTopScroll, scrollChatToBottom, emoMacros, renderFile, $q) {
+    function (
+        $log,
+        $rootScope,
+        $scope,
+        $timeout,
+        Account,
+        Message,
+        File,
+        paddTopScroll,
+        scrollChatToBottom,
+        emoMacros,
+        renderFile,
+        $q
+    ) {
         $scope.pendingUploads = 0;
         $scope.recentlySentTyping = null;
 
