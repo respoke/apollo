@@ -16,3 +16,7 @@ block content
                 input(type="hidden" ng-init="resetPass.conf = '" + conf + "'" ng-model="resetPass.conf")
                 br
                 button.btn.btn-danger(ng-click="doPasswordReset()") Reset Password
+
+append js
+    script.
+        window.pixies.start();

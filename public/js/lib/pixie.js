@@ -15,7 +15,6 @@
     var INTERVAL;
 
     $(document).ready(function(){
-        window.pixies.start();
         $(window).resize(function (evt) {
             var wasStopped = !window.pixies.isRunning;
             window.pixies.stop();
@@ -33,7 +32,7 @@
 
         self.start = function () {
             if (self.isRunning) {
-                return; 
+                return;
             }
             WIDTH = window.innerWidth;
             HEIGHT = window.innerHeight;

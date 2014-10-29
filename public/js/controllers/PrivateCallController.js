@@ -35,8 +35,6 @@ exports = module.exports = [
         var cleanUpCall = function (evt) {
             $log.debug('got hangup');
             respokeVideo.cleanup();
-            $window.pixies.resume();
-
             $scope.errorMessage = "The call has ended.";
         };
 
@@ -45,10 +43,9 @@ exports = module.exports = [
         };
         $window.opener.activeCall.ignore(privateChatMessageListener);
         $window.opener.activeCall.listen('message', privateChatMessageListener);
-        
+
         $window.opener.activeCall.listen('hangup', cleanUpCall);
 
-        $window.pixies.stop();
         respokeVideo.setLocalVideo($scope.activeCall.outgoingMedia.stream);
         respokeVideo.setRemoteVideo($scope.activeCall.incomingMedia.stream);
 

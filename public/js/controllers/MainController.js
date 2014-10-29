@@ -40,11 +40,7 @@ exports = module.exports = [
         $scope.showSettings = false;
         $scope.toggleSettings = function (override) {
             $scope.showSettings = typeof override !== 'undefined' ? override : !$scope.showSettings;
-            if ($scope.showSettings) {
-                $window.pixies.resume();
-            }
-            else {
-                $window.pixies.stop();
+            if (!$scope.showSettings) {
                 $timeout(scrollChatToBottom);
             }
         };
