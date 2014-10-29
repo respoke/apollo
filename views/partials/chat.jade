@@ -92,7 +92,13 @@
 
         //- Call
         #audio-call-controls.middle.row(ng-show="activeCall && !hideCallPanel")
-            .col-xs-7
+            .col-xs-1
+                ap-audioviz(
+                    ng-if="activeCall.incomingMedia.stream || activeCall.outgoingMedia.stream"
+                    stream1="activeCall.incomingMedia.stream"
+                    stream2="activeCall.outgoingMedia.stream"
+                )
+            .col-xs-6
                 span(ng-show="!incomingCall && !callIsRinging") On a call with
                 span(ng-show="callIsRinging") Placing a call to
                 span(style="display:block")

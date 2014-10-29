@@ -58,6 +58,7 @@ apollo.directive('apToggleSetting', require('./directives/ap-toggle-setting'));
 apollo.directive('apMessage', require('./directives/ap-message.js'));
 apollo.directive('apPresence', require('./directives/ap-presence.js'));
 apollo.directive('apAvatar', require('./directives/ap-avatar.js'));
+apollo.directive('apAudioviz', require('./directives/ap-audioviz.js'));
 
 // Routes for main /#/
 apollo.config(['$routeProvider', function ($routeProvider) {
