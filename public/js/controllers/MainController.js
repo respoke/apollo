@@ -331,9 +331,16 @@ exports = module.exports = [
                 });
             }
 
+            var notifTitle;
+            if (evt.group) {
+                notifTitle = evt.group.id + ' > ' + $rootScope.recents[evt.message.endpointId].display;
+            }
+            else {
+                notifTitle = $rootScope.recents[evt.message.endpointId].display;
+            }
             var thisMessageNotif = function () {
                 notify({
-                    title: evt.group ? evt.group.id : $rootScope.recents[evt.message.endpointId].display,
+                    title: notifTitle,
                     body: msgValue.substring(0, 100) + (msgValue.length > 100 ? '...' : '')
                 });
             };
@@ -351,20 +358,21 @@ exports = module.exports = [
                 || !$scope.selectedChat
                 || itemId !== $scope.selectedChat._id
             ) {
-                $log.debug('group sound', evt.group, $rootScope.account.settings.groupMessageSounds);
+                // group message
                 if (evt.group) {
                     if ($rootScope.account.settings.groupMessageSounds) {
                         $rootScope.audio.message.play();
                     }
-                    if ($rootScope.account.settings.groupDesktopNotifications) {
+                    if (!$scope.windowInFocus && $rootScope.account.settings.groupDesktopNotifications) {
                         thisMessageNotif();
                     }
                 }
-                else if (!evt.group) {
+                // private message
+                else {
                     if ($rootScope.account.settings.privateMessageSounds) {
                         $rootScope.audio.message.play();
                     }
-                    if ($rootScope.account.settings.privateDesktopNotifications) {
+                    if (!$scope.windowInFocus && $rootScope.account.settings.privateDesktopNotifications) {
                         thisMessageNotif();
                     }
                 }
