@@ -333,7 +333,7 @@ exports = module.exports = [
 
             var notifTitle;
             if (evt.group) {
-                notifTitle = evt.group.id + ' > ' + $rootScope.recents[evt.message.endpointId].display;
+                notifTitle = $rootScope.recents[evt.message.endpointId].display + ' > ' + evt.group.id;
             }
             else {
                 notifTitle = $rootScope.recents[evt.message.endpointId].display;

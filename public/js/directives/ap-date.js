@@ -28,8 +28,13 @@ exports = module.exports = ['moment', function (moment) {
         else if (diff < oneHour) {
             return date.fromNow(true);
         }
-        else if (diff < oneDay) {
+        // it was yesterday, but not a full 24 hrs ago
+        else if (diff < oneDay && date.format('dd') === now.format('dd')) {
             return date.format('h:mm a');
+        }
+        // it was today
+        else if (diff < oneDay * 1.3) {
+            return date.format('ddd ha');
         }
         else if (diff < oneWeek) {
             return date.format('dddd');
