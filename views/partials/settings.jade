@@ -13,8 +13,8 @@ div(ng-controller="SettingsController")
 
     table.table
         tr
-            td.col-md-7: label Display name
-            td.col-md-5.clickable(
+            td.col-sm-7: label Display name
+            td.col-sm-5.clickable(
                 ng-click="newDisplayName = account.display; showEditDisplay = true;"
             )
                 span(ng-show="!showEditDisplay") {{ account.display }}&nbsp;&nbsp;
@@ -28,21 +28,47 @@ div(ng-controller="SettingsController")
     br
     table.table
         tr
+            td.col-sm-7 Group desktop notifications
+            td.col-sm-5
+                ap-toggle-setting(
+                    key="groupDesktopNotifications"
+                    initial="account.settings.groupDesktopNotifications"
+                )
+        tr
             td.col-sm-7 Group message sounds
             td.col-sm-5
-                ap-toggle-setting(key="groupMessageSounds" initial="account.settings.groupMessageSounds")
+                ap-toggle-setting(
+                    key="groupMessageSounds"
+                    initial="account.settings.groupMessageSounds"
+                )
+        tr
+            td.col-sm-7 Private desktop notifications
+            td.col-sm-5
+                ap-toggle-setting(
+                    key="privateDesktopNotifications"
+                    initial="account.settings.privateDesktopNotifications"
+                )
         tr
             td Private message sounds
             td
-                ap-toggle-setting(key="privateMessageSounds" initial="account.settings.privateMessageSounds")
+                ap-toggle-setting(
+                    key="privateMessageSounds"
+                    initial="account.settings.privateMessageSounds"
+                )
         tr
             td Offline notification emails
             td
-                ap-toggle-setting(key="offlineNotifications" initial="account.settings.offlineNotifications")
+                ap-toggle-setting(
+                    key="offlineNotifications"
+                    initial="account.settings.offlineNotifications"
+                )
         tr
             td Allow HTML in emails
             td
-                ap-toggle-setting(key="htmlEmails" initial="account.settings.htmlEmails")
+                ap-toggle-setting(
+                    key="htmlEmails"
+                    initial="account.settings.htmlEmails"
+                )
 
     h6 Manage groups
         button.btn.btn-default.btn-sm(ng-click="loadGroups()")

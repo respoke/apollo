@@ -16,6 +16,7 @@ exports = module.exports = [
     'moment',
     'favicon',
     'scrollChatToBottom',
+    'notify',
 
     function (
         $log,
@@ -30,7 +31,8 @@ exports = module.exports = [
         File,
         moment,
         favicon,
-        scrollChatToBottom
+        scrollChatToBottom,
+        notify
 
     ) {
         // make available to the view
@@ -317,6 +319,7 @@ exports = module.exports = [
                     created: new Date()
                 });
                 // clear chatstate
+                $timeout.cancel($rootScope.recents[itemId].chatstate[evt.message.endpointId]);
                 $rootScope.recents[itemId].chatstate[evt.message.endpointId] = null;
             }
             else {
@@ -328,25 +331,42 @@ exports = module.exports = [
                 });
             }
 
+            var thisMessageNotif = function () {
+                notify({
+                    title: evt.group ? evt.group.id : $rootScope.recents[evt.message.endpointId].display,
+                    body: msgValue.substring(0, 100) + (msgValue.length > 100 ? '...' : '')
+                });
+            };
             // if you're mentioned, you get notified by sound
             var reMe = new RegExp("\\[\\~" + $rootScope.account._id + "\\]");
             var wasMentioned = msgValue && msgValue.match(reMe);
             if (wasMentioned) {
                 $rootScope.audio.mention.play();
+                thisMessageNotif();
             }
-            // Playing sounds
-            // they do not play when you have focus on the window and are viewing the chat
+            // Notifications and Sounds
+            // They do not play when you have focus on the window and are viewing the chat
             else if (
                 !$scope.windowInFocus
                 || !$scope.selectedChat
                 || itemId !== $scope.selectedChat._id
             ) {
                 $log.debug('group sound', evt.group, $rootScope.account.settings.groupMessageSounds);
-                if (evt.group && $rootScope.account.settings.groupMessageSounds) {
-                    $rootScope.audio.message.play();
+                if (evt.group) {
+                    if ($rootScope.account.settings.groupMessageSounds) {
+                        $rootScope.audio.message.play();
+                    }
+                    if ($rootScope.account.settings.groupDesktopNotifications) {
+                        thisMessageNotif();
+                    }
                 }
-                else if (!evt.group && $rootScope.account.settings.privateMessageSounds) {
-                    $rootScope.audio.message.play();
+                else if (!evt.group) {
+                    if ($rootScope.account.settings.privateMessageSounds) {
+                        $rootScope.audio.message.play();
+                    }
+                    if ($rootScope.account.settings.privateDesktopNotifications) {
+                        thisMessageNotif();
+                    }
                 }
             }
 
