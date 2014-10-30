@@ -106,7 +106,7 @@ input[type="text"].form-control, textarea.form-control {
     right: 0;
     z-index: 5000;
     &.full {
-        left: 360px;
+        left: 270px;
     }
 }
 .main {
@@ -137,7 +137,7 @@ input[type="text"].form-control, textarea.form-control {
         background-color: @medBaseGray;
         width: 200px;
         &.full {
-            width: 360px;
+            width: 270px;
         }
     }
     &.right {
@@ -188,7 +188,7 @@ input[type="text"].form-control, textarea.form-control {
         }
         &.full {
             background: transparent;
-            left: 360px;
+            left: 270px;
         }
 
         #chat-header {
@@ -334,10 +334,6 @@ input[type="text"].form-control, textarea.form-control {
     opacity: .2;
 }
 
-.selectedRecent {
-    background: @panelGradientStart;
-}
-
 .clickable {
     cursor: pointer;
 }
@@ -395,30 +391,42 @@ input[type="text"].form-control, textarea.form-control {
 
     table.table {
         background: transparent;
+
         tr, td {
             border: none;
+        }
+
+        tr.selectedRecent {
+            background: @highlightGray;
+            color: @salmon;
+            td:nth-child(3) h6 {
+                color: @salmon;
+            }
         }
         tr>td:first-child {
             /* to produce 20px from edge */
             padding-left: 18px;
-
             vertical-align: middle;
         }
         tr>td:nth-child(2) {
-            h6 {
-                padding: 0;
-                font-size: 14px;
-
-                ap-presence .presence {
-                    padding: 0 10px 0 4px;
-                    i.fa-circle {
-                        font-size: 10px;
-                        vertical-align: middle;
-                    }
+            ap-presence .presence {
+                padding: 0 10px 0 4px;
+                i.fa-circle {
+                    font-size: 10px;
+                    vertical-align: middle;
                 }
             }
-            h6.no-presence {
-                padding-left: 22px;
+        }
+        tr>td:nth-child(3) {
+            h6 {
+                padding: 0;
+                margin: 0;
+                font-size: 12px;
+                font-weight: bold;
+                margin-top: 4px;
+            }
+            small.date {
+                color: @fadedText;
             }
         }
     }
