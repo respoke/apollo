@@ -9,7 +9,7 @@
 exports = module.exports = function () {
     // keep from making a bunch of audio contexts. only need one.
     var audioContext = new webkitAudioContext();
-    var analyzer = scope.audioContext.createAnalyser();
+    var analyzer = audioContext.createAnalyser();
 
     return {
         restrict: 'E',
