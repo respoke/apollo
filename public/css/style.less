@@ -182,6 +182,65 @@ input[type="text"].form-control, textarea.form-control {
             left: 360px;
         }
 
+        #chat-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+
+            table.table {
+                margin: 0;
+                background: transparent;
+                td {
+                    background: transparent;
+                    padding-bottom: 8px;
+                }
+                tr.notify>td {
+                    background: @salmon;
+                }
+
+                td:first-child {
+                    padding-left: 23px;
+                    padding-right: 0;
+                    width: 72px;
+                    img {
+                        width: 50px;
+                        opacity: .5;
+                    }
+                }
+                td:nth-child(2) {
+                    padding-left: 13px;
+                }
+                td:nth-child(3) {
+                    width: 100px;
+                    text-align: left;
+                }
+
+                #audio-call-controls {
+                    table, tr, td {
+                        background: @salmon;
+                    }
+                    table tr>td:first-child {
+                        width: 80px;
+                        padding-left: 12px;
+                    }
+
+                    span {
+                        margin: 0;
+                        padding: 0;
+                    }
+                    ap-audioviz {
+                        canvas {
+                            width: 60px;
+
+                        }
+                    }
+                }
+
+            }
+        }
+
         #chat {
             position: fixed;
             display: block;
@@ -191,7 +250,9 @@ input[type="text"].form-control, textarea.form-control {
             bottom: 76px;
             left: 0;
             overflow-y: auto;
+            margin-top: 70px;
 
+            /* Chat table */
             table.table {
                 background: transparent;
 
@@ -211,6 +272,7 @@ input[type="text"].form-control, textarea.form-control {
                 td:nth-child(2) {
                     padding-left: 13px;
                     font-weight: 400;
+                    word-break: break-word;
 
                     /* message from text */
                     h6 {
@@ -250,8 +312,9 @@ input[type="text"].form-control, textarea.form-control {
                         }
                     }
 
-                    word-break: break-word;
-
+                }
+                td:nth-child(3) {
+                    width: 100px;
                 }
                 span.chat-date {
                     font-size: 10px;
@@ -320,13 +383,6 @@ input[type="text"].form-control, textarea.form-control {
     font-size: 20px;
     border-color: transparent;
     .panelGradient();
-}
-
-#audio-call-controls {
-    padding-top: 8px;
-    p {
-        color: @text;
-    }
 }
 
 #buddies {
@@ -465,13 +521,6 @@ input[type="text"].form-control, textarea.form-control {
         background: white;
     }
 }
-.notify {
-    position: relative;
-    padding: 13px;
-    color: @text;
-    background: @salmon;
-    font-size: 18px;
-}
 
 #avatar-section {
     #selfie {
@@ -514,11 +563,6 @@ table a:not(.btn), .table a:not(.btn) {
     text-decoration: none !important;
 }
 
-.notify img {
-    width: 32px;
-    height: 32px;
-}
-
 #not-connected {
     .btn {
         opacity: .3;
@@ -549,11 +593,5 @@ table a:not(.btn), .table a:not(.btn) {
             border-bottom-right-radius: 0;
             border-bottom-left-radius: 0;
         }
-    }
-}
-
-ap-audioviz {
-    canvas {
-        height: 55px;
     }
 }

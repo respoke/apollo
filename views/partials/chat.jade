@@ -2,12 +2,72 @@
     ng-show="client.isConnected()"
     ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }"
 )
+    //- Chat Header
+    #chat-header: table.table(ng-show="!hideCallPanel")
+        
+        //- Primary header element
+        tr#chat-header-main
+            td
+                img(src="/img/apollo-a.png")
+            td
+                span(ng-show="selectedChat && selectedChat.display")
+                    | Conversation with {{ selectedChat.display }}
+                span(ng-show="selectedChat && !selectedChat.display")
+                    | {{ selectedChat._id }}
+            td.call-buttons
+                div(ng-show="selectedChat && isAllowedToCall(selectedChat)")
+                    //- audio call
+                    button.btn.btn-primary.btn-xs.btn-block(
+                        ng-click="audioCall(item._id)"
+                    ): i.fa.fa-phone
+                    //- video call
+                    button.btn.btn-primary.btn-xs.btn-block(
+                        ng-click="videoCall(item._id)"
+                    ): i.fa.fa-video-camera
+        
+        //- File upload
+        tr.notify(ng-show="pendingUploads")
+            td
+                i.fa.fa-long-arrow-up
+            td(colspan="2")
+                | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...
+            
+        //- Call
+        tr#audio-call-controls.notify(ng-show="activeCall")
+            td
+                ap-audioviz(
+                    ng-if="activeCall.incomingMedia.stream || activeCall.outgoingMedia.stream"
+                    stream1="activeCall.incomingMedia.stream"
+                    stream2="activeCall.outgoingMedia.stream"
+                )
+            td
+                span(ng-show="!incomingCall && !callIsRinging") On a call with
+                span(ng-show="callIsRinging")  Placing a call to
+                span  {{ recents[activeCall.remoteEndpoint.id].display }}
+                span(ng-show="incomingCall")  is calling you
+
+            td.align-right
+                //- hang up
+                button.btn.btn-default.btn-sm(ng-click="hangup()") Hang up
+                
+                //- answer
+                button.btn.btn-default.btn-sm(
+                    ng-click="answer();"
+                    ng-show="incomingCall"
+                ) Answer
+
+                //- Join video call
+                a.btn.btn-primary.btn-sm(
+                    href="/private"
+                    ng-show="activeCall.hasVideo"
+                    target="_blank") Join video call
     
     ap-chat#chat(
         ap-drop="onDropUpload"
         ap-onscrolltop="loadBackMessages"
     )
         
+        //- Chat
         table#chat-table.table(ng-show="!showSettings")
 
             //- Messages
@@ -24,14 +84,15 @@
                 td
                     h6(ng-if="notSameFrom") {{ message.from.display }}
                     ap-message(ap-content="message.content.text" ap-file="message.file")
-                td.align-right(width="100px")
+                td.align-right
                     span.chat-date(ap-date="message.created")
                     
 
         //- Settings panel
         #settings.animated.fadeIn(ng-show="showSettings")
             include settings.jade
-
+    
+    //- Text input
     .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings")
         
         //- display when someone is typing
@@ -75,50 +136,6 @@
             ng-keyup="isTyping()"
             
             mentio
-            autocomplete="off"
         )
-
-
-
-    //- Notifications
-
-    .notify(ng-show="(activeCall && !hideCallPanel) || pendingUploads")
-        
-        //- File upload
-        .middle.left(ng-show="pendingUploads")
-            i.fa.fa-long-arrow-up
-            | &nbsp;&nbsp;
-            | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...
-
-        //- Call
-        #audio-call-controls.middle.row(ng-show="activeCall && !hideCallPanel")
-            .col-xs-1
-                ap-audioviz(
-                    ng-if="activeCall.incomingMedia.stream || activeCall.outgoingMedia.stream"
-                    stream1="activeCall.incomingMedia.stream"
-                    stream2="activeCall.outgoingMedia.stream"
-                )
-            .col-xs-6
-                span(ng-show="!incomingCall && !callIsRinging") On a call with
-                span(ng-show="callIsRinging") Placing a call to
-                span(style="display:block")
-                    strong {{ recents[activeCall.remoteEndpoint.id].display }}
-                span(ng-show="incomingCall") is calling you
-
-            .col-xs-5.align-right
-                //- hang up
-                button.btn.btn-default.btn-sm(ng-click="hangup()") Hang up
-                
-                //- answer
-                button.btn.btn-default.btn-sm(
-                    ng-click="answer();"
-                    ng-show="incomingCall"
-                ) Answer
-
-                //- Join video call
-                a.btn.btn-primary.btn-sm(
-                    href="/private"
-                    ng-show="activeCall.hasVideo"
-                    target="_blank") Join video call
             
                 

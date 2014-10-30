@@ -7,6 +7,9 @@
  *
  */
 exports = module.exports = function () {
+    // keep from making a bunch of audio contexts. only need one.
+    var audioContext = new webkitAudioContext();
+    var analyzer = scope.audioContext.createAnalyser();
 
     return {
         restrict: 'E',
@@ -16,24 +19,24 @@ exports = module.exports = function () {
         },
         link: function (scope, element, attrs) {
 
-            var barHeight = 55;
-            var barWidth = 13;
+            var barHeight = 65;
+            var barWidth = 50;
 
-            scope.audioContext = new webkitAudioContext();
+            scope.audioContext = audioContext;
 
-            scope.analyser = scope.audioContext.createAnalyser();
-            scope.analyser.smoothingTimeConstant = 0.5;
-            scope.analyser.fftSize = 512;
+            scope.analyser = analyzer;
+            scope.analyser.smoothingTimeConstant = 0.8;
+            scope.analyser.fftSize = 1024;
 
             scope.processor = scope.audioContext.createScriptProcessor(2048, 2, 1);
 
             scope.processor.connect(scope.audioContext.destination);
             scope.analyser.connect(scope.processor);
 
-            function processAudio() {
+            scope.cvs = document.createElement("canvas");
+            scope.canvasContext = scope.cvs.getContext("2d");
 
-                scope.cvs = document.createElement("canvas");
-                scope.canvasContext = scope.cvs.getContext("2d");
+            function processAudio() {
 
                 if (scope.stream1) {
                     scope.input1 = scope.audioContext.createMediaStreamSource(scope.stream1);
@@ -56,7 +59,9 @@ exports = module.exports = function () {
                     var average = values / length;
                     scope.canvasContext.clearRect(0, 0, barWidth, barHeight);
                     scope.canvasContext.fillStyle = '#ffffff';
-                    scope.canvasContext.fillRect(0, barHeight - average, barWidth, barHeight);
+
+                    var showHeight = average;
+                    scope.canvasContext.fillRect(0, showHeight, barWidth, barHeight);
                 };
 
                 element[0].innerHTML = '';

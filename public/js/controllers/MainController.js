@@ -341,7 +341,7 @@ exports = module.exports = [
             var thisMessageNotif = function () {
                 notify({
                     title: notifTitle,
-                    body: msgValue.substring(0, 100) + (msgValue.length > 100 ? '...' : '')
+                    body: msgValue.substring(0, 80) + (msgValue.length > 80 ? '...' : '')
                 });
             };
             // if you're mentioned, you get notified by sound

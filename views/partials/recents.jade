@@ -105,14 +105,7 @@
             td.col-xs-3.call-buttons(
                 ng-show="isAllowedToCall(item)"
             )
-                    //- audio call
-                    button.btn.btn-primary.btn-xs.btn-block(
-                        ng-click="audioCall(item._id)"
-                    ): i.fa.fa-phone
-                    //- video call
-                    button.btn.btn-primary.btn-xs.btn-block(
-                        ng-click="videoCall(item._id)"
-                    ): i.fa.fa-video-camera
+                    
 
 
             td.col-xs-3(ng-show="!isAllowedToCall(item)")
