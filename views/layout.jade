@@ -16,12 +16,15 @@ html
 
             WIN.removeAllListeners('new-win-policy');
             WIN.on('new-win-policy', function (frame, url, policy) {
-                console.log(frame, url, policy, this);
                 if (url.indexOf('/private') !== -1) {
                     policy.forceNewPopup(); // video calls in a popup
                     return;
                 } else if (url.indexOf('#{config.baseURL}' + '/files') !== -1) {
-                    policy.forceNewWindow(); // so you can see the link
+                    GUI.Window.open(url, {
+                        toolbar: true,
+                        frame: true
+                    });
+                    policy.ignore();
                     return;
                 }
                 GUI.Shell.openExternal(url);
@@ -45,6 +48,7 @@ html
                     return;
                 }
                 
+                // System Tray
                 if (!GUI.App.TRAY) {
                     GUI.App.TRAY = new GUI.Tray({ title: '#{config.name}' });
 
@@ -105,17 +109,9 @@ html
                 type: 'separator'
             }));
             nativeMenuBar.items[1].submenu.insert(new GUI.MenuItem({
-                modifiers: 'cmd-shift',
-                key: 'c',
-                label: 'Copy Window URL',
-                click: function () {
-                    GUI.Clipboard.get().set(WIN.window.location.toString(), 'text');
-                }
-            }));
-            nativeMenuBar.items[1].submenu.insert(new GUI.MenuItem({
                 modifiers: 'cmd',
                 key: 'r',
-                label: 'Refresh',
+                label: 'Reload',
                 click: function () {
                     GUI.Window.get().window.location.reload();
                 }
