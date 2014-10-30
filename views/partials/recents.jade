@@ -12,79 +12,75 @@
     ng-show="client.isConnected()"
 )
 
-    //- User account and settings
-    .row
-        #avatar-section.col-xs-3
-            //- Presence
-            img#selfie.img-thumbnail.clickable(
-                ap-avatar email="account.email"
-                data-toggle="dropdown"
-                class="{{ recents[account._id].presence ? 'animated fadeInDown faster ' + recents[account._id].presence : '' }}"
+    //- Display group and buddy list
+    #buddies.scrollable: table.table
+        //- mememememe
+        tr
+            td.col-xs-2.center
+                img(
+                    ap-avatar email="account.email"
+                )
+            td.col-xs-1.center
+                .dropdown
+                    ap-presence.clickable(
+                        presence="{{ recents[account._id].presence }}"
+                        data-toggle="dropdown"
+                    )
+                    ul.dropdown-menu.animated.fadeInDown.faster
+                        li: a(
+                            tabindex="-1"
+                            ng-click="setPresence('available')"
+                            href="javascript:void(0)"
+                        )
+                            ap-presence(presence="{{'available'}}")
+                            | available
+                        li: a(
+                            tabindex="-1"
+                            ng-click="setPresence('busy')"
+                            href="javascript:void(0)"
+                        )
+                            ap-presence(presence="{{'busy'}}")
+                            | busy
+                        li: a(
+                            tabindex="-1"
+                            ng-click="setPresence('away')"
+                            href="javascript:void(0)"
+                        )
+                            ap-presence(presence="{{'away'}}")
+                            | away
+            td.col-xs-6.clickable(
+                ng-mouseover="showSettingsDisplayIcon = true"
+                ng-mouseout="showSettingsDisplayIcon = false"
+                ng-click="toggleSettings()"
             )
-            ul.dropdown-menu.animated.fadeInDown.faster
-                li: a(
-                    tabindex="-1"
-                    ng-click="setPresence('available')"
-                    href="javascript:void(0)"
-                )
-                    ap-presence(presence="{{'available'}}")
-                    | available
-                li: a(
-                    tabindex="-1"
-                    ng-click="setPresence('busy')"
-                    href="javascript:void(0)"
-                )
-                    ap-presence(presence="{{'busy'}}")
-                    | busy
-                li: a(
-                    tabindex="-1"
-                    ng-click="setPresence('away')"
-                    href="javascript:void(0)"
-                )
-                    ap-presence(presence="{{'away'}}")
-                    | away
+                h6 {{ account.display }}   
+                    i.fa.fa-cog.fa-sm(
+                        ng-show="showSettingsDisplayIcon && !showSettings"
+                    )
+            
+        tr: td(colspan="3").align-right
 
-
-
-        #me-section.col-xs-9.clickable(
-            ng-mouseover="showSettingsDisplayIcon = true"
-            ng-mouseout="showSettingsDisplayIcon = false"
-            ng-click="toggleSettings()"
-        )
-            //- Display name
-
-            h3 {{ account.display.split(' ')[0] }}&nbsp;&nbsp;
-                i.fa.fa-cog.fa-sm(ng-show="showSettingsDisplayIcon && !showSettings")
-            h6 {{ account.display.indexOf(' ') !== -1 ? account.display.substring(account.display.indexOf(' ') + 1) : '' }}
-
-
-    br
-
-    .input-group.input-group-sm
-        input#recents-query.form-control(
-            type="text"
-            placeholder="Search for friends and groups"
-            ng-model="recentQuery"
-        )
-        span.input-group-btn
-            button#newgroup.btn.btn-default(
+            input#recents-query.form-control.input-sm(
+                type="text"
+                placeholder="Search"
+                ng-model="recentQuery"
+            )
+            button#newgroup.btn.btn-default.btn-xs(
                 ng-click="showCreateGroup = !showCreateGroup"
             )
-                i.fa.fa-plus(ng-show="!showCreateGroup")
+                span(ng-show="!showCreateGroup") Create new
                 i.fa.fa-remove(ng-show="showCreateGroup")
 
 
-    .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
-        input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
-        button.btn.btn-primary.btn-block.btn-sm(
-            ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
-        ) Create
-        button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
-            | Cancel
-
-
-    //- Display group and buddy list
-    #buddies.scrollable: table.table
+            .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
+                input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+                button.btn.btn-primary.btn-block.btn-sm(
+                    ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
+                ) Create
+                button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+                    | Cancel
+        
+        //- all the other stuff
         tr.clickable(
             ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
             ng-if="item && item._id !== account._id"
@@ -93,7 +89,7 @@
         )
             td.col-xs-2.center
                 i.fa.fa-group.fa-2x.yellow(ng-if="!item.email")
-                img.img-thumbnail(
+                img(
                     ng-if="item.email"
                     ap-avatar email="item.email"
                 )

@@ -1,9 +1,9 @@
 div(ng-controller="SettingsController")
 
     p
-        i#close-settings.fa.fa-remove.fa-3x.clickable(ng-click="toggleSettings()")
+        button.btn.btn-xs.btn-default(ng-click="toggleSettings()") Close settings
         //- Sign out
-        button#signout.btn.btn-xs.btn-danger(
+        button.btn.btn-xs.btn-danger(
             ng-click="logout()"
         ) Sign out
 
@@ -70,9 +70,7 @@ div(ng-controller="SettingsController")
                     initial="account.settings.htmlEmails"
                 )
 
-    h6 Manage groups
-        button.btn.btn-default.btn-sm(ng-click="loadGroups()")
-            i.fa.fa-refresh
+    h6: button.btn.btn-default.btn-sm(ng-click="loadGroups()") Manage Groups
 
     p(ng-show="groups && !groups.length"): em You do not own any groups.
     table.table

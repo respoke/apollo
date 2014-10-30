@@ -19,7 +19,7 @@ exports = module.exports = function () {
         },
         link: function (scope, element, attrs) {
 
-            var barHeight = 65;
+            var barHeight = 40;
             var barWidth = 50;
 
             scope.audioContext = audioContext;
@@ -34,6 +34,8 @@ exports = module.exports = function () {
             scope.analyser.connect(scope.processor);
 
             scope.cvs = document.createElement("canvas");
+            scope.cvs.width = barWidth;
+            scope.cvs.height = barHeight;
             scope.canvasContext = scope.cvs.getContext("2d");
 
             function processAudio() {
@@ -48,20 +50,16 @@ exports = module.exports = function () {
                 }
 
                 scope.processor.onaudioprocess = function () {
-                    var array =  new Uint8Array(scope.analyser.frequencyBinCount);
-                    scope.analyser.getByteFrequencyData(array);
-                    var values = 0;
-
-                    var length = array.length;
-                    for (var i = 0; i < length; i++) {
-                        values += array[i];
-                    }
-                    var average = values / length;
+                    var frequency = new Uint8Array(scope.analyser.frequencyBinCount);
+                    scope.analyser.getByteFrequencyData(frequency);
                     scope.canvasContext.clearRect(0, 0, barWidth, barHeight);
                     scope.canvasContext.fillStyle = '#ffffff';
+                    var start = 0;
+                    for (var i=0; i < frequency.length && start < barWidth; i++) {
+                        scope.canvasContext.fillRect(start, barHeight - frequency[i], 12, barHeight);
+                        start += 13;
+                    }
 
-                    var showHeight = average;
-                    scope.canvasContext.fillRect(0, showHeight, barWidth, barHeight);
                 };
 
                 element[0].innerHTML = '';
