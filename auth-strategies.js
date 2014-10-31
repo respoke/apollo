@@ -43,7 +43,7 @@ function strategize() {
                 if (profile.displayName) {
                     display = profile.displayName;
                 }
-                
+
 
                 var Account = mongoose.model('Account');
                 Account
@@ -72,8 +72,8 @@ function strategize() {
                             done(null, saved);
 
                             // TODO: try to not be a jerk and do this
-                            if (global.respoke) {
-                                global.respoke.groups.publish({
+                            if (global.__respoke) {
+                                global.__respoke.groups.publish({
                                     groupId: config.systemGroupId,
                                     message: JSON.stringify({
                                         meta: {

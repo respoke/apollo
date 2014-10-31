@@ -49,7 +49,7 @@ respoke.on('connect', function () {
 respoke.on('error', function (err) {
     debug('failed to connect to respoke', err);
 });
-global.respoke = respoke;
+global.__respoke = respoke;
 
 // Attaching app locals and utils to request
 app.use(function (req, res, next) {
