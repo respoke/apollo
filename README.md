@@ -35,7 +35,7 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 
 You should be able to input your google auth credentials in `./config.js`, set `config.google.enable = true` and it will work.
 
-This does require creating a google project in their developer console. [This blog post](http://scotch.io/tutorials/javascript/easy-node-authentication-google) gives an overview of basic concepts for google oauth 2.0.
+This does require creating a google project in their developer console. [This blog post](http://scotch.io/tutorials/javascript/easy-node-authentication-google) gives an overview of basic concepts for Google OAuth 2.0.
 
 ### Custom message parsing plugins
 

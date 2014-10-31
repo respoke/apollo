@@ -20,7 +20,7 @@ config.baseURL = 'http://localhost:' + config.port;
 config.respokeJS = 'https://cdn.respoke.io/respoke.min.js';
 // You can also specify a folder where a local copy of respoke is located.
 // (primarily for development purposes)
-// 
+//
 //      config.respokeJS = '/respoke.min.js';
 //      config.respokeLocalPath = __dirname + '/../mercury/javascript/transporter/';
 //
@@ -30,9 +30,15 @@ config.respokeLocalPath = null;
 config.mongoURI = 'mongodb://localhost/apollo';
 
 // session store
+// passed directly to MongoStore
+// https://github.com/kcbanner/connect-mongo
 config.mongoSessions = {
-    secret: 'change-this-1234'
+    secret: 'change-this-1234',
+    url: 'mongodb://localhost/apollosessions'
 };
+
+// miliseconds for cookie to live
+config.cookieMaxAge = 1000 * 60 * 60 * 24 * 7; // one week
 
 config.email = {
     from: 'Apollo <system@example.com>'
@@ -57,7 +63,7 @@ config.smtp = {
     // or
     service: '', // 'gmail'
 
-    
+
     auth: {
         user: '',
         pass: ''
@@ -71,7 +77,7 @@ config.localSignupEnabled = true;
 // Create a project and go to APIs & Auth > Credentials
 // - https://console.developers.google.com
 // - be sure to setup the consent screen as well
-// 
+//
 // Using Passport.js google oauth plugin:
 // -  https://github.com/jaredhanson/passport-google-oauth
 config.google = {

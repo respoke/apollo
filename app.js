@@ -74,7 +74,10 @@ app.use(session({
     secret: config.mongoSessions.secret,
     store: new MongoStore(config.mongoSessions),
     saveUninitialized: true,
-    resave: true
+    resave: true,
+    cookie: {
+        maxAge: config.cookieMaxAge
+    }
 }));
 
 // Request parsers

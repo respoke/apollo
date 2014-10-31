@@ -99,7 +99,7 @@
             td.col-xs-6
                 h6 {{ item.display || item._id }}                    
                 small.text-primary(
-                    ng-show="item.unread"
+                    ng-show="item.unread && item._id !== selectedChat._id"
                 ): strong {{ item.unread }} new
                 small(
                     ng-show="!item.unread && item._id !== selectedChat._id"
