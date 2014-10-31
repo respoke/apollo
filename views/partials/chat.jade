@@ -122,7 +122,6 @@
             img.img-thumbnail(
                 ng-repeat="(key, obj) in selectedChat.chatstate" ng-if="obj"
                 ap-avatar email="recents[key].email"
-                ng-class="{ 'animated pulse infinite': obj.value === 'composing' }"
             )
 
         //- Macros
