@@ -5,13 +5,17 @@ var debug = require('debug')('apollo-plugin');
  * An example Apollo plugin.
  * Put in the `./plugins` folder and it will be loaded automatically.
  *
- * @param object locals - Useful local variables from the app
+ * @param object locals - Useful local variables from the app.
+ * @param object locals.config - Server configuration settings.
+ * @param object locals.clientConfig - Client configuration settings.
  * @param object locals.db - Mongoose models are attached to this object.
  * @param object locals.db.Account
  * @param object locals.db.File
  * @param object locals.db.Group
  * @param object locals.db.Message
- * @param object locals.
+ * @param object locals.email - Nodemailer transport instance for sending email.
+ * @param object locals.respoke - An instance of Respoke that will be automatically connected.
+ * @param object app - Express app instance.
  */
 exports = module.exports = function (locals, app) {
 

@@ -131,7 +131,11 @@ fs.readdirSync(normalizedPath).forEach(function (file) {
     debug('loading plugin', fullPath);
     require(fullPath)(pluginVars, app);
 });
-require('./example-plugin.js')(pluginVars, app);
+
+// An example plugin - feel free to delete this.
+if (process.env.NODE_ENV !== 'production') {
+    require('./example-plugin.js')(pluginVars, app);
+}
 
 // Error handling routes
 // after plugins in case the plugins extend the app routes
