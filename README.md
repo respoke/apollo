@@ -54,6 +54,14 @@ Example middleware:
 
     }
 
+### Custom server plugins
+
+You can extend the base Apollo application.
+
+An example plugin can be seen at `./example-plugin.js`.
+
+Apollo automatically loads all plugins in the `./plugins/` folder.
+
 ### Desktop app
 
 ##### Requirements
