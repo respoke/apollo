@@ -30,14 +30,14 @@ exports = module.exports = function (locals, app) {
 
 
     // Do respoke stuff
-    respoke.on('connect', function () {
+    locals.respoke.on('connect', function () {
 
         var msg = {
             groupId: 'Apollo',
             message: JSON.stringify({ text: 'System says: Hey there' })
         };
         debug('Sending message');
-        respoke.groups.publish(msg, function (err, data) {
+        locals.respoke.groups.publish(msg, function (err, data) {
             if (err) {
                 debug(err);
                 return;
