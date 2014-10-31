@@ -75,3 +75,7 @@ If you would like to build the desktop app, proceed with the following steps.
 1. From the Apollo directory, run `grunt release`.
 1. The applications will be in the `./public/release/<your app name>` folder.
 1. It is recommended to compress them by running `grunt pack`.
+
+---
+
+###### Apollo Copyright D.C.S. 2014
