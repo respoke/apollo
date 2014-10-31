@@ -4,9 +4,16 @@
 )
     //- Chat Header
     #chat-header: table.table(ng-show="!hideCallPanel")
+        tr.animated.fadeIn(ng-show="showSettings")
+            td: strong Settings
+            td
+            td.align-right
+                button.btn.btn-salmon-inverse.btn-sm(ng-click="toggleSettings()") Close
         
         //- Primary header element
-        tr#chat-header-main.animated.fadeInDown.faster(ng-show="!pendingUploads && !activeCall")
+        tr#chat-header-main.animated.fadeInDown.faster(
+            ng-show="!pendingUploads && !activeCall && !showSettings"
+        )
             td
                 img(src="/img/apollo-a.png" ng-if="!selectedChat")
                 i.fa.fa-group.fa-3x.yellow(ng-if="selectedChat && !selectedChat.email")

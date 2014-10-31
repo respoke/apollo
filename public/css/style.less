@@ -29,6 +29,13 @@
         color: @salmon;
     }
 }
+.btn-salmon-inverse {
+    background: @salmon;
+    color: white;
+    &:hover {
+        color: white;
+    }
+}
 
 html, body {
     height: 100%;
@@ -357,14 +364,18 @@ textarea.form-control {
     position: fixed;
     width: 100%;
 
-    td {
-        .btn {
-            width: 60px;
-            transition: width .2s ease-in-out;
-        }
-        .btn.disabled {
-            width: 100px;
-        }
+    div.col-xs-*>p {
+        display: block;
+        vertical-align: middle;
+    }
+
+    ap-toggle-setting>.btn {
+        transition: all .2s ease-in-out;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        padding: 0 8px;
+        margin-left: -6px;
     }
 }
 
