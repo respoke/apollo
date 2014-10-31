@@ -1,8 +1,9 @@
 'use strict';
 var express = require('express');
 var path = require('path');
+var fs = require('fs');
 var nodemailer = require('nodemailer');
-var Respoke = require('./lib/node-respoke');
+var Respoke = require('respoke');
 var debug = require('debug')('apollo-app');
 
 // Express middleware
@@ -56,7 +57,7 @@ app.use(function (req, res, next) {
     res.locals = req.locals || {};
     res.locals.config = config;
     res.locals.clientConfig = clientConfig;
-    
+
     req.db = models;
     req.email = mailTransport;
     req.utils = appUtilities;
@@ -115,6 +116,25 @@ passport.deserializeUser(function (id, done) {
 app.use('/', require('./routes/home'));
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
+
+// Loading Apollo plugins
+var normalizedPath = path.join(__dirname, 'plugins');
+var pluginVars = {
+    db: models,
+    config: config,
+    clientConfig: clientConfig,
+    email: mailTransport,
+    respoke: respoke
+};
+fs.readdirSync(normalizedPath).forEach(function (file) {
+    var fullPath = './plugins/' + file;
+    debug('loading plugin', fullPath);
+    require(fullPath)(pluginVars, app);
+});
+require('./example-plugin.js')(pluginVars, app);
+
+// Error handling routes
+// after plugins in case the plugins extend the app routes
 app.use(middleware.fourOhFour);
 app.use(middleware.errorHandler);
 
@@ -124,4 +144,5 @@ module.exports = app;
 
 var server = app.listen(config.port, function() {
     debug(config.name + ' is listening at http://localhost:' + server.address().port + '/');
+    app.emit('loaded');
 });

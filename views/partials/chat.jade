@@ -8,7 +8,12 @@
         //- Primary header element
         tr#chat-header-main.animated.fadeInDown.faster(ng-show="!pendingUploads && !activeCall")
             td
-                img(src="/img/apollo-a.png")
+                img(src="/img/apollo-a.png" ng-if="!selectedChat")
+                i.fa.fa-group.fa-3x.yellow(ng-if="selectedChat && !selectedChat.email")
+                img(
+                    ng-if="selectedChat && selectedChat.email"
+                    ap-avatar email="selectedChat.email"
+                )
             td
                 strong(ng-show="selectedChat && selectedChat.display")
                     | Conversation with {{ selectedChat.display }}

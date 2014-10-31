@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth,apollo-passport node app.js",
+    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth,apollo-passport,apollo-plugin node app.js",
     "jshint": "node_modules/.bin/jshint app.js models.js lib/*.js public/js/**/*.js --exclude=public/js/plugins/**/*"
   },
   "license": "proprietary",
@@ -27,6 +27,7 @@
     "nodemailer": "^1.3.0",
     "passport": "^0.2.1",
     "passport-google-oauth": "^0.1.5",
+    "respoke": "git+https://jparrish@stash.digium.com/stash/scm/scl/node-respoke-public.git",
     "serve-favicon": "~2.1.3",
     "uuid": "^2.0.1"
   },

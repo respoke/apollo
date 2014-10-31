@@ -216,9 +216,15 @@ input[type="text"].form-control, textarea.form-control {
                     padding-left: 23px;
                     padding-right: 0;
                     width: 72px;
-                    img {
+                    img, i.fa {
                         width: 50px;
                         opacity: .5;
+                    }
+                    img {
+                        border-radius: 5px;
+                    }
+                    i.fa {
+                        margin-left: 2px;
                     }
                 }
                 td:nth-child(2) {
@@ -389,6 +395,7 @@ input[type="text"].form-control, textarea.form-control {
 
         tr, td {
             border: none;
+            height: 56px;
         }
 
         #newgroup {
@@ -399,7 +406,7 @@ input[type="text"].form-control, textarea.form-control {
         #recents-query {
             background: transparent;
             border: 0;
-            padding-left: 21px;
+            padding-left: 6px;
             transition: background .2s ease;
 
             &:focus {
@@ -415,8 +422,7 @@ input[type="text"].form-control, textarea.form-control {
             }
         }
         tr>td:first-child {
-            /* to produce 20px from edge */
-            padding-left: 18px;
+            padding-left: 5px;
             vertical-align: middle;
             img {
                 width: 40px;
@@ -467,6 +473,7 @@ input[type="text"].form-control, textarea.form-control {
     }
     #chat {
         background: rgba(0, 0, 0, .1);
+        margin-top: 0;
     }
     #chat-table {
         td {

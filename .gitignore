@@ -25,6 +25,9 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
+# User created plugins
+plugins/
+
 # Compiled CSS
 *.css
 

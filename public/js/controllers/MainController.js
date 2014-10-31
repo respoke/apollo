@@ -227,7 +227,7 @@ exports = module.exports = [
 
         // receiving messages
         $rootScope.client.ignore('message');
-        $rootScope.client.listen('message', function (evt) {
+        $rootScope.client.listen('message', function onMessageReceived(evt) {
 
             try {
                 evt.message.message = JSON.parse(evt.message.message);
@@ -332,11 +332,14 @@ exports = module.exports = [
             }
 
             var notifTitle;
+            var from = $rootScope.recents[evt.message.endpointId]
+                ? $rootScope.recents[evt.message.endpointId].display
+                : evt.message.endpointId;
             if (evt.group) {
-                notifTitle = $rootScope.recents[evt.message.endpointId].display + ' > ' + evt.group.id;
+                notifTitle = from + ' > ' + evt.group.id;
             }
             else {
-                notifTitle = $rootScope.recents[evt.message.endpointId].display;
+                notifTitle = from;
             }
             var thisMessageNotif = function () {
                 notify({

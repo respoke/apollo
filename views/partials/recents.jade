@@ -14,6 +14,7 @@
 
     //- Display group and buddy list
     #buddies.scrollable: table.table
+        
         //- mememememe
         tr
             td.col-xs-2.center
@@ -101,6 +102,6 @@
                     ng-show="item.unread"
                 ): strong {{ item.unread }} new
                 small(
-                    ng-show="!item.unread"
+                    ng-show="!item.unread && item._id !== selectedChat._id"
                     ap-date="item.messages[item.messages.length - 1].created"
                 )
