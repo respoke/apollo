@@ -2,8 +2,8 @@
 /**
  * A sorting filter which accepts an object where the keys are the `_id` and the
  * values are the `Account` or `Group`.
- * 
- * This establishes the sort order of the buddy list / recent conversations. It has 
+ *
+ * This establishes the sort order of the buddy list / recent conversations. It has
  * some built-in assumptions and business logic.
  */
 exports = module.exports = function () {
@@ -23,7 +23,7 @@ exports = module.exports = function () {
 
             // Rank the most recent conversations at the top.
 
-            // If a conversation has a message, and the other doesn't, then it is 
+            // If a conversation has a message, and the other doesn't, then it is
             // more recent.
             if (a.messages && a.messages.length && b.messages && !b.messages.length) {
                 return -1;
@@ -44,23 +44,14 @@ exports = module.exports = function () {
                 }
             }
 
-            // In general, groups higher than people.
-            var aIsGroup = !a.display;
-            var bIsGroup = !b.display;
-            if (!aIsGroup && bIsGroup) {
+            // otherwise sort by alpha
+            var dispA = a.display || a._id;
+            var dispB = b.display || b._id;
+            if (dispA > dispB) {
                 return 1;
             }
-            if (aIsGroup && !bIsGroup) {
+            if (dispA < dispB) {
                 return -1;
-            }
-
-            // In general, rank people who are available higher than those who are 
-            // unavailable.
-            if (a.presence !== 'unavailable' && b.presence === 'unavailable') {
-                return -1;
-            }
-            if (a.presence === 'unavailable' && b.presence !== 'unavailable') {
-                return 1;
             }
             return 0;
         });
