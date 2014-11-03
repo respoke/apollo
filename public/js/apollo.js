@@ -17,7 +17,7 @@ require('./services/rest-factories.js')(apollo);
 apollo.factory('notify', require('./services/notify.js'));
 
 apollo.factory('respoke', function () {
-    return clientConfig.respoke || respoke;
+    return respoke;
 });
 apollo.factory('moment', function () {
     return require('moment');
