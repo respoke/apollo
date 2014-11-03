@@ -1,4 +1,4 @@
-#not-connected.animated.center.on-top.relative(ng-show="!client.isConnected()")
+#not-connected.animated.align-center.on-top.relative(ng-show="!client.isConnected()")
     br
     h1.lightweight.pulse.infinite.slowly #{config.name}
     br
@@ -17,11 +17,11 @@
         
         //- mememememe
         tr
-            td.col-xs-2.center
+            td.col-xs-2.align-center
                 img(
                     ap-avatar email="account.email"
                 )
-            td.col-xs-1.center
+            td.col-xs-1.align-center
                 .dropdown
                     ap-presence.clickable(
                         presence="{{ recents[account._id].presence }}"
@@ -88,13 +88,13 @@
             ng-class="{ 'selectedRecent': selectedChat._id === item._id }"
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
-            td.col-xs-2.center
+            td.col-xs-2.align-center
                 i.fa.fa-group.fa-2x.yellow(ng-if="!item.email")
                 img(
                     ng-if="item.email"
                     ap-avatar email="item.email"
                 )
-            td.col-xs-1.center
+            td.col-xs-1.align-center
                 ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
             td.col-xs-6
                 h6 {{ item.display || item._id }}                    

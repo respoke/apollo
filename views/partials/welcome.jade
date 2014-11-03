@@ -1,5 +1,5 @@
 .container-fluid: .animated.fadeInLeftBig(ng-class="{ 'fadeOutLeftBig': justLoggedIn }")
-    h1.center= "Sign in to " + config.name
+    h1.align-center= "Sign in to " + config.name
 
     //- When passport authorization fails, it will redirect here with a querystring message.
     .alert.alert-warning(ng-show="authFailureMessage") {{ authFailureMessage }}

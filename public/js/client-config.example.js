@@ -1,20 +1,20 @@
 // Require any plugins here
-var emo = require('./plugins/emo');
-var marked = require('./plugins/marked');
-var mention = require('./plugins/mention');
-var jira = require('./plugins/jira');
-var renderFile = require('./plugins/render-file');
+var emo = require('./parsers/emo');
+var marked = require('./parsers/marked');
+var mention = require('./parsers/mention');
+var jira = require('./parsers/jira');
+var renderFile = require('./parsers/render-file');
 
 var clientConfig = {};
 
-// clientConfig.jiraBaseWithSlash = 'https://jira.digium.com/browse/';
+// clientConfig.jiraBaseWithSlash = 'https://your.base.jira.url/';
 
 // When rendering a message, you can pass it through async middleware.
 // Middleware should accept two arguments, a string of content, and the function `next`.
 //
 //      function (messageContent, next) {  }
 //
-// If the function `next(err)` returns an error, the middleware execution stops and the 
+// If the function `next(err)` returns an error, the middleware execution stops and the
 // error is displayed instead of the message.
 clientConfig.messageRenderingMiddleware = [
     // jira(clientConfig.jiraBaseWithSlash),
@@ -58,9 +58,9 @@ clientConfig.emoMacros = [
 // The callback must implement the following:
 //
 //      function (fileObject, callback) { callback(err, fileDisplayHtml) }
-// 
+//
 // If renderFile is omitted, it will not be used and uploaded files will not be rendered.
-// 
+//
 clientConfig.renderFile = renderFile;
 
 exports = module.exports = clientConfig;

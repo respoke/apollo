@@ -9,6 +9,13 @@ html
     script.
         // node webkit stuff.
         if (window.nwDispatcher && window.location.pathname === '/') {
+            
+            // The only scenarios where this application has crashed have been
+            // due to client-side respoke.min.js code executing inside Node.js.
+            // So for now, we are logging these and continuing the app execution.
+            process.on('error', function (err) {
+                console.error("FATAL NODE.JS ERROR", err);
+            });
 
             var GUI = window.nwDispatcher.requireNwGui();
             var WIN = GUI.Window.get();
@@ -124,7 +131,7 @@ html
         }
     script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular.min.js")
     script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular-route.min.js")
-    script(src=config.respokeJS)
+    //- script(src=config.respokeJS)
     script(src="/js/apollo.js")
 
   body

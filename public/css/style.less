@@ -18,6 +18,14 @@
 .lightweight {
     font-weight: 100;
 }
+.clickable {
+    cursor: pointer;
+}
+.scrollable {
+    overflow-y: auto;
+    height: 100%;
+    padding-bottom: 150px;
+}
 .img-thumbnail {
     padding: 0;
     border: 0;
@@ -35,18 +43,6 @@
     &:hover {
         color: white;
     }
-}
-
-html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-weight: 100;
-    .panelGradient();
-    z-index: -200;
-    text-shadow: rgba(0,0,0,.01) 0 0 1px;
-    -webkit-font-smoothing: antialiased;
 }
 .fa.fa-rotate-45 {
     transform: rotate(45deg);
@@ -74,7 +70,26 @@ html, body {
     -o-animation-duration: .3s;
     animation-duration: .3s;
 }
-
+.align-center {
+    text-align: center;
+}
+.align-right {
+    text-align: right;
+}
+.align-left {
+    text-align: left;
+}
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-weight: 100;
+    .panelGradient();
+    z-index: -200;
+    text-shadow: rgba(0,0,0,.01) 0 0 1px;
+    -webkit-font-smoothing: antialiased;
+}
 input[type="text"].form-control,
 input[type="password"].form-control,
 textarea.form-control {
@@ -96,9 +111,6 @@ textarea.form-control {
         width: 100%;
     }
 }
-.center { text-align: center }
-.align-right { text-align: right }
-.align-left { text-align: left }
 .notifications {
     position: fixed;
     top: 0;
@@ -343,20 +355,6 @@ textarea.form-control {
             }
         }
     }
-}
-
-.offline {
-    opacity: .2;
-}
-
-.clickable {
-    cursor: pointer;
-}
-
-.scrollable {
-    overflow-y: auto;
-    height: 100%;
-    padding-bottom: 150px;
 }
 
 #settings {
