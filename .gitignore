@@ -28,6 +28,7 @@ coverage
 
 # User created plugins
 plugins/
+!public/js/plugins/
 
 # Compiled CSS
 *.css
