@@ -87,6 +87,7 @@
     ap-chat#chat(
         ap-drop="onDropUpload"
         ap-onscrolltop="loadBackMessages"
+        ng-class="{ 'no-bottom': showSettings }"
     )
         
         //- Chat
@@ -150,7 +151,7 @@
         ): i.fa.fa-upload
         textarea#textInput(
             ng-model="textInput"
-            placeholder="Type text, markdown, paste images, or drag files"
+            placeholder="Type text, markdown, :symbol:, @mention, and drag files"
             ap-enter="sendMessage(textInput); textInput = '';"
             ap-paste="onPasteUpload"
             ap-drop="onDropUpload"

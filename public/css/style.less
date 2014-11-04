@@ -278,9 +278,31 @@ textarea.form-control {
             top: 0;
             right: 2px;
             bottom: 76px;
+            &.no-bottom {
+                bottom: 0;
+            }
             left: 0;
             overflow-y: auto;
             margin-top: 70px;
+
+            #settings {
+                color: #fff;
+                overflow-x: hidden;
+
+                div.col-xs-*>p {
+                    display: block;
+                    vertical-align: middle;
+                }
+
+                ap-toggle-setting>.btn {
+                    transition: all .2s ease-in-out;
+                    width: 40px;
+                    height: 40px;
+                    font-size: 24px;
+                    padding: 0 8px;
+                    margin-left: -6px;
+                }
+            }
 
             /* Chat table */
             table.table {
@@ -357,26 +379,6 @@ textarea.form-control {
     }
 }
 
-#settings {
-    color: #fff;
-    position: fixed;
-    width: 100%;
-
-    div.col-xs-*>p {
-        display: block;
-        vertical-align: middle;
-    }
-
-    ap-toggle-setting>.btn {
-        transition: all .2s ease-in-out;
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
-        padding: 0 8px;
-        margin-left: -6px;
-    }
-}
-
 .passport-btn {
     padding: 21px 21px 13px 21px;
 }
@@ -418,8 +420,10 @@ textarea.form-control {
             background: transparent;
             border: 0;
             padding-left: 6px;
-            transition: background .2s ease;
-
+            transition: background .3s ease;
+            &:hover {
+                background: rgba(255, 255, 255, .1);
+            }
             &:focus {
                 background: white;
             }

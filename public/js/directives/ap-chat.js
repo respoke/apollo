@@ -1,7 +1,7 @@
 'use strict';
 /**
  * The chat window.
- * TODO: fix it so not this: The parent scope **must** implement the object `selectedChat`.
+ * Parent scope must have $scope.selectedChat. (TODO refactor)
  */
 exports = module.exports = [
     '$rootScope',
@@ -12,8 +12,8 @@ exports = module.exports = [
             link: function (scope, element, attrs) {
                 $rootScope.autoScrollDisabled = false;
 
-                var apOnscrolltop = attrs.apOnscrolltop 
-                    ? scope.$eval(attrs.apOnscrolltop) 
+                var apOnscrolltop = attrs.apOnscrolltop
+                    ? scope.$eval(attrs.apOnscrolltop)
                     : function (data) { };
 
                 // load previous elements
@@ -22,9 +22,9 @@ exports = module.exports = [
                         apOnscrolltop();
                     }
                     // scroll automatically when close to the bottom of the chat window.
-                    if (evt.target.scrollHeight - evt.target.scrollTop < 600
-                        || evt.target.scrollTop / evt.target.scrollHeight > 0.7
-                    ) {
+                    var bottomTopDiffSmall = evt.target.scrollHeight - evt.target.scrollTop < 400;
+                    var chatWindowIsShort = evt.target.scrollTop / evt.target.scrollHeight > 0.7;
+                    if (bottomTopDiffSmall || chatWindowIsShort) {
                         $rootScope.autoScrollDisabled = false;
                     }
                     else {

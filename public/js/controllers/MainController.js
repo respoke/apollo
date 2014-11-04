@@ -169,6 +169,7 @@ exports = module.exports = [
             $rootScope.recents[account._id].chatstate = {};
             $rootScope.recents[account._id].presence = "unavailable";
             $rootScope.recents[account._id].unread = 0;
+            // seed every chat in the background
             $scope.fetchChat($rootScope.recents[account._id]);
             return setPresenceListener(account._id);
         }
@@ -196,6 +197,7 @@ exports = module.exports = [
                     $rootScope.recents['group-' + group._id] = group;
                     $rootScope.recents['group-' + group._id].messages = msgs;
                     $rootScope.recents['group-' + group._id].chatstate = {};
+                    // seed the chat in the background
                     $scope.fetchChat($rootScope.recents['group-' + group._id]);
                     $rootScope.$apply();
                 },
@@ -232,7 +234,7 @@ exports = module.exports = [
             try {
                 evt.message.message = JSON.parse(evt.message.message);
             } catch (ignored) {
-                $log.debug('invalid message content received', evt);
+                $log.debug('INVALID JSON message content received', evt);
             }
 
             var fromSystemGroup = evt.group && evt.group.id === $rootScope.systemGroupId;
@@ -347,7 +349,7 @@ exports = module.exports = [
                     body: msgValue.substring(0, 80) + (msgValue.length > 80 ? '...' : '')
                 });
             };
-            // if you're mentioned, you get notified by sound
+            // If you're mentioned, you get notified by sound
             var reMe = new RegExp("\\[\\~" + $rootScope.account._id + "\\]");
             var wasMentioned = msgValue && msgValue.match(reMe);
             if (wasMentioned) {
@@ -426,8 +428,8 @@ exports = module.exports = [
             // reset the NEW chat unreads to zero
             $scope.selectedChat.unread = 0;
 
-            // fetch messages if there arent very many
-            if ($scope.selectedChat.messages.length < 25) {
+            // fetch messages if there arent any
+            if ($scope.selectedChat.messages.length < 1) {
                 $scope.fetchChat($scope.selectedChat);
             }
             else if ($scope.selectedChat.messages.length > 100) {
