@@ -29,8 +29,6 @@ exports = module.exports = [
                     else {
                         $rootScope.autoScrollDisabled = true;
                     }
-                    console.log('autoscrollDisabled', evt.target.scrollHeight,
-                        evt.target.scrollTop, $rootScope.autoScrollDisabled);
                 });
             },
             controller: 'ChatController'
