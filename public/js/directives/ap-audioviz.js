@@ -8,7 +8,11 @@
  */
 exports = module.exports = function () {
     // keep from making a bunch of audio contexts. only need one.
-    var audioContext = new webkitAudioContext();
+    var Context = window.AudioContext || window.webkitAudioContext;
+    if (!Context) {
+        return;
+    }
+    var audioContext = new Context();
     var analyzer = audioContext.createAnalyser();
 
     return {
