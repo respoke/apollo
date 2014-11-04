@@ -22,14 +22,15 @@ exports = module.exports = [
                         apOnscrolltop();
                     }
                     // scroll automatically when close to the bottom of the chat window.
-                    var bottomTopDiffSmall = evt.target.scrollHeight - evt.target.scrollTop < 400;
-                    var chatWindowIsShort = evt.target.scrollTop / evt.target.scrollHeight > 0.7;
-                    if (bottomTopDiffSmall || chatWindowIsShort) {
+                    var bottomTopDiffSmall = evt.target.scrollHeight - evt.target.scrollTop < 500;
+                    if (bottomTopDiffSmall) {
                         $rootScope.autoScrollDisabled = false;
                     }
                     else {
                         $rootScope.autoScrollDisabled = true;
                     }
+                    console.log('autoscrollDisabled', evt.target.scrollHeight,
+                        evt.target.scrollTop, $rootScope.autoScrollDisabled);
                 });
             },
             controller: 'ChatController'

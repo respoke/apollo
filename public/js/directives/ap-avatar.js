@@ -2,11 +2,11 @@
 /**
  * A directive for showing a gravatar on an image.
  * Usage:
- * 
+ *
  *      <img ap-avatar email="billy@respoke.io" />
  *
  */
-exports = module.exports = ['crypto', function (crypto) {
+exports = module.exports = ['crypto', 'clientConfig', function (crypto, clientConfig) {
     return {
         restrict: 'A',
         scope: {
@@ -14,9 +14,12 @@ exports = module.exports = ['crypto', function (crypto) {
         },
         link: function (scope, element, attrs) {
             scope.gravatar = function () {
-                element[0].src = 'https://secure.gravatar.com/avatar/';
                 if (scope.email) {
-                    element[0].src += crypto.createHash('md5').update(scope.email).digest("hex");
+                    var h = crypto.createHash('md5').update(scope.email).digest("hex");
+                    element[0].src = 'https://secure.gravatar.com/avatar/' + h + '?d=retro';
+                }
+                else {
+                    element[0].src = '/img/avatar.png';
                 }
             };
             scope.$watch('email', scope.gravatar);

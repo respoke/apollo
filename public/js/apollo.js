@@ -14,8 +14,10 @@ apollo.controller('ChatController', require('./controllers/ChatController'));
 
 // Services and Factories
 require('./services/rest-factories.js')(apollo);
+apollo.factory('clientConfig', function () {
+    return clientConfig;
+});
 apollo.factory('notify', require('./services/notify.js'));
-
 apollo.factory('respoke', function () {
     return require('../../tmp/respoke/respoke.js');//respoke;
 });

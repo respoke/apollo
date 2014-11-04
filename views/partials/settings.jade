@@ -1,6 +1,7 @@
 div(ng-controller="SettingsController")
     
     br
+    br
     .row
         .col-xs-1.col-xs-offset-1
             i.fa.fa-2x.fa-user.salmon
@@ -27,6 +28,10 @@ div(ng-controller="SettingsController")
             )
         .col-xs-4
             span.help-inline(ng-show="newDisplayName !== account.display") Hit enter to save
+    .row
+        .col-xs-2
+        .col-xs-4: p: strong
+            a(href="https://gravatar.com" target="_blank") Change profile image
     
     br
     br

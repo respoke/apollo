@@ -17,6 +17,8 @@ exports = module.exports = ['$rootScope', function ($rootScope) {
 
         if (force || chat.scrollHeight < 2000 || !$rootScope.autoScrollDisabled) {
             chat.scrollTop = chat.scrollHeight;
+        } else if (force === false) {
+            chat.scrollTop = 0;
         }
     };
 }];

@@ -45,6 +45,11 @@ exports = module.exports = [
             if (!$scope.showSettings) {
                 $timeout(scrollChatToBottom);
             }
+            else {
+                $timeout(function () {
+                    scrollChatToBottom(false);
+                });
+            }
         };
         $scope.selectedChat = null;
         $scope.callIsRinging = false;
