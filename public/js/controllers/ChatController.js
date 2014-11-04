@@ -111,8 +111,8 @@ exports = module.exports = [
             });
         };
 
-        $scope.sendMessage = function (txt, fileId) {
-            $log.debug('sendMessage', txt);
+        $scope.sendMessage = function (txt, fileId, specificChatId) {
+            $log.debug('sendMessage', txt, fileId, specificChatId);
             if (!txt) {
                 return;
             }
@@ -122,22 +122,24 @@ exports = module.exports = [
                     text: txt
                 }
             };
+            var $chat = specificChatId ? $rootScope.recents[specificChatId] : $scope.selectedChat;
+
             // is it a private message?
-            if ($scope.selectedChat.display) {
-                msg.to = $scope.selectedChat._id;
+            if ($chat.display) {
+                msg.to = $chat._id;
                 // indicate the recipient was not online and needs to be notified
-                if ($scope.selectedChat.presence === 'unavailable') {
+                if ($chat.presence === 'unavailable') {
                     msg.recipientOffline = true;
                 }
             }
             // or a group message
             else {
-                msg.group = $scope.selectedChat._id;
+                msg.group = $chat._id;
             }
             if (fileId) {
                 msg.file = fileId;
             }
-            $scope.selectedChat.messages.push({
+            $chat.messages.push({
                 content: {
                     text: txt
                 },
@@ -158,10 +160,12 @@ exports = module.exports = [
             Message.create(msg, function (err, sentMessage) {
                 if (err) {
                     $rootScope.notifications.push(err);
-                    $scope.selectedChat.messages.pop();
+                    $chat.messages.pop();
                     return;
                 }
-                scrollChatToBottom(true);
+                if ($chat._id === $scope.selectedChat._id) {
+                    scrollChatToBottom(true);
+                }
             });
         };
 
@@ -203,7 +207,8 @@ exports = module.exports = [
         };
 
         $scope.onDropUpload = function (files) {
-            $log.debug('drag and drop ', files.length, 'files');
+            var currentChatId = $scope.selectedChat.display ? $scope.selectedChat._id: 'group-' + $scope.selectedChat._id;
+            $log.debug('drop or upload button', files.length, 'files');
             files.forEach(function (data) {
                 $log.debug(data.name, data.contentType);
                 $scope.pendingUploads++;
@@ -211,34 +216,36 @@ exports = module.exports = [
                     contentType: data.contentType,
                     content: data.content,
                     name: data.name
-                }, onAfterUpload);
+                }, onAfterUpload(currentChatId));
             });
         };
 
         $scope.onPasteUpload = function (data) {
+            var currentChatId = $scope.selectedChat.display ? $scope.selectedChat._id: 'group-' + $scope.selectedChat._id;
             $log.debug('paste upload', data.contentType);
             $scope.pendingUploads++;
             File.create({
                 contentType: data.contentType,
                 content: data.content
-            }, onAfterUpload);
+            }, onAfterUpload(currentChatId));
         };
 
-        function onAfterUpload(err, file) {
-            $scope.pendingUploads--;
-            if (err) {
-                $rootScope.notifications.push(err);
-                return;
-            }
-
-            renderFile(file, function (err, messageText) {
+        function onAfterUpload (chatId) {
+            return function (err, file) {
+                $scope.pendingUploads--;
                 if (err) {
                     $rootScope.notifications.push(err);
                     return;
                 }
-                $scope.sendMessage(messageText, file._id);
-            });
-        }
 
+                renderFile(file, function (err, messageText) {
+                    if (err) {
+                        $rootScope.notifications.push(err);
+                        return;
+                    }
+                    $scope.sendMessage(messageText, file._id, chatId);
+                });
+            };
+        }
     }
 ];
