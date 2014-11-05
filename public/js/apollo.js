@@ -19,7 +19,7 @@ apollo.factory('clientConfig', function () {
 });
 apollo.factory('notify', require('./services/notify.js'));
 apollo.factory('respoke', function () {
-    return require('../../tmp/respoke/respoke.js');//respoke;
+    return respoke;
 });
 apollo.factory('moment', function () {
     return require('moment');

@@ -11,6 +11,7 @@ exports = module.exports = function (file, next) {
     }
 
     var fileURL = '/files/' + file._id;
+    // the approx diff ratio between base64 string and binary file
     var bytes = (4 * (file.content.length / 3)) * 0.6;
     var embed = '';
     var displayText = file.contentType;
@@ -18,11 +19,11 @@ exports = module.exports = function (file, next) {
 
     if (/audio/.test(file.contentType)) {
         iconSymbol = ':file-audio-o:';
-        embed = '<br /><br /><audio src="' + fileURL + '" controls></audio>';
+        embed = '<br /><br /><audio src="' + fileURL + '" controls loop></audio>';
     }
     else if (/video/.test(file.contentType)) {
         iconSymbol = ':file-video-o:';
-        embed = '<br /><br /><video src="' + fileURL + '" controls></video>';
+        embed = '<br /><br /><video src="' + fileURL + '" controls loop></video>';
     }
     else if (/zip|gz|tar/.test(file.contentType)) {
         iconSymbol = ':file-archive-o:';
@@ -46,7 +47,7 @@ exports = module.exports = function (file, next) {
     }
 
     // render images directly.
-    var messageText = '[' + displayText + ' - ' + (bytes/1024/1024).toFixed(3) + 'mb' 
+    var messageText = '[' + displayText + ' - ' + (bytes/1024/1024).toFixed(3) + 'mb'
             + '](/files/' + file._id + ')';
 
     messageText = iconSymbol + '&nbsp;' + messageText + embed;
