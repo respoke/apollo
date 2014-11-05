@@ -23,8 +23,8 @@ exports = module.exports = function () {
         },
         link: function (scope, element, attrs) {
 
-            var barHeight = 40;
-            var barWidth = 50;
+            var WIDTH = 50;
+            var HEIGHT = 40;
 
             scope.audioContext = audioContext;
 
@@ -38,9 +38,14 @@ exports = module.exports = function () {
             scope.analyser.connect(scope.processor);
 
             scope.cvs = document.createElement("canvas");
-            scope.cvs.width = barWidth;
-            scope.cvs.height = barHeight;
+            scope.cvs.width = WIDTH;
+            scope.cvs.height = HEIGHT;
             scope.canvasContext = scope.cvs.getContext("2d");
+            scope.canvasContext.fillStyle = '#ffffff';
+
+            function normalize(num) {
+
+            }
 
             function processAudio() {
 
@@ -54,15 +59,18 @@ exports = module.exports = function () {
                 }
 
                 scope.processor.onaudioprocess = function () {
-                    var frequency = new Uint8Array(scope.analyser.frequencyBinCount);
-                    scope.analyser.getByteFrequencyData(frequency);
-                    scope.canvasContext.clearRect(0, 0, barWidth, barHeight);
-                    scope.canvasContext.fillStyle = '#ffffff';
-                    var start = 0;
-                    for (var i=0; i < frequency.length && start < barWidth; i++) {
-                        scope.canvasContext.fillRect(start, barHeight - frequency[i], 12, barHeight);
-                        start += 13;
+                    scope.canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
+                    var freqDomain = new Uint8Array(scope.analyser.frequencyBinCount);
+                    scope.analyser.getByteFrequencyData(freqDomain);
+                    for (var i = 0; i < scope.analyser.frequencyBinCount/3; i = i+3) {
+                        var value = freqDomain[i];
+                        var percent = value / 256;
+                        var height = HEIGHT * percent;
+                        var offset = HEIGHT - height - 1;
+                        var barWidth = WIDTH/(scope.analyser.frequencyBinCount/3) + 1;
+                        scope.canvasContext.fillRect(i * barWidth, offset, barWidth, height);
                     }
+
 
                 };
 

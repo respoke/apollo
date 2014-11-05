@@ -67,19 +67,16 @@
 
             td
                 //- hang up
-                button.btn.btn-salmon(ng-click="hangup()")
-                    i.fa.fa-phone.fa-rotate-135
+                button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hangup' }}
                 
                 //- answer
-                button.btn.btn-primary(
+                button.btn.btn-primary.btn-xs(
                     ng-click="answer();"
                     ng-show="incomingCall"
-                )
-                    i.fa.fa-phone(ng-show="!activeCall.incomingMedia.hasVideo()")
-                    i.fa.fa-video-camera(ng-show="activeCall.incomingMedia.hasVideo()")
+                ) Answer
 
                 //- Join video call
-                a.btn.btn-primary(
+                a.btn.btn-primary.btn-xs(
                     href="/private"
                     ng-show="activeCall.hasVideo"
                     target="_blank"): i.fa.fa-external-link
