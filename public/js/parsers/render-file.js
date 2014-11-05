@@ -47,10 +47,10 @@ exports = module.exports = function (file, next) {
     }
 
     // render images directly.
-    var messageText = '[' + displayText + ' - ' + (bytes/1024/1024).toFixed(3) + 'mb'
-            + '](/files/' + file._id + ')';
-
-    messageText = iconSymbol + '&nbsp;' + messageText + embed;
+    var messageText = '[' + iconSymbol + '&nbsp;&nbsp;'
+        + displayText + ' - ' + (bytes/1024/1024).toFixed(3) + 'mb'
+        + '](/files/' + file._id + ')'
+        + embed;
 
     var err = null;
     next(err, messageText);
