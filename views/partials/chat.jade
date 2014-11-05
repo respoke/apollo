@@ -51,29 +51,30 @@
                     ng-show="(incomingCall && !activeCall.incomingMedia.hasVideo()) || (callIsRinging && !activeCall.outgoingMedia.hasVideo())"
                 )
                 i.fa.fa-video-camera.fa-3x(
-                    ng-show="(incomingCall && activeCall.incomingMedia.hasVideo()) || (callIsRinging && activeCall.outgoingMedia.hasVideo())"
+                    ng-show="incomingCall && activeCall.incomingMedia.hasVideo()"
                 )
                 
                 ap-audioviz(
-                    ng-if="activeCall.incomingMedia.stream"
+                    ng-if="activeCall.incomingMedia.stream && !activeCall.incomingMedia.hasVideo()"
                     stream1="activeCall.incomingMedia.stream"
                     stream2="activeCall.outgoingMedia.stream"
                 )
             td
-                span(ng-show="!incomingCall && !callIsRinging") On a call with
-                span(ng-show="callIsRinging")  Placing a call to
+                span(ng-show="!incomingCall && !callIsRinging")
+                    | {{ activeCall.incomingMedia.hasVideo() ? 'Video' : 'Audio'}} call with
+                span(ng-show="callIsRinging")  Placing {{ activeCall.incomingMedia.hasVideo() ? 'video' : 'audio'}} call to
                 span  {{ recents[activeCall.remoteEndpoint.id].display }}
                 span(ng-show="incomingCall")  is calling you
 
             td
-                //- hang up
-                button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hangup' }}
-                
                 //- answer
                 button.btn.btn-primary.btn-xs(
                     ng-click="answer();"
                     ng-show="incomingCall"
                 ) Answer
+                
+                //- hang up
+                button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hangup' }}
 
                 //- Join video call
                 a.btn.btn-primary.btn-xs(

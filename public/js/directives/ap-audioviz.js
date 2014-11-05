@@ -43,10 +43,6 @@ exports = module.exports = function () {
             scope.canvasContext = scope.cvs.getContext("2d");
             scope.canvasContext.fillStyle = '#ffffff';
 
-            function normalize(num) {
-
-            }
-
             function processAudio() {
 
                 if (scope.stream1) {
