@@ -5,7 +5,25 @@ block content
         h3#chat-title(ng-show="errorMessage") {{ errorMessage }}
 
         #respokeLocalVideo(ap-draggable)
-        #respokeRemoteVideo(ap-draggable)
+            .btn-group
+                button#toggle-audio.btn.btn-xs(
+                    ng-click="activeCall.toggleAudio()"
+                    ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isAudioMuted(), 'btn-default': activeCall.outgoingMedia.isAudioMuted() }"
+                )
+                    i.fa.fa-microphone.fa-lg(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
+                    i.fa.fa-microphone-slash.fa-lg(ng-show="activeCall.outgoingMedia.isAudioMuted()")
+                | &nbsp;
+                button#toggle-video.btn.btn-xs(
+                    ng-click="activeCall.toggleVideo()"
+                    ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isVideoMuted(), 'btn-default': activeCall.outgoingMedia.isVideoMuted() }"
+                )
+                    i.fa.fa-ban.fa-lg(ng-show="activeCall.outgoingMedia.isVideoMuted()")
+                    i.fa.fa-video-camera(
+                        ng-class="{ 'fa-lg': !activeCall.outgoingMedia.isVideoMuted() }"
+                    )
+        #respokeRemoteVideo
+            
+            
 
         div(ng-show="activeCall")
             include partials/chat
@@ -13,18 +31,19 @@ block content
         #video-call-controls(ng-show="activeCall")
             button.btn.btn-sm.btn-default(ng-click="hangup()") Hang up
             | &nbsp;
-            button#toggle-audio.btn.btn-sm(
-                ng-click="activeCall.toggleAudio()"
-                ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isAudioMuted(), 'btn-default': activeCall.outgoingMedia.isAudioMuted() }"
-            )
-                i.fa.fa-microphone.fa-2x(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
-                i.fa.fa-microphone-slash.fa-2x(ng-show="activeCall.outgoingMedia.isAudioMuted()")
-            | &nbsp;
-            button#toggle-video.btn.btn-sm(
-                ng-click="activeCall.toggleVideo()"
-                ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isVideoMuted(), 'btn-default': activeCall.outgoingMedia.isVideoMuted() }"
-            )
-                i.fa.fa-ban.fa-2x(ng-show="activeCall.outgoingMedia.isVideoMuted()")
-                i.fa.fa-video-camera(
-                    ng-class="{ 'fa-2x': !activeCall.outgoingMedia.isVideoMuted() }"
+            .btn-group
+                button#toggle-audio.btn.btn-sm(
+                    ng-click="activeCall.incomingMedia.isAudioMuted() ? activeCall.incomingMedia.unmuteAudio() : activeCall.incomingMedia.muteAudio()"
+                    ng-class="{ 'btn-primary': !activeCall.incomingMedia.isAudioMuted(), 'btn-default': activeCall.incomingMedia.isAudioMuted() }"
                 )
+                    i.fa.fa-microphone.fa-2x(ng-show="!activeCall.incomingMedia.isAudioMuted()")
+                    i.fa.fa-microphone-slash.fa-2x(ng-show="activeCall.incomingMedia.isAudioMuted()")
+                button#toggle-video.btn.btn-sm(
+                    ng-click="activeCall.incomingMedia.isVideoMuted() ? activeCall.incomingMedia.unmuteVideo() : activeCall.incomingMedia.muteVideo()"
+                    ng-class="{ 'btn-primary': !activeCall.incomingMedia.isVideoMuted(), 'btn-default': activeCall.incomingMedia.isVideoMuted() }"
+                )
+                    i.fa.fa-ban.fa-2x(ng-show="activeCall.incomingMedia.isVideoMuted()")
+                    i.fa.fa-video-camera(
+                        ng-class="{ 'fa-2x': !activeCall.incomingMedia.isVideoMuted() }"
+                    )
+                

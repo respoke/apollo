@@ -508,7 +508,7 @@ exports = module.exports = [
             $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
             stopRinging();
             $scope.$apply();
-            if ($rootScope.activeCall.incomingMedia.hasVideo()) {
+            if ($scope.activeCall.incomingMedia.hasVideo()) {
                 $window.open('/private', '_blank');
             }
         };

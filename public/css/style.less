@@ -528,6 +528,9 @@ textarea.form-control {
             }
         }
     }
+    #respokeLocalVideo, #respokeRemoteVideo {
+
+    }
     #respokeLocalVideo {
         position: fixed;
         left: 0;
@@ -536,6 +539,12 @@ textarea.form-control {
         min-height: 110px;
         z-index: 100;
 
+        .btn-group {
+            position: absolute;
+            left: 5px;
+            bottom: 5px;
+        }
+
         video {
             height: 100%;
             width: 100%;
@@ -543,13 +552,9 @@ textarea.form-control {
     }
     #respokeRemoteVideo {
         position: fixed;
-        left: 0;
-        right: 300px;
         top: 0;
-        bottom: 0;
-        height: 100%;
-        z-index: 50;
-
+        left: 0;
+        z-index: 0;
         video {
             height: 100%;
             width: 100%;
