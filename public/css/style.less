@@ -79,6 +79,9 @@
 .align-left {
     text-align: left;
 }
+.absolute {
+    display: absolute;
+}
 html, body {
     height: 100%;
     width: 100%;
@@ -144,6 +147,7 @@ textarea.form-control {
     position: fixed;
 
     border-radius: 0;
+    border: 0;
     margin: 0;
 
     top: 0;
@@ -217,13 +221,12 @@ textarea.form-control {
             top: 0;
             right: 0;
             left: 0;
-            border-bottom: 1px solid rgba(0,0,0,.1);
 
             table.table {
                 margin: 0;
-                background: transparent;
+                background: rgba(0, 0, 0, .05);
                 td {
-                    background: transparent;
+                    background: rgba(0, 0, 0, .05);
                     padding-bottom: 8px;
                     height: 70px;
                     font-weight: 400;
@@ -239,7 +242,6 @@ textarea.form-control {
                     width: 72px;
                     img, i.fa {
                         width: 50px;
-                        opacity: .5;
                     }
                     img {
                         border-radius: 5px;
@@ -419,14 +421,18 @@ textarea.form-control {
         #recents-query {
             background: rgba(255, 255, 255, .05);
             border: 0;
-            padding-left: 6px;
+            margin-bottom: 1px;
+            padding-left: 8px;
             transition: background .3s ease;
             &:hover {
-                background: rgba(255, 255, 255, .25);
+                background: rgba(0, 0, 0, .25);
             }
             &:focus {
                 background: white;
             }
+        }
+        #new-group-input {
+            border-radius: 0;
         }
 
         tr.selectedRecent {

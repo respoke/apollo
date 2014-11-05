@@ -3,7 +3,7 @@
   "name": "Apollo",
   "description": "Team collaboration built on Respoke",
   "version": "0.2.0",
-  "node-remote": "*",
+  "node-remote": "localhost,apollo.ruffrey.com",
   "window": {
     "title": "Apollo",
     "icon": "apollo.png",

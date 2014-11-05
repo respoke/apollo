@@ -73,13 +73,16 @@
                 i.fa.fa-remove(ng-show="showCreateGroup")
 
 
-            .animated(ng-show="showCreateGroup" ng-class="{ 'flipInX': showCreateGroup }")
-                input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
-                button.btn.btn-primary.btn-block.btn-sm(
+            .animated.faster(
+                ng-show="showCreateGroup"
+                ng-class="{ 'zoomIn': showCreateGroup }"
+            )
+                input#new-group-input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+                button.btn.btn-default.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+                    | Cancel
+                button.btn.btn-primary.btn-sm(
                     ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
                 ) Create
-                button.btn.btn-default.btn-block.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
-                    | Cancel
         
         //- all the other stuff
         tr.clickable(
@@ -89,7 +92,7 @@
             ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
         )
             td.col-xs-2.align-center
-                i.fa.fa-group.fa-2x.yellow(ng-if="!item.email")
+                i.fa.fa-comments.fa-2x(ng-if="!item.email")
                 img(
                     ng-if="item.email"
                     ap-avatar email="item.email"

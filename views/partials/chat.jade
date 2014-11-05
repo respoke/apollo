@@ -16,7 +16,7 @@
         )
             td
                 img(src="/img/apollo-a.png" ng-if="!selectedChat")
-                i.fa.fa-group.fa-3x.yellow(ng-if="selectedChat && !selectedChat.email")
+                i.fa.fa-comments.fa-3x(ng-if="selectedChat && !selectedChat.email")
                 img(
                     ng-if="selectedChat && selectedChat.email"
                     ap-avatar email="selectedChat.email"
@@ -29,13 +29,13 @@
             td
                 div(ng-show="selectedChat && isAllowedToCall(selectedChat)")
                     //- audio call
-                    button.btn.btn-default(
+                    button.btn.btn-salmon.btn-sm(
                         ng-click="audioCall(selectedChat._id)"
-                    ): i.fa.fa-phone
+                    ): i.fa.fa-phone.fa-lg
                     //- video call
-                    button.btn.btn-default(
+                    button.btn.btn-salmon.btn-sm(
                         ng-click="videoCall(selectedChat._id)"
-                    ): i.fa.fa-video-camera
+                    ): i.fa.fa-video-camera.fa-lg
         
         //- File upload
         tr.notify.animated.fadeInDown.faster(ng-show="pendingUploads")
