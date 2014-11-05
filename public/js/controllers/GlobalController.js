@@ -46,6 +46,7 @@ exports = module.exports = [
         $rootScope.client = $window.client = respoke.createClient();
         $rootScope.client.listen('connect', function () {
             $log.debug('connected');
+            $rootScope.notifications = [];
             $rootScope.$apply();
 
             $rootScope.client.join({

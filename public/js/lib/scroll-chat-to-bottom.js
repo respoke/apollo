@@ -15,10 +15,11 @@ exports = module.exports = ['$rootScope', function ($rootScope) {
     return function scrollChatToBottom(force) {
         var chat = document.getElementById('chat');
 
-        if (force || chat.scrollHeight < 2000 || !$rootScope.autoScrollDisabled) {
-            chat.scrollTop = chat.scrollHeight;
-        } else if (force === false) {
+        if (force === false) {
             chat.scrollTop = 0;
+        }
+        else if (force || !$rootScope.autoScrollDisabled) {
+            chat.scrollTop = chat.scrollHeight;
         }
     };
 }];

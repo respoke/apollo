@@ -43,12 +43,14 @@ exports = module.exports = [
         $scope.toggleSettings = function (override) {
             $scope.showSettings = typeof override !== 'undefined' ? override : !$scope.showSettings;
             if (!$scope.showSettings) {
-                $timeout(scrollChatToBottom);
+                $timeout(function () {
+                    scrollChatToBottom(true)
+                }, 200);
             }
             else {
                 $timeout(function () {
                     scrollChatToBottom(false);
-                });
+                }, 100);
             }
         };
         $scope.selectedChat = null;

@@ -177,6 +177,9 @@ exports = module.exports = [
             if (!$scope.selectedChat.messages.length) {
                 return;
             }
+            if ($scope.showSettings) {
+                return;
+            }
             var qs;
             if ($scope.selectedChat.display) {
                 qs = '?account=' + $scope.selectedChat._id;

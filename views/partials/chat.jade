@@ -51,7 +51,7 @@
                     ng-show="(incomingCall && !activeCall.incomingMedia.hasVideo()) || (callIsRinging && !activeCall.outgoingMedia.hasVideo())"
                 )
                 i.fa.fa-video-camera.fa-3x(
-                    ng-show="incomingCall && activeCall.incomingMedia.hasVideo()"
+                    ng-show="activeCall.incomingMedia.hasVideo()"
                 )
                 
                 ap-audioviz(
@@ -62,19 +62,27 @@
             td
                 span(ng-show="!incomingCall && !callIsRinging")
                     | {{ activeCall.incomingMedia.hasVideo() ? 'Video' : 'Audio'}} call with
-                span(ng-show="callIsRinging")  Placing {{ activeCall.incomingMedia.hasVideo() ? 'video' : 'audio'}} call to
+                span(ng-show="callIsRinging")  Placing {{ activeCall.incomingMedia.hasVideo() ? 'video' : '' }} call to
                 span  {{ recents[activeCall.remoteEndpoint.id].display }}
                 span(ng-show="incomingCall")  is calling you
 
             td
-                //- answer
-                button.btn.btn-primary.btn-xs(
+                //- Answer
+                button.btn.btn-salmon.btn-xs(
                     ng-click="answer();"
                     ng-show="incomingCall"
                 ) Answer
                 
-                //- hang up
-                button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hangup' }}
+                //- Mute
+                button#toggle-audio.btn.btn-salmon.btn-xs(
+                    ng-show="!incomingCall && !callIsRinging && activeCall.outgoingMedia.stream"
+                    ng-click="activeCall.toggleAudio()"
+                )
+                    i.fa.fa-microphone.fa-lg(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
+                    i.fa.fa-microphone-slash.fa-lg(ng-show="activeCall.outgoingMedia.isAudioMuted()")
+                
+                //- Hang up
+                button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hang up' }}
 
                 //- Join video call
                 a.btn.btn-primary.btn-xs(

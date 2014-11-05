@@ -11,8 +11,7 @@ block content
             include partials/chat
 
         #video-call-controls(ng-show="activeCall")
-            button.btn.btn-sm.btn-default(ng-click="hangup()")
-                i.fa.fa-phone.fa-rotate-135.fa-2x
+            button.btn.btn-sm.btn-default(ng-click="hangup()") Hang up
             | &nbsp;
             button#toggle-audio.btn.btn-sm(
                 ng-click="activeCall.toggleAudio()"

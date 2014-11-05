@@ -13,8 +13,9 @@ html
             // The only scenarios where this application has crashed have been
             // due to client-side respoke.min.js code executing inside Node.js.
             // So for now, we are logging these and continuing the app execution.
-            process.on('error', function (err) {
-                console.error("FATAL NODE.JS ERROR", err);
+            process.on('uncaughtException', function (err) {
+                console.error("UNCAUGHT EXCEPTION", err);
+                //- GUI.Window.get().window.location.reload();
             });
 
             var GUI = window.nwDispatcher.requireNwGui();
