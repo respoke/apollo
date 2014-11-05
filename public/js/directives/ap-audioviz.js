@@ -67,7 +67,6 @@ exports = module.exports = function () {
                         scope.canvasContext.fillRect(i * barWidth, offset, barWidth, height);
                     }
 
-
                 };
 
                 element[0].innerHTML = '';

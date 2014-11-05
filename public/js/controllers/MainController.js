@@ -506,6 +506,7 @@ exports = module.exports = [
             $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
             stopRinging();
             $scope.$apply();
+            $window.open('/private', '_blank');
         };
         var audioCallConstraints = {
             constraints: {audio: true, video: false},
