@@ -159,10 +159,10 @@ exports = module.exports = function (angular) {
                             if (
                                 $attrs.id !== undefined ||
                                 $attrs.mentioId !== undefined
-                            ) 
+                            )
                             {
                                 if (
-                                    $attrs.id === data.targetElement || 
+                                    $attrs.id === data.targetElement ||
                                     (
                                         $attrs.mentioId !== undefined &&
                                         $scope.altId === data.targetElement
@@ -278,28 +278,28 @@ exports = module.exports = function (angular) {
                             var isActive = scope.isActive();
                             var isContentEditable = scope.isContentEditable();
 
-                            var mentionInfo = mentioUtil.getTriggerInfo(scope.triggerCharSet, 
+                            var mentionInfo = mentioUtil.getTriggerInfo(scope.triggerCharSet,
                                 scope.requireLeadingSpace, isActive);
 
-                            if (mentionInfo !== undefined && 
+                            if (mentionInfo !== undefined &&
                                     (
-                                        !isActive || 
-                                        (isActive && 
+                                        !isActive ||
+                                        (isActive &&
                                             (
-                                                /* content editable selection changes to local nodes which 
-                                                modifies the start position of the selection over time, 
+                                                /* content editable selection changes to local nodes which
+                                                modifies the start position of the selection over time,
                                                 just consider triggerchar changes which
-                                                will have the odd effect that deleting a trigger char pops 
+                                                will have the odd effect that deleting a trigger char pops
                                                 the menu for a previous
                                                 trigger char sequence if one exists in a content editable */
-                                                (isContentEditable && mentionInfo.mentionTriggerChar === 
+                                                (isContentEditable && mentionInfo.mentionTriggerChar ===
                                                     scope.currentMentionTriggerChar) ||
-                                                (!isContentEditable && mentionInfo.mentionPosition === 
+                                                (!isContentEditable && mentionInfo.mentionPosition ===
                                                     scope.currentMentionPosition)
                                             )
                                         )
                                     )
-                                ) 
+                                )
                             {
                                 /** save selection info about the target control for later re-selection */
                                 scope.targetElement = mentionInfo.mentionSelectedElement;
@@ -793,7 +793,7 @@ exports = module.exports = function (angular) {
 
                     var hasTrailingSpace = false;
 
-                    if (effectiveRange.length > 0 && 
+                    if (effectiveRange.length > 0 &&
                         (effectiveRange.charAt(effectiveRange.length - 1) === '\xA0' ||
                             effectiveRange.charAt(effectiveRange.length - 1) === ' ')) {
                         hasTrailingSpace = true;
@@ -832,7 +832,7 @@ exports = module.exports = function (angular) {
                 var selected = sel.anchorNode;
                 var path = [];
                 var offset;
-                if (selected != null) {
+                if (selected !== null) {
                     var i;
                     var ce = selected.contentEditable;
                     while (selected !== null && ce !== 'true') {
@@ -880,25 +880,25 @@ exports = module.exports = function (angular) {
                             triggerChar = c;
                         }
                     });
-                    if (mostRecentTriggerCharPos >= 0 && 
+                    if (mostRecentTriggerCharPos >= 0 &&
                             (
-                                mostRecentTriggerCharPos === 0 || 
+                                mostRecentTriggerCharPos === 0 ||
                                 !requireLeadingSpace ||
                                 /[\xA0\s]/g.test
                                 (
                                     effectiveRange.substring(
-                                        mostRecentTriggerCharPos - 1, 
+                                        mostRecentTriggerCharPos - 1,
                                         mostRecentTriggerCharPos)
                                 )
                             )
-                        ) 
+                        )
                     {
                         var currentTriggerSnippet = effectiveRange.substring(mostRecentTriggerCharPos + 1,
                             effectiveRange.length);
 
                         triggerChar = effectiveRange.substring(mostRecentTriggerCharPos, mostRecentTriggerCharPos+1);
                         var firstSnippetChar = currentTriggerSnippet.substring(0,1);
-                        var leadingSpace = currentTriggerSnippet.length > 0 && 
+                        var leadingSpace = currentTriggerSnippet.length > 0 &&
                             (
                                 firstSnippetChar === ' ' ||
                                 firstSnippetChar === '\xA0'
@@ -934,8 +934,8 @@ exports = module.exports = function (angular) {
                     }
 
                 } else {
-                    var selectedElem = window.getSelection().anchorNode; 
-                    if (selectedElem != null) {
+                    var selectedElem = window.getSelection().anchorNode;
+                    if (selectedElem !== null) {
                         var workingNodeContent = selectedElem.textContent;
                         var selectStartOffset = window.getSelection().getRangeAt(0).startOffset;
                         if (selectStartOffset >= 0) {
@@ -991,7 +991,7 @@ exports = module.exports = function (angular) {
                 do {
                     coordinates.left += obj.offsetLeft;
                     coordinates.top += obj.offsetTop;
-                } while (obj = obj.offsetParent);
+                } while (obj = obj.offsetParent); // jshint ignore:line
 
                 markerEl.parentNode.removeChild(markerEl);
                 return coordinates;
@@ -999,12 +999,12 @@ exports = module.exports = function (angular) {
 
             function getTextAreaOrInputUnderlinePosition (element, position) {
                 var properties = [
-                    'direction', 
+                    'direction',
                     'boxSizing',
-                    'width', 
+                    'width',
                     'height',
                     'overflowX',
-                    'overflowY', 
+                    'overflowY',
                     'borderTopWidth',
                     'borderRightWidth',
                     'borderBottomWidth',
@@ -1040,12 +1040,12 @@ exports = module.exports = function (angular) {
 
                 style.whiteSpace = 'pre-wrap';
                 if (element.nodeName !== 'INPUT') {
-                    style.wordWrap = 'break-word'; 
+                    style.wordWrap = 'break-word';
                 }
 
                 // position off-screen
-                style.position = 'absolute'; 
-                style.visibility = 'hidden'; 
+                style.position = 'absolute';
+                style.visibility = 'hidden';
 
                 // transfer the element's properties to the div
                 properties.forEach(function (prop) {
@@ -1054,10 +1054,11 @@ exports = module.exports = function (angular) {
 
                 if (isFirefox) {
                     style.width = (parseInt(computed.width) - 2) + 'px';
-                    if (element.scrollHeight > parseInt(computed.height))
+                    if (element.scrollHeight > parseInt(computed.height)) {
                         style.overflowY = 'scroll';
+                    }
                 } else {
-                    style.overflow = 'hidden'; 
+                    style.overflow = 'hidden';
                 }
 
                 div.textContent = element.value.substring(0, position);
@@ -1079,7 +1080,7 @@ exports = module.exports = function (angular) {
                 do {
                     coordinates.left += obj.offsetLeft;
                     coordinates.top += obj.offsetTop;
-                } while (obj = obj.offsetParent);
+                } while (obj = obj.offsetParent); // jshint ignore:line
 
                 document.body.removeChild(div);
 

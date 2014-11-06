@@ -20,7 +20,7 @@ var middleware = require('./lib/middleware');
 
 // local configuration settings
 var config = require('./config');
-var mailTransport = nodemailer.createTransport(config.smtp);;
+var mailTransport = nodemailer.createTransport(config.smtp);
 var clientConfig = require('./public/js/client-config');
 // app utilities
 var appUtilities = require('./lib/app-utilities');

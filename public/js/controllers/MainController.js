@@ -1,3 +1,5 @@
+/* global WIN */
+/* global showWin */
 'use strict';
 function focusInput() {
     document.getElementById('textInput').focus();
@@ -44,7 +46,7 @@ exports = module.exports = [
             $scope.showSettings = typeof override !== 'undefined' ? override : !$scope.showSettings;
             if (!$scope.showSettings) {
                 $timeout(function () {
-                    scrollChatToBottom(true)
+                    scrollChatToBottom(true);
                 }, 200);
             }
             else {
@@ -114,7 +116,8 @@ exports = module.exports = [
         }
         $window.addEventListener('focus', onWindowFocus);
         $window.addEventListener('blur', onWindowBlur);
-        if (typeof WIN !== 'undefined') {
+        // node-webkit
+        if (window.nwDispatcher) {
             WIN.on('blur', onWindowBlur);
             WIN.on('focus', onWindowFocus);
         }

@@ -110,7 +110,8 @@
         "xit",
         "xdescribe",
         "MediaStreamTrack",
-        "angular"
+        "angular",
+        "Notification"
     ],
     "indent"        : 4         // Specify indentation spacing
 }
