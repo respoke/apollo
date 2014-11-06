@@ -31,9 +31,6 @@
     "serve-favicon": "~2.1.3",
     "uuid": "^2.0.1"
   },
-  "domains": [
-    "apollo.ruffrey.com"
-  ],
   "engines": {
     "node": "0.10.31"
   },
