@@ -129,11 +129,13 @@ var pluginVars = {
     email: mailTransport,
     respoke: respoke
 };
-fs.readdirSync(normalizedPath).forEach(function (file) {
-    var fullPath = './plugins/' + file;
-    debug('loading plugin', fullPath);
-    require(fullPath)(pluginVars, app);
-});
+if (fs.existsSync(normalizedPath)) {
+    fs.readdirSync(normalizedPath).forEach(function (file) {
+        var fullPath = './plugins/' + file;
+        debug('loading plugin', fullPath);
+        require(fullPath)(pluginVars, app);
+    });
+}
 
 // An example plugin - feel free to delete this.
 if (process.env.NODE_ENV !== 'production') {
