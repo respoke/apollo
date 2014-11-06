@@ -53,7 +53,10 @@ config.respoke = {
     roleId: ""
 };
 
-// Email - SMTP transport options for Nodemailer
+// Email
+// Optional. Leaving smtp options blank will result in failed
+// emails being logged, but will not affect app stability.
+// The options are the SMTP transport options for Nodemailer.
 // https://github.com/andris9/nodemailer-smtp-transport#usage
 config.smtp = {
     port: '',
