@@ -5,7 +5,10 @@ var config = require('./config');
 var debug = require('debug')('passport');
 var uuid = require('uuid');
 
-function strategize() {
+/**
+ * @param object respoke - Respoke client instance
+ */
+function strategize(respoke) {
     // bind passport strategies here
 
 
@@ -71,22 +74,19 @@ function strategize() {
                             }
                             done(null, saved);
 
-                            // TODO: try to not be a jerk and do this
-                            if (global.__respoke) {
-                                global.__respoke.groups.publish({
-                                    groupId: config.systemGroupId,
-                                    message: JSON.stringify({
-                                        meta: {
-                                            type: 'newaccount',
-                                            value: saved._id
-                                        }
-                                    })
-                                }, function (err) {
-                                    if (err) {
-                                        debug('failed to send new account notification', err);
+                            respoke.groups.publish({
+                                groupId: config.systemGroupId,
+                                message: JSON.stringify({
+                                    meta: {
+                                        type: 'newaccount',
+                                        value: saved._id
                                     }
-                                });
-                            }
+                                })
+                            }, function (err) {
+                                if (err) {
+                                    debug('failed to send new account notification', err);
+                                }
+                            });
 
                         });
                         return;

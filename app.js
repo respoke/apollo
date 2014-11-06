@@ -14,7 +14,6 @@ var bodyParser = require('body-parser');
 var jadeStatic = require('connect-jade-static');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
-var passport = require('./auth-strategies')();
 var browserify = require('browserify-middleware');
 var middleware = require('./lib/middleware');
 
@@ -49,7 +48,7 @@ respoke.on('connect', function () {
 respoke.on('error', function (err) {
     debug('failed to connect to respoke', err);
 });
-global.__respoke = respoke;
+var passport = require('./auth-strategies')(respoke);
 
 // Attaching app locals and utils to request
 app.use(function (req, res, next) {
