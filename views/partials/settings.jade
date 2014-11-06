@@ -73,16 +73,25 @@ div(ng-controller="SettingsController")
     .row
         .col-xs-1.col-xs-offset-1
             ap-toggle-setting(
-                key="offlineNotifications"
-                initial="account.settings.offlineNotifications"
+                key="notifyOnMention"
+                initial="account.settings.notifyOnMention"
             )
-        .col-xs-4: p Offline notification emails
+        .col-xs-4: p Notify me when @mentioned
         .col-xs-1
             ap-toggle-setting(
                 key="htmlEmails"
                 initial="account.settings.htmlEmails"
             )
         .col-xs-5: p Allow HTML in emails
+    br
+    .row
+        .col-xs-1.col-xs-offset-1
+            ap-toggle-setting(
+                key="offlineNotifications"
+                initial="account.settings.offlineNotifications"
+            )
+        .col-xs-4: p Offline notification emails
+        
     
     br
     br

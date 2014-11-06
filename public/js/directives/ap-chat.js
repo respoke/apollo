@@ -22,7 +22,8 @@ exports = module.exports = [
                         apOnscrolltop();
                     }
                     // scroll automatically when close to the bottom of the chat window.
-                    var bottomTopDiffSmall = evt.target.scrollHeight - evt.target.scrollTop < 500;
+                    var elem = $(evt.target);
+                    var bottomTopDiffSmall = elem[0].scrollHeight - elem.scrollTop() === elem.outerHeight();
                     if (bottomTopDiffSmall) {
                         $rootScope.autoScrollDisabled = false;
                     }

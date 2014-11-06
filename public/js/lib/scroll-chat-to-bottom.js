@@ -13,6 +13,7 @@
  */
 exports = module.exports = ['$rootScope', function ($rootScope) {
     return function scrollChatToBottom(force) {
+        // injected $document does not have 'getElementById'
         var chat = document.getElementById('chat');
 
         if (force === false) {

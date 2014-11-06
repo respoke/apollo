@@ -250,5 +250,21 @@ exports = module.exports = [
                 });
             };
         }
+
+        $scope.toggleGroupMute = function (groupId) {
+            $rootScope.account.settings.mutedGroups = $rootScope.account.settings.mutedGroups || [];
+            var groupIndex = $rootScope.account.settings.mutedGroups.indexOf(groupId);
+            if (groupIndex !== -1) {
+                $rootScope.account.settings.mutedGroups.splice(groupIndex, 1);
+            } else {
+                $rootScope.account.settings.mutedGroups.push(groupId);
+            }
+            Account.update($rootScope.account, function (err, acct) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+            });
+        };
     }
 ];

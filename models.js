@@ -59,7 +59,9 @@ var AccountSchema = new mongoose.Schema({
             privateDesktopNotifications: true,
             groupMessageSounds: true,
             offlineNotifications: true,
-            htmlEmails: true
+            htmlEmails: true,
+            notifyOnMention: true,
+            mutedGroups: []
         },
         required: true
     },

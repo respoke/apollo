@@ -36,6 +36,17 @@
                     button.btn.btn-salmon.btn-sm(
                         ng-click="videoCall(selectedChat._id)"
                     ): i.fa.fa-video-camera.fa-lg
+                //- Group buttons
+                div(ng-show="selectedChat && !selectedChat.display")
+                    button.btn.btn-salmon.btn-sm(
+                        ng-click="toggleGroupMute(selectedChat._id)"
+                    )
+                        i.fa.fa-bell.fa-lg(
+                            ng-show="!account.settings.mutedGroups || account.settings.mutedGroups.indexOf(selectedChat._id) === -1"
+                        )
+                        i.fa.fa-bell-slash.fa-lg(
+                            ng-show="account.settings.mutedGroups && account.settings.mutedGroups.indexOf(selectedChat._id) !== -1"
+                        )
         
         //- File upload
         tr.notify.animated.fadeInDown.faster(ng-show="pendingUploads")

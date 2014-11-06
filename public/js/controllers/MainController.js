@@ -319,6 +319,7 @@ exports = module.exports = [
 
             // Normal messages
 
+            var groupIsMuted = evt.group && $rootScope.account.settings.mutedGroups && $rootScope.account.settings.mutedGroups.indexOf(evt.group.id) !== -1;
             // Adding the message to local history
             if (evt.group) {
                 $rootScope.recents[itemId].messages.push({
@@ -359,7 +360,7 @@ exports = module.exports = [
             // If you're mentioned, you get notified by sound
             var reMe = new RegExp("\\[\\~" + $rootScope.account._id + "\\]");
             var wasMentioned = msgValue && msgValue.match(reMe);
-            if (wasMentioned) {
+            if (wasMentioned && $rootScope.account.settings.notifyOnMention !== false) {
                 $rootScope.audio.mention.play();
                 thisMessageNotif();
             }
@@ -371,7 +372,7 @@ exports = module.exports = [
                 || itemId !== $scope.selectedChat._id
             ) {
                 // group message
-                if (evt.group) {
+                if (evt.group && !groupIsMuted) {
                     if ($rootScope.account.settings.groupMessageSounds) {
                         $rootScope.audio.message.play();
                     }
@@ -380,7 +381,7 @@ exports = module.exports = [
                     }
                 }
                 // private message
-                else {
+                else if (!evt.group) {
                     if ($rootScope.account.settings.privateMessageSounds) {
                         $rootScope.audio.message.play();
                     }
@@ -392,14 +393,16 @@ exports = module.exports = [
 
             // Tracking unread items on this chat
             $rootScope.recents[itemId].unread = $rootScope.recents[itemId].unread || 0;
-            if (!$scope.windowInFocus || !$scope.selectedChat || ($scope.selectedChat && itemId !== $scope.selectedChat._id)) {
-                $rootScope.recents[itemId].unread++;
-            }
+            if (!groupIsMuted) {
+                if (!$scope.windowInFocus || !$scope.selectedChat || ($scope.selectedChat && itemId !== $scope.selectedChat._id)) {
+                    $rootScope.recents[itemId].unread++;
+                }
 
-            // Update favicon while window is out of focus
-            if (!$scope.windowInFocus) {
-                $scope.messagesDuringBlur++;
-                favicon($scope.messagesDuringBlur);
+                // Update favicon while window is out of focus
+                if (!$scope.windowInFocus) {
+                    $scope.messagesDuringBlur++;
+                    favicon($scope.messagesDuringBlur);
+                }
             }
 
             $rootScope.$apply();
@@ -443,11 +446,12 @@ exports = module.exports = [
                 var overLimit = $scope.selectedChat.messages.length - 100;
                 $scope.selectedChat.messages.splice(0, overLimit);
             }
-            // bummer, but we just have to do this
+            // bummer, but we just have to do this, can't seem to find a way around it
+            $rootScope.autoScrollDisabled = false;
             $timeout(function () {
                 scrollChatToBottom(true);
                 focusInput();
-            }, 600);
+            }, 450);
         };
 
         $scope.fetchChat = function (item) {
