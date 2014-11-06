@@ -16,95 +16,98 @@
     #buddies.scrollable: table.table
         
         //- mememememe
-        tr
-            td.col-xs-2.align-center
-                img(
-                    ap-avatar email="account.email"
+        thead
+            tr
+                td.col-xs-2.align-center
+                    img(
+                        ap-avatar email="account.email"
+                    )
+                td.col-xs-1.align-center
+                    .dropdown
+                        ap-presence.clickable(
+                            presence="{{ recents[account._id].presence }}"
+                            data-toggle="dropdown"
+                        )
+                        ul.dropdown-menu.animated.fadeInDown.faster
+                            li: a(
+                                tabindex="-1"
+                                ng-click="setPresence('available')"
+                                href="javascript:void(0)"
+                            )
+                                ap-presence(presence="{{'available'}}")
+                                | available
+                            li: a(
+                                tabindex="-1"
+                                ng-click="setPresence('busy')"
+                                href="javascript:void(0)"
+                            )
+                                ap-presence(presence="{{'busy'}}")
+                                | busy
+                            li: a(
+                                tabindex="-1"
+                                ng-click="setPresence('away')"
+                                href="javascript:void(0)"
+                            )
+                                ap-presence(presence="{{'away'}}")
+                                | away
+                td.col-xs-6.clickable(
+                    ng-mouseover="showSettingsDisplayIcon = true"
+                    ng-mouseout="showSettingsDisplayIcon = false"
+                    ng-click="toggleSettings()"
                 )
-            td.col-xs-1.align-center
-                .dropdown
-                    ap-presence.clickable(
-                        presence="{{ recents[account._id].presence }}"
-                        data-toggle="dropdown"
-                    )
-                    ul.dropdown-menu.animated.fadeInDown.faster
-                        li: a(
-                            tabindex="-1"
-                            ng-click="setPresence('available')"
-                            href="javascript:void(0)"
+                    h6 {{ account.display }}   
+                        i.fa.fa-cog.fa-sm(
+                            ng-show="showSettingsDisplayIcon && !showSettings"
                         )
-                            ap-presence(presence="{{'available'}}")
-                            | available
-                        li: a(
-                            tabindex="-1"
-                            ng-click="setPresence('busy')"
-                            href="javascript:void(0)"
-                        )
-                            ap-presence(presence="{{'busy'}}")
-                            | busy
-                        li: a(
-                            tabindex="-1"
-                            ng-click="setPresence('away')"
-                            href="javascript:void(0)"
-                        )
-                            ap-presence(presence="{{'away'}}")
-                            | away
-            td.col-xs-6.clickable(
-                ng-mouseover="showSettingsDisplayIcon = true"
-                ng-mouseout="showSettingsDisplayIcon = false"
-                ng-click="toggleSettings()"
-            )
-                h6 {{ account.display }}   
-                    i.fa.fa-cog.fa-sm(
-                        ng-show="showSettingsDisplayIcon && !showSettings"
-                    )
-            
-        tr: td(colspan="3").align-right
+                
+            tr: td(colspan="3").align-right
 
-            input#recents-query.form-control.input-sm(
-                type="text"
-                placeholder="Search"
-                ng-model="recentQuery"
-            )
-            button#newgroup.btn.btn-default.btn-xs(
-                ng-click="showCreateGroup = !showCreateGroup"
-            )
-                span(ng-show="!showCreateGroup") New group
-                i.fa.fa-remove(ng-show="showCreateGroup")
+                input#recents-query.form-control.input-sm(
+                    type="text"
+                    placeholder="Search"
+                    ng-model="recentQuery"
+                )
+                button#newgroup.btn.btn-default.btn-xs(
+                    ng-click="showCreateGroup = !showCreateGroup"
+                )
+                    span(ng-show="!showCreateGroup") New group
+                    i.fa.fa-remove(ng-show="showCreateGroup")
 
 
-            .animated.faster(
-                ng-show="showCreateGroup"
-                ng-class="{ 'zoomIn': showCreateGroup }"
-            )
-                input#new-group-input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
-                button.btn.btn-default.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
-                    | Cancel
-                button.btn.btn-primary.btn-sm(
-                    ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
-                ) Create
+                .animated(
+                    ng-show="showCreateGroup"
+                    ng-class="{ 'flipInX': showCreateGroup }"
+                )
+                    input#new-group-input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+                    button.btn.btn-default.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+                        | Cancel
+                    button.btn.btn-primary.btn-sm(
+                        ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
+                    ) Create
         
-        //- all the other stuff
-        tr.clickable(
-            ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
-            ng-if="item && item._id !== account._id"
-            ng-class="{ 'selectedRecent': selectedChat._id === item._id }"
-            ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
-        )
-            td.col-xs-2.align-center
-                i.fa.fa-comments.fa-2x(ng-if="!item.email")
-                img(
-                    ng-if="item.email"
-                    ap-avatar email="item.email"
-                )
-            td.col-xs-1.align-center
-                ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
-            td.col-xs-6
-                h6 {{ item.display || item._id }}                    
-                small.text-primary(
-                    ng-show="item.unread && item._id !== selectedChat._id"
-                ): strong {{ item.unread }} new
-                small(
-                    ng-show="!item.unread && item._id !== selectedChat._id"
-                    ap-date="item.messages[item.messages.length - 1].created"
-                )
+        tbody
+            //- all the other stuff
+            tr(style="height: 140px")
+            tr.clickable(
+                ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
+                ng-if="item && item._id !== account._id"
+                ng-class="{ 'selectedRecent': selectedChat._id === item._id }"
+                ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
+            )
+                td.col-xs-2.align-center
+                    i.fa.fa-comments.fa-3x(ng-if="!item.email")
+                    img(
+                        ng-if="item.email"
+                        ap-avatar email="item.email"
+                    )
+                td.col-xs-1.align-center
+                    ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
+                td.col-xs-6
+                    h6 {{ item.display || item._id }}                    
+                    small.text-primary(
+                        ng-show="item.unread && item._id !== selectedChat._id"
+                    ): strong {{ item.unread }} new
+                    small(
+                        ng-show="!item.unread && item._id !== selectedChat._id"
+                        ap-date="item.messages[item.messages.length - 1].created"
+                    )
