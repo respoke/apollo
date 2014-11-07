@@ -183,18 +183,31 @@ textarea.form-control {
                     height: 24px;
                 }
             }
-            /* The next two elements are mashed together. */
+            /* The next three elements are mashed together. */
             button#upload-button {
                 position: fixed;
+                margin: 0;
                 margin-left: -41px!important;
                 width: 40px;
-                height: 52px;
-                margin: 0;
-                border-radius: 8px;
-                border-top-right-radius: 0px;
-                border-bottom-right-radius: 0px;
+                height: 28px;
+                border-radius: 0;
+                border-top-left-radius: 8px;
+                border-bottom: 1px solid @medBaseGray;
+                padding: 0;
             }
-            textarea {
+            button#macro-button {
+                position: fixed;
+                margin: 0;
+                margin-left: -41px!important;
+                margin-top: 28px;
+                height: 24px;
+                width: 40px;
+                border-radius: 0;
+                border-bottom-left-radius: 8px;
+                padding: 0;
+                padding-left: 2px;
+            }
+            #textInput, #macro-help {
                 resize: none;
                 border: 1px inset white;
                 border-radius: 8px;
@@ -206,6 +219,15 @@ textarea.form-control {
                 font-size: 12px;
                 color: @textInput;
                 font-weight: 600;
+            }
+            #macro-help {
+                border: 1px solid @medBase;
+                color: white;
+                overflow-y: auto;
+                margin-bottom: 5px;
+                .macro-preview:hover {
+                    color: @salmon;
+                }
             }
         }
         &.full {

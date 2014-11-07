@@ -142,17 +142,6 @@
                 ap-avatar email="recents[key].email"
             )
 
-        //- Macros
-        mentio-menu#macros(
-            mentio-typed-text="typedTerm"
-            mentio-search="searchMacros(term)"
-            mentio-select="selectedMacro(item)"
-            mentio-for="'textInput'"
-            mentio-trigger-char="':'"
-            mentio-template-url="/partials/macros.html"
-            mentio-items="macros | filter:label:typedTerm"
-        )
-
         //- Mentioning somebody with @
         mentio-menu#mentions(
             mentio-typed-text="typedTerm"
@@ -165,10 +154,14 @@
         )
         button#upload-button.btn.btn-default(
             ap-upload="onDropUpload"
-        ): i.fa.fa-upload
+        ): i.fa.fa-paperclip
+        button#macro-button.btn.btn-default(
+            ng-click="showMacroHelp = !showMacroHelp"
+        ): i.fa.fa-smile-o
         textarea#textInput(
             ng-model="textInput"
-            placeholder="Type markdown, :symbol:, @mention, & drag files"
+            ng-show="!showMacroHelp"
+            placeholder="Type markdown, @mention, & drag files"
             ap-enter="sendMessage(textInput); textInput = '';"
             ap-paste="onPasteUpload"
             ap-drop="onDropUpload"
@@ -176,5 +169,14 @@
             
             mentio
         )
-            
+        #macro-help(
+            ng-show="showMacroHelp"
+        )
+            .macro-preview.clickable.hover(
+                ng-repeat="macro in macros"
+                ng-click="addMacro(macro);"
+            )
+                i.fa(ng-bind-html="macro.display | unsafe")
+                | &nbsp;{{ macro.name }}
+                em &nbsp;{{ macro._id }}
                 

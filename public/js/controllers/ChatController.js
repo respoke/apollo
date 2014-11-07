@@ -33,25 +33,13 @@ exports = module.exports = [
     ) {
         $scope.pendingUploads = 0;
         $scope.recentlySentTyping = null;
-
-
-        $rootScope.macros = [];
-        $rootScope.searchMacros = function (term) {
-            term = term.toLowerCase();
-            return $q(function (resolve) {
-                var macros = emoMacros.filter(function (mac) {
-                    if (mac._id.indexOf(term) !== -1) {
-                        return true;
-                    }
-                });
-                $rootScope.macros = macros;
-                resolve($rootScope.macros);
-            });
+        $scope.macros = emoMacros;
+        $scope.textInput = '';
+        $scope.showMacroHelp = false;
+        $scope.addMacro = function (macro) {
+            $scope.textInput += macro._id;
+            $scope.showMacroHelp = false;
         };
-        $rootScope.selectedMacro = function (item) {
-            return item._id;
-        };
-
 
         $rootScope.allRecents = [];
         $rootScope.getMentionList = function (term) {
