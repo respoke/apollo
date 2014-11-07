@@ -19,18 +19,11 @@ router.get('/me', function (req, res, next) {
 
 router.patch('/me', middleware.isAuthorized, function (req, res, next) {
     var updateFields = {};
-    if (req.body.password) {
-        updateFields.password = req.body.password;
-    }
-    if (req.body.display) {
-        updateFields.display = req.body.display;
-    }
-    if (req.body.email) {
-        updateFields.email = req.body.email;
-    }
-    if (req.body.settings) {
-        updateFields.settings = req.body.settings;
-    }
+    ['password', 'display', 'email', 'settings'].forEach(function (field) {
+        if (req.body[field]) {
+            updateFields[field] = req.body[field];
+        }
+    });
     if (!Object.keys(updateFields).length) {
         return res.send(req.user);
     }
@@ -74,7 +67,7 @@ router.put('/forgot/:emailOrId', function (req, res, next) {
                 debug(err);
                 return next(err);
             }
-            
+
             // send an e-mail
             req.email.sendMail({
                 from: config.email.from,
@@ -358,7 +351,7 @@ router.patch('/groups/:id/:account', middleware.isAuthorized, function (req, res
             return res.status(404).send({ error: 'Group ' + req.params.id + ' was not found.' });
         }
         if (group.owner._id.toString() !== req.user._id.toString()) {
-            return res.status(401).send({ 
+            return res.status(401).send({
                 error: 'Group ' + req.params.id + ' is owned by ' + group.owner.display + '.'
             });
         }
@@ -421,7 +414,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
     if (req.query.before) {
         query = query.where('created').lt(req.query.before);
     }
-    
+
     query
     .populate('from to group')
     .exec(function (err, messages) {
@@ -430,7 +423,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
         }
         res.send(messages);
     });
-    
+
 });
 
 router.post('/messages', middleware.isAuthorized, function (req, res, next) {
@@ -479,7 +472,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                     from: config.email.from,
                     replyTo: req.user.email,
                     to: account.email,
-                    subject: '[' + config.name + '] ' 
+                    subject: '[' + config.name + '] '
                         + req.user.display + ' sent you a message while you were offline',
                     text: req.user.display + ' said:\n\n' + content.text
                         + '\n---\nUnsubscribe from these messages in the '
@@ -488,7 +481,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                 };
 
                 if (account.settings.htmlEmails) {
-                    emailContent.html = '<em>' + req.user.display + '</em>&nbsp;&nbsp;&nbsp;' 
+                    emailContent.html = '<em>' + req.user.display + '</em>&nbsp;&nbsp;&nbsp;'
                         + content.text
                         + '<br />---<br /><a href="' + config.baseURL + '">'
                         + 'Unsubscribe from these messages in the '
@@ -533,7 +526,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
                     };
 
                     if (account.settings.htmlEmails) {
-                        emailContent.html = '<em>' + req.user.display + '</em>&nbsp;&nbsp;&nbsp;' 
+                        emailContent.html = '<em>' + req.user.display + '</em>&nbsp;&nbsp;&nbsp;'
                             + content.text
                             + '<br />---<br /><a href="' + config.baseURL + '">'
                             + config.name + '</a>';
