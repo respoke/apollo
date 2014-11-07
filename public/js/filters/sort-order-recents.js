@@ -45,9 +45,10 @@ exports = module.exports = function () {
             }
 
             // otherwise sort by alpha
-            // TODO: make case insensitive
             var dispA = a.display || a._id;
             var dispB = b.display || b._id;
+            dispA = dispA.toLowerCase();
+            dispB = dispB.toLowerCase();
             if (dispA > dispB) {
                 return 1;
             }
