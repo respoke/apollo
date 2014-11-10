@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 /**
  * Replace jira tickets with 'MER-3433' with the link to that jira ticket.
@@ -11,5 +14,5 @@ exports = module.exports = function (jiraBaseURL) {
             input.replace(/([^\/]|^)MER\-(\d+)/g, ' <a href="' + jiraBaseURL + 'MER-$2" target="_blank">MER-$2</a> ')
         );
     };
-    
+
 };

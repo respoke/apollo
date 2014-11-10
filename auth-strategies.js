@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 var passport = require('passport');
 var mongoose = require('mongoose');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;

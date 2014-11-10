@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 /* global $ */
 /**
@@ -6,12 +9,12 @@
 exports = module.exports = ['multiFileProcessor', function (multiFileProcessor) {
     return {
         link: function (scope, element, attrs) {
-            
+
             var apDrop = attrs.apDrop ? scope.$eval(attrs.apDrop) : function (data) { };
 
             element[0].addEventListener('drop', function (evt) {
                 element.removeClass('animated pulse infinite');
-                
+
                 evt.stopPropagation();
                 evt.preventDefault();
 

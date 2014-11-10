@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 /**
  * Change the scroll position so it is "n" elements down.

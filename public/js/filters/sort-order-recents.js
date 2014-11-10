@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 /**
  * A sorting filter which accepts an object where the keys are the `_id` and the

@@ -78,4 +78,4 @@ If you would like to build the desktop app, proceed with the following steps.
 
 ---
 
-###### Apollo Copyright D.C.S. 2014
+###### Apollo - Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.

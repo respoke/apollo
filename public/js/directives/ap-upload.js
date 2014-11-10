@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 /* global $ */
 
@@ -8,9 +11,9 @@
 exports = module.exports = ['multiFileProcessor', function (multiFileProcessor) {
     return {
         link: function (scope, element, attrs) {
-            
+
             var apUpload = attrs.apUpload ? scope.$eval(attrs.apUpload) : function (data) { };
-            
+
             var uploadInput = document.createElement('input');
             uploadInput.setAttribute('type', 'file');
             uploadInput.setAttribute('multiple', 'multiple');

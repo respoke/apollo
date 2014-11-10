@@ -1,10 +1,13 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 /* global $ */
 'use strict';
 /**
  * A chat message, intended to be inside of the ap-chat directive.
  */
 exports = module.exports = [
-    
+
     '$sce', // secure context environment for overriding html
     '$rootScope',
 
@@ -32,7 +35,7 @@ exports = module.exports = [
 
                 scope.content = scope.$eval(attrs.apContent || '');
                 scope.file = scope.$eval(attrs.apFile || '');
-                
+
                 var mwIndex = -1;
                 // Use each of the middleware to async render the content.
                 // Then render a file descriptor, if it exists.
@@ -72,7 +75,7 @@ exports = module.exports = [
                         });
                     }
                 };
-                
+
                 next(null, scope.content);
             },
             template: '<div class="message" ng-bind-html="trustAsHtml(content)"></div>'

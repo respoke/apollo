@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 /**
  * Makes an element draggable. That element should have the css property
@@ -40,7 +43,7 @@ exports = module.exports = ['$window', function ($window) {
             };
 
             element.on('mousedown', trackDragOn);
-            
+
         }
     };
 }];

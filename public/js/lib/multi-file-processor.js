@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 /**
  * Take multiple file objects which were dragged or selected in an upload dialog,
@@ -5,9 +8,9 @@
  */
 exports = module.exports = function () {
         return function (files, callback) {
-        
+
         var data = []; // array of file data
-        
+
         var digestFile = function (file) {
             var reader = new FileReader();
             reader.onload = function () {
@@ -23,7 +26,7 @@ exports = module.exports = function () {
                 data.push(d);
                 if (data.length === files.length) {
                     callback(data);
-                } 
+                }
             };
             reader.readAsDataURL(file);
         };

@@ -1,15 +1,18 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 exports = module.exports = function () {
     return {
         link: function (scope, element, attrs) {
-            
+
             var apPaste = attrs.apPaste ? scope.$eval(attrs.apPaste) : function (data) { };
             var onPasteEvent = function (event) {
                 var clipboardData = event.clipboardData || event.originalEvent.clipboardData;
                 var found = false;
 
                 if (!clipboardData || !clipboardData.types || !clipboardData.types.length) {
-                    return; 
+                    return;
                 }
                 clipboardData.types.forEach(function (type, i) {
                     if (found) {

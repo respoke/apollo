@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 var express = require('express');
 var router = express.Router();
 var config = require('../config');
@@ -50,7 +53,7 @@ router.get('/conf/:_id/:conf', function (req, res, next) {
                     return next(err);
                 }
 
-                res.render('conf', { 
+                res.render('conf', {
                     title: 'Email confirmed',
                     message: 'Welcome!'
                 });
@@ -74,7 +77,7 @@ router.get('/password-reset/:_id/:conf', function(req, res, next) {
         if (!account) {
             return next(genericMessage);
         }
-        res.render('reset', { 
+        res.render('reset', {
             title: 'Password reset',
             message: 'Reset your password',
             conf: account.conf,

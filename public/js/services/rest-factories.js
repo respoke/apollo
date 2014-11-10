@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 'use strict';
 exports = module.exports = function (app) {
     var success = function (callback) {
@@ -8,9 +11,9 @@ exports = module.exports = function (app) {
         callback = callback || function () { };
         return function (err) { callback(err || { error: "Error. No response from the server." }); };
     };
-    
+
     // Account
-    app.factory('Account', ['$http', 
+    app.factory('Account', ['$http',
         function ($http) {
             return {
                 confirm: function (_id, conf, callback) {

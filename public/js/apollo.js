@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
 /* global angular */
 /* global respoke */
 require('./lib/mentio.js')(angular);
