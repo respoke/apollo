@@ -4,7 +4,7 @@
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
  * https://github.com/chjj/marked
  *
- * Changes by @ruffrey
+ * Changes by @ruffrey for https://github.com/respoke/apollo
  */
 
 exports = module.exports = function markdownRenderer(input, next) {
