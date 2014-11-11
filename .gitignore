@@ -1,6 +1,7 @@
 # App local configuration
 config.js
 public/js/client-config.js
+public/passthrough.html
 
 # OS
 .DS_Store

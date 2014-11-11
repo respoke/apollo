@@ -1,3 +1,7 @@
+/*!
+ * Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+ */
+
 // When saved as config.js, the file is excluded from source control
 // by the .gitignore file.
 
