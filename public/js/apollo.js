@@ -73,10 +73,7 @@ apollo.config(['$routeProvider', function ($routeProvider) {
             templateUrl: 'partials/main.html'
         })
         .when('/welcome', {
-            templateUrl: 'partials/welcome.html',
-            controller: ['$window', function ($window) {
-                $window.pixies.start();
-            }]
+            templateUrl: 'partials/welcome.html'
         })
         .otherwise({
             redirectTo: '/'
