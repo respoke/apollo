@@ -6,9 +6,10 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 
 ## Requirements
 
-* A [Respoke account](https://respoke.io), an app ID, an app secret, and a role ID.
 * Node.js
 * MongoDB
+* A [Respoke account](https://respoke.io), an app ID, an app secret, and a role ID.
+    * Make sure you create a Role in the Respoke developer console! *[More about Respoke permissions and roles](https://docs.respoke.io/tutorials/roles-and-permissions.html)*
 
 ## Usage
 
@@ -31,17 +32,26 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 1. Apollo will be running at [http://localhost:3000/](http://localhost:3000/).
 
 
-### Google Auth
+### Using Google OAuth 2.0 authentication
 
 You should be able to input your google auth credentials in `./config.js`, set `config.google.enable = true` and it will work.
 
-This does require creating a google project in their developer console. [This blog post](http://scotch.io/tutorials/javascript/easy-node-authentication-google) gives an overview of basic concepts for Google OAuth 2.0.
+Google auth requires that you create a Google developer project in their [developer console](https://console.developers.google.com).
+* Click *Create Project* and select that project
+* Go to *APIs and Auth* > *Credentials* and obtain credentials for Apollo (the `google` section of `./config.js`)
+* Go to *APIs and Auth* > *Consent Screen* and add your information
 
-### Custom message parsing plugins
+[This blog post](http://scotch.io/tutorials/javascript/easy-node-authentication-google) gives an
+overview of basic concepts for Google OAuth 2.0.
 
-Apollo lets you add your own plugins to parse message contents. You might want to turn a certain string into a link, or fetch an image when a particular string is in a message, embed a video, etc.
+### Extending Apollo
 
-Message parsing plugins are middleware and executed **asyncronously in series** according to the `clientConfig.messageRenderingMiddleware` array in your `./public/js/client-config.js` file.
+##### Custom message parsing plugins
+
+Apollo lets you add your own plugins to parse message contents. You might want to turn a certain
+string into a link, or fetch an image when a particular string is in a message, embed a video, etc.
+
+Message parsing plugins are middleware - **executed asynchronously, in series** according to the `clientConfig.messageRenderingMiddleware` array in your `./public/js/client-config.js` file.
 
 Example middleware:
 
@@ -54,15 +64,20 @@ Example middleware:
 
     }
 
-### Custom server plugins
+##### Custom server plugins
 
 You can extend the base Apollo application.
 
 An example plugin can be seen at `./example-plugin.js`.
 
-Apollo automatically loads all plugins in the `./plugins/` folder.
+Apollo automatically loads (via `require`) all plugins that are placed in the `./plugins/` folder.
 
 ### Desktop app
+
+Apollo has a companion desktop application which uses node-webkit.
+
+You must configure to point to your Apollo server, then build it. Thus, it will not work without
+first setting up an Apollo server.
 
 ##### Requirements
 
@@ -70,8 +85,9 @@ Apollo automatically loads all plugins in the `./plugins/` folder.
 
 If you would like to build the desktop app, proceed with the following steps.
 
-1. Edit `./nodewebkit.json` and change thesettings to meet your needs.
-1. Set the url to your deployed Apollo application in `./public/passthrough.example.html` under the `<meta http-equiv . . .>` tag. Save it as `./public/passthrough.html`.
+1. Edit the following example config files and rename them:
+    * `./nodewebkit.example.json` to `./nodewebkit.json`
+    * `./public/passthrough.example.html` to `./public/passthrough.html`
 1. From the Apollo directory, run `grunt release`.
 1. The applications will be in the `./public/release/<your app name>` folder.
 1. It is recommended to compress them by running `grunt pack`.
