@@ -51,7 +51,7 @@
         //- File upload
         tr.notify.animated.fadeInDown.faster(ng-show="pendingUploads")
             td
-                i.fa.fa-upload
+                i.fa.fa-upload.fa-3x
             td(colspan="2")
                 | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...
             
@@ -89,12 +89,12 @@
                     ng-show="!incomingCall && !callIsRinging && activeCall.outgoingMedia.stream"
                     ng-click="activeCall.toggleAudio()"
                 )
-                    i.fa.fa-microphone.fa-lg(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
-                    i.fa.fa-microphone-slash.fa-lg(ng-show="activeCall.outgoingMedia.isAudioMuted()")
+                    i.fa.fa-microphone-slash.fa-lg(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
+                    i.fa.fa-microphone.fa-lg(ng-show="activeCall.outgoingMedia.isAudioMuted()")
                 
                 //- Hang up
                 button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hang up' }}
-
+                | &nbsp;
                 //- Join video call
                 a.btn.btn-primary.btn-xs(
                     href="/private"
