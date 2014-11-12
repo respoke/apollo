@@ -186,18 +186,18 @@ router.post('/accounts', function (req, res, next) {
 
         // now send account confirmation email
         // this can take a little while, so send the email in the background
+        var confirmURI = config.baseURL + '/conf/' + account._id + '/' + newAccount.conf;
         req.email.sendMail({
             from: config.email.from,
             to: account.email,
             subject: 'Account confirmation - ' + config.name,
-            text: 'Visit the following link to confirm your ' + config.name + ' account. '
-                + config.baseURL + '/conf/' + account._id + '/' + newAccount.conf
+            text: 'Visit the following link to confirm your ' + config.name + ' account. ' + confirmURI
         }, function (err) {
             if (err) {
-                debug('ERROR: Account confirmation email failed to send.', err);
+                debug('ERROR: Account confirmation email failed to send.', err, "Visit link to confirm.", confirmURI);
                 return;
             }
-            debug('Sent account confirmation email', account.email);
+            debug('Sent account confirmation email', account.email, 'with confirmation link', confirmURI)
         });
 
         req.respoke.groups.publish({
