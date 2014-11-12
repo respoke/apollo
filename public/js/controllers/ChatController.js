@@ -130,13 +130,6 @@ exports = module.exports = [
             if (fileId) {
                 msg.file = fileId;
             }
-            $chat.messages.push({
-                content: {
-                    text: txt
-                },
-                from: $rootScope.account,
-                created: new Date()
-            });
             var mentions = txt.match(/\[\~([a-z0-9]+)\]/g);
             if (mentions) {
                 msg.offlineMentions = [];
@@ -151,9 +144,15 @@ exports = module.exports = [
             Message.create(msg, function (err, sentMessage) {
                 if (err) {
                     $rootScope.notifications.push(err);
-                    $chat.messages.pop();
                     return;
                 }
+                $chat.messages.push({
+                    content: {
+                        text: txt
+                    },
+                    from: $rootScope.account,
+                    created: new Date()
+                });
                 if ($chat._id === $scope.selectedChat._id) {
                     scrollChatToBottom(true);
                 }

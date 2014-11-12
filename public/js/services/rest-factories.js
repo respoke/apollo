@@ -85,6 +85,18 @@ exports = module.exports = function (app) {
     // Message
     app.factory('Message', ['$http', '$rootScope', '$log',
         function ($http, $rootScope, $log) {
+            function addMessageToServerHistory(message) {
+                if (!message.offRecord) {
+                    $http
+                    .post('/api/messages', message)
+                    .success(success()).error(function (err) {
+                        if (err) {
+                            $log.error(err);
+                        }
+                        $rootScope.notifications.push('Failed to save message to the server.');
+                    });
+                }
+            }
             return {
                 create: function (message, callback) {
                     // message.content is a JSON string
@@ -97,7 +109,10 @@ exports = module.exports = function (app) {
                         $rootScope.client.getGroup({ id: message.group })
                         .sendMessage({
                             message: message.content,
-                            onSuccess: success(callback),
+                            onSuccess: function (params) {
+                                addMessageToServerHistory(message);
+                                success(callback)(params);
+                            },
                             onError: fail(callback)
                         });
                     }
@@ -105,24 +120,15 @@ exports = module.exports = function (app) {
                         var privateMessage = {
                             endpointId: message.to,
                             message: message.content,
-                            onSuccess: success(callback),
+                            onSuccess: function (params) {
+                                addMessageToServerHistory(message);
+                                success(callback)(params);
+                            },
                             onError: fail(callback)
                         };
                         $log.debug('privateMessage', privateMessage);
                         $rootScope.client.sendMessage(privateMessage);
                     }
-
-                    if (!message.offRecord) {
-                        $http
-                        .post('/api/messages', message)
-                        .success(success()).error(function (err) {
-                            if (err) {
-                                $log.error(err);
-                            }
-                            $rootScope.notifications.push('Failed to save message to the server.');
-                        });
-                    }
-
                 },
                 get: function (id, callback) {
                     var reqUrl = '/api/messages';
