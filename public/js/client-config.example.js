@@ -18,9 +18,9 @@ var clientConfig = {};
 // error is displayed instead of the message.
 clientConfig.messageRenderingMiddleware = [
     // jira(clientConfig.jiraBaseWithSlash),
+    mention,
     emo,
-    marked,
-    mention
+    marked
 ];
 
 /**
