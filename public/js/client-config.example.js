@@ -1,7 +1,6 @@
 // Require any plugins here
 var emo = require('./parsers/emo');
 var marked = require('./parsers/marked');
-var mention = require('./parsers/mention');
 var jira = require('./parsers/jira');
 var renderFile = require('./parsers/render-file');
 
@@ -18,7 +17,6 @@ var clientConfig = {};
 // error is displayed instead of the message.
 clientConfig.messageRenderingMiddleware = [
     // jira(clientConfig.jiraBaseWithSlash),
-    mention,
     emo,
     marked
 ];

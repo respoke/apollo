@@ -13,10 +13,11 @@ exports = module.exports = [
 
     // from client-config.js
     'messageRenderingMiddleware',
+    'mentionRenderer',
     'scrollChatToBottom',
     '$timeout',
 
-    function ($sce, $rootScope, middleware, scrollChatToBottom, $timeout) {
+    function ($sce, $rootScope, middleware, mentionRenderer, scrollChatToBottom, $timeout) {
         // First, validate that the middleware functionas are valid
         var invalidMiddlware = new Error("ap-message middleware must be an array of functions");
         if (!middleware || !(middleware instanceof Array)) {
@@ -51,28 +52,26 @@ exports = module.exports = [
                     }
                     // when middleware is done
                     else {
-                        $timeout(function () {
-                            var mentions = $(element).find('.mentioned');
-                            mentions.each(function () {
-                                var _id = ($(this).data('mention') || '').replace('@', '');
-
-                                if (_id && $rootScope.recents[_id]) {
-                                    $(this).text('@' + $rootScope.recents[_id].display);
+                        // apply mentions
+                        scope.content = mentionRenderer(
+                            $rootScope.recents,
+                            scope.content,
+                            function (input) {
+                                return '<span class="mentioned">@' + input + '</span>';
+                            }
+                        );
+                        $timeout(scrollChatToBottom);
+                        // async render images
+                        if (scope.content.indexOf('<img') !== -1) {
+                            $timeout(function () {
+                                var imgs = element.find('img');
+                                if (imgs.length) {
+                                    imgs.on('load', function (evt) {
+                                        scrollChatToBottom();
+                                    });
                                 }
                             });
-                        });
-
-                        $timeout(function () {
-                            var imgs = element.find('img');
-                            if (imgs.length) {
-                                imgs.on('load', function (evt) {
-                                    scrollChatToBottom();
-                                });
-                            }
-                            else {
-                                scrollChatToBottom();
-                            }
-                        });
+                        }
                     }
                 };
 

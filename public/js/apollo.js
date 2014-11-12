@@ -33,6 +33,9 @@ apollo.factory('favicon', function () {
 apollo.factory('messageRenderingMiddleware', function () {
     return clientConfig.messageRenderingMiddleware;
 });
+apollo.factory('mentionRenderer', function () {
+    return require('./parsers/mention.js');
+});
 apollo.factory('renderFile', function () {
     return clientConfig.renderFile || function (fileObject, callback) {
         callback();
