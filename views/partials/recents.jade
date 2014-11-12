@@ -7,8 +7,8 @@
     br
     button.btn.btn-xs.btn-default(ng-click="respokeConnect()") reconnect
 
-.panel.left.animated.fadeInRightBig(
-    ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }"
+.panel.left.animated.fadeInLeft(
+    ng-class="{ 'full': showFullChat, 'fadeOutLeft': justLoggedOut }"
     ng-show="client.isConnected()"
 )
 
@@ -28,7 +28,7 @@
                             presence="{{ recents[account._id].presence }}"
                             data-toggle="dropdown"
                         )
-                        ul.dropdown-menu.animated.fadeInDown.faster
+                        ul.dropdown-menu.animated.fadeIn.faster
                             li: a(
                                 tabindex="-1"
                                 ng-click="setPresence('available')"

@@ -50,8 +50,12 @@ exports = module.exports = function () {
             // otherwise sort by alpha
             var dispA = a.display || a._id;
             var dispB = b.display || b._id;
-            dispA = dispA.toLowerCase();
-            dispB = dispB.toLowerCase();
+            if (dispA) {
+                dispA = dispA.toLowerCase();
+            }
+            if (dispB) {
+                dispB = dispB.toLowerCase();
+            }
             if (dispA > dispB) {
                 return 1;
             }

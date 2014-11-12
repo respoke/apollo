@@ -1,6 +1,6 @@
 .panel.right.animated(
     ng-show="client.isConnected()"
-    ng-class="{ 'full': showFullChat, 'fadeOutRightBig': justLoggedOut }"
+    ng-class="{ 'full': showFullChat, 'fadeOutRight': justLoggedOut }"
 )
     //- Chat Header
     #chat-header: table.table(ng-show="!hideCallPanel")
@@ -104,14 +104,17 @@
     ap-chat#chat(
         ap-drop="onDropUpload"
         ap-onscrolltop="loadBackMessages"
-        ng-class="{ 'no-bottom': showSettings }"
+        ng-class="{ 'no-bottom': showSettings, fadeOutRight: justLoggedOut }"
     )
         
         //- Chat
         table#chat-table.table(ng-show="!showSettings")
 
             //- Messages
-            tr.animated.fadeInUp.faster(ng-repeat="message in selectedChat.messages" ng-init="notSameFrom = message.from._id !== selectedChat.messages[$index -1].from._id")
+            tr(
+                ng-repeat="message in selectedChat.messages"
+                ng-init="notSameFrom = message.from._id !== selectedChat.messages[$index -1].from._id"
+            )
                 //- avatar for remote party
                 td
                     img.img-thumbnail(
@@ -129,7 +132,10 @@
                     
 
         //- Settings panel
-        #settings.animated.fadeIn(ng-show="showSettings")
+        #settings.animated.fadeIn(
+            ng-show="showSettings"
+            ng-class="{ fadeOutRight: justLoggedOut }"
+        )
             include settings.jade
     
     //- Text input

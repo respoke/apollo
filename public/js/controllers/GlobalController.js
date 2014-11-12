@@ -193,10 +193,10 @@ exports = module.exports = [
                 }
                 $rootScope.notifications = [];
                 $scope.signin = {};
-                $rootScope.account = data;
+                $rootScope.account = $rootScope.recents[data._id] = data;
                 $rootScope.justLoggedIn = true;
                 $scope.respokeConnect();
-                setTimeout(function () {
+                $timeout(function () {
                     $location.search('authFailure', null).path('/');
                     $rootScope.justLoggedIn = false;
                 });
@@ -211,7 +211,7 @@ exports = module.exports = [
                 }
                 $rootScope.account = null;
                 $rootScope.justLoggedOut = true;
-                setTimeout(function () {
+                $timeout(function () {
                     $window.open('/', '_self');
                 });
             });

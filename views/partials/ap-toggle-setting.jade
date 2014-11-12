@@ -1,5 +1,5 @@
 button.btn(
-    ng-class="{ 'btn-default': !setting }"
+    ng-class="{ 'btn-primary': !setting, 'btn-default': setting }"
     ng-click="setting = !setting; updateSetting(settingKey, setting);")
     i.fa.fa-check-square-o.animated.fadeIn(ng-show="setting")
     i.fa.fa-square-o.animated.fadeIn(ng-show="!setting")
