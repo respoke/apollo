@@ -212,7 +212,7 @@ exports = module.exports = [
                 $rootScope.account = null;
                 $rootScope.justLoggedOut = true;
                 $timeout(function () {
-                    $window.open('/', '_self');
+                    $window.location.reload();
                 });
             });
         };
