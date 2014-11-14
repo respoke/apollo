@@ -53,7 +53,7 @@
             td
                 i.fa.fa-upload.fa-3x
             td(colspan="2")
-                | Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}...
+                strong Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}
             
         //- Call
         tr#audio-call-controls.notify.animated.fadeInDown.faster(ng-show="activeCall")
