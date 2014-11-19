@@ -98,4 +98,6 @@ If you would like to build the desktop app, proceed with the following steps.
 
 GPL v2
 
+See the LICENSE file for text.
+
 ###### Apollo - Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
