@@ -27,9 +27,25 @@ var browserify = require('browserify-middleware');
 var middleware = require('./lib/middleware');
 
 // local configuration settings
-var config = require('./config');
+var config;
+try {
+    config = require('./config');
+} catch (ex) {
+    console.error('\nYou did not set up the application config correctly at ./config.js');
+    console.error('Copy the example from ./config.example.js and fill in your specific values.');
+    console.error('For setup instructions see ./README.md\n');
+    throw ex;
+}
+var clientConfig;
+try {
+    clientConfig = require('./public/js/client-config');
+} catch (ex) {
+    console.warn('\nYou did not set up browser config correctly at ./public/js/client-config.js');
+    console.warn('Attempting to use ./public/js/client-config.example.js instead.\n');
+    debug(ex, '\n');
+    clientConfig = require('./public/js/client-config.example.js');
+}
 var mailTransport = nodemailer.createTransport(config.smtp);
-var clientConfig = require('./public/js/client-config');
 // app utilities
 var appUtilities = require('./lib/app-utilities');
 // mongoose ODM models

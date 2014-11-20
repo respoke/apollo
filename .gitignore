@@ -2,6 +2,7 @@
 config.js
 public/js/client-config.js
 public/passthrough.html
+nodewebkit.json
 
 # OS
 .DS_Store
@@ -29,7 +30,6 @@ coverage
 
 # User created plugins
 plugins/
-!public/js/plugins/
 
 # Compiled CSS
 *.css

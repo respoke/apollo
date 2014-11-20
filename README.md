@@ -9,9 +9,9 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 * Node.js
 * MongoDB
 * A [Respoke account](https://respoke.io), an app ID, an app secret, and a role ID.
-    * Make sure you create a Role in the Respoke developer console! *[More about Respoke permissions and roles](https://docs.respoke.io/tutorials/roles-and-permissions.html)*
+* Make sure you create a Role in the Respoke developer console! *[More about Respoke permissions and roles](https://docs.respoke.io/tutorials/roles-and-permissions.html)*
 
-## Usage
+## Setup
 
 1. Perform the following commands in a terminal:
     ```bash
@@ -37,9 +37,13 @@ IM, group chat, and video calls built on [Respoke](https://respoke.io).
 You should be able to input your google auth credentials in `./config.js`, set `config.google.enable = true` and it will work.
 
 Google auth requires that you create a Google developer project in their [developer console](https://console.developers.google.com).
-* Click *Create Project* and select that project
-* Go to *APIs and Auth* > *Credentials* and obtain credentials for Apollo (the `google` section of `./config.js`)
-* Go to *APIs and Auth* > *Consent Screen* and add your information
+1. Click *Create Project* and select that project
+1. Go to *APIs and Auth* > *Credentials* and click on "Create New Client ID" under Oauth
+1. Choose "Web Application".
+1. Add your site's base URL including http:// or https:// under "AUTHORIZED JAVASCRIPT ORIGINS". (e.g. https://localhost:8080)
+1. Add <base URL>/auth/google/callback under "AUTHORIZED REDIRECT URI". (e.g. https://localhost:8080/auth/google/callback)
+1. Obtain the Client ID and Client Secret for Apollo (the `google` section of `./config.js`)
+1. Go to *APIs and Auth* > *Consent Screen* and add your information including a product name
 
 [This blog post](http://scotch.io/tutorials/javascript/easy-node-authentication-google) gives an
 overview of basic concepts for Google OAuth 2.0.
@@ -55,14 +59,16 @@ Message parsing plugins are middleware - **executed asynchronously, in series** 
 
 Example middleware:
 
-    function (messageInputText, next) {
+```javascript
+function (messageInputText, next) {
 
-        // replace all instances of "Billy" with "Cheeseface"
-        var err = null;
+    // replace all instances of "Billy" with "Cheeseface"
+    var err = null;
 
-        next(err, messageInputText.replace(/Billy/g, "Cheeseface"));
+    next(err, messageInputText.replace(/Billy/g, "Cheeseface"));
 
-    }
+}
+```
 
 ##### Custom server plugins
 
