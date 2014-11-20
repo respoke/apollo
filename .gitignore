@@ -2,6 +2,7 @@
 config.js
 public/js/client-config.js
 public/passthrough.html
+nodewebkit.json
 
 # OS
 .DS_Store
