@@ -23,7 +23,15 @@ var middleware = require('./lib/middleware');
 // local configuration settings
 var config = require('./config');
 var mailTransport = nodemailer.createTransport(config.smtp);
-var clientConfig = require('./public/js/client-config');
+var clientConfig;
+try {
+    throw new Error("hi");
+    clientConfig = require('./public/js/client-config');
+} catch (ignored) {
+    console.warn('\nYou did not set up browser config at ./public/js/client-config.js');
+    console.warn('Attempting to use ./public/js/client-config.example.js instead.\n');
+    clientConfig = require('./public/js/client-config.example.js');
+}
 // app utilities
 var appUtilities = require('./lib/app-utilities');
 // mongoose ODM models
