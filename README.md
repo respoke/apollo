@@ -25,9 +25,9 @@ npm install
     - Browser configuration: `./public/js/client-config.example.js` and copy to `./public/js/client-config.js`
 
 1. Start the app via terminal:
-```bash
-npm start
-```
+    ```bash
+    npm start
+    ```
 
 1. Apollo will be running at [http://localhost:3000/](http://localhost:3000/).
 
@@ -59,6 +59,7 @@ Message parsing plugins are middleware - **executed asynchronously, in series** 
 
 Example middleware:
 
+```javascript
 function (messageInputText, next) {
 
     // replace all instances of "Billy" with "Cheeseface"
@@ -67,6 +68,7 @@ function (messageInputText, next) {
     next(err, messageInputText.replace(/Billy/g, "Cheeseface"));
 
 }
+```
 
 ##### Custom server plugins
 
