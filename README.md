@@ -100,4 +100,4 @@ GPL v2
 
 See the LICENSE file for text.
 
-###### Apollo - Copyright (c) 2014, D.C.S. LLC. All Rights Reserved. Licensed Software.
+###### Apollo - Copyright (c) 2014, Digium. All Rights Reserved. Licensed Software.
