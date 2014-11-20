@@ -92,8 +92,8 @@ first setting up an Apollo server.
 If you would like to build the desktop app, proceed with the following steps.
 
 1. Edit the following example config files and rename them:
-* `./nodewebkit.example.json` to `./nodewebkit.json`
-* `./public/passthrough.example.html` to `./public/passthrough.html`
+    * `./nodewebkit.example.json` to `./nodewebkit.json`
+    * `./public/passthrough.example.html` to `./public/passthrough.html`
 1. From the Apollo directory, run `grunt release`.
 1. The applications will be in the `./public/release/<your app name>` folder.
 1. It is recommended to compress them by running `grunt pack`.
