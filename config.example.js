@@ -37,14 +37,14 @@ config.respokeJS = 'https://cdn.respoke.io/respoke.min.js';
 config.respokeLocalPath = null;
 
 // main DB
-config.mongoURI = 'mongodb://localhost/apollo';
+config.mongoURI = 'mongodb://localhost:27017/apollo';
 
 // session store
 // passed directly to MongoStore
 // https://github.com/kcbanner/connect-mongo
 config.mongoSessions = {
     secret: 'change-this-1234',
-    url: 'mongodb://localhost/apollosessions'
+    url: 'mongodb://localhost:27017/apollosessions'
 };
 
 // miliseconds for cookie to live
