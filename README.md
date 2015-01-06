@@ -1,5 +1,3 @@
-# (under construction)
-
 # Apollo
 
 IM, group chat, and video calls built on [Respoke](https://respoke.io).
