@@ -102,8 +102,8 @@ If you would like to build the desktop app, proceed with the following steps.
 
 ## License
 
-GPL v2
+AGPL v3
 
 See the LICENSE file for text.
 
-###### Apollo - Copyright (c) 2014, Digium. All Rights Reserved. Licensed Software.
+###### Apollo - Copyright (c) 2015, Digium. All Rights Reserved. Licensed Software.
