@@ -1,0 +1,124 @@
+script.
+    // node webkit stuff.
+    if (window.nwDispatcher && window.location.pathname === '/') {
+
+        // The only scenarios where this application has crashed have been
+        // due to client-side respoke.min.js code executing inside Node.js.
+        // So for now, we are logging these and continuing the app execution.
+        process.on('uncaughtException', function (err) {
+            console.error("UNCAUGHT EXCEPTION", err);
+            //- GUI.Window.get().window.location.reload();
+        });
+
+        var GUI = window.nwDispatcher.requireNwGui();
+        var WIN = GUI.Window.get();
+        GUI.App.TRAY = null;
+
+        WIN.removeAllListeners('new-win-policy');
+        WIN.on('new-win-policy', function (frame, url, policy) {
+            if (url.indexOf('/private') !== -1) {
+                policy.forceNewPopup(); // video calls in a popup
+                return;
+            } else if (url.indexOf('#{config.baseURL}' + '/files') !== -1) {
+                GUI.Window.open(url, {
+                    toolbar: true,
+                    frame: true
+                });
+                policy.ignore();
+                return;
+            }
+            GUI.Shell.openExternal(url);
+            policy.ignore();
+        });
+
+        WIN.removeAllListeners('close');
+        function showWin() {
+            WIN.show();
+            // Remove the tray
+            if (GUI.App.TRAY) {
+                try {
+                    GUI.App.TRAY.remove();
+                } catch (noTray) { }
+                GUI.App.TRAY = null;
+            }
+        }
+        WIN.on('close', function (e) {
+            if (e) {
+                WIN.close(true);
+                return;
+            }
+
+            // System Tray
+            if (!GUI.App.TRAY) {
+                GUI.App.TRAY = new GUI.Tray({ title: '#{config.name}' });
+
+                // Give it a menu
+                var menu = new GUI.Menu();
+                menu.append(new GUI.MenuItem({
+                    label: 'Show ' + '#{config.name}',
+                    click: showWin
+                }));
+                menu.append(new GUI.MenuItem({
+                    label: 'Quit ' + '#{config.name}',
+                    click: function () {
+                        GUI.App.quit();
+                    }
+                }));
+                GUI.App.TRAY.menu = menu;
+
+            }
+
+            WIN.hide();
+            // Load native UI library
+        });
+        GUI.App.removeAllListeners('reopen');
+        GUI.App.on('reopen', showWin);
+
+        var nativeMenuBar = new GUI.Menu({ type: "menubar" });
+        try {
+            nativeMenuBar.createMacBuiltin("");
+            nativeMenuBar.items[0].submenu.removeAt(nativeMenuBar.items[0].submenu.items.length - 1);
+            nativeMenuBar.items[0].submenu.append(new GUI.MenuItem({
+                modifiers: 'cmd',
+                key: 'q',
+                label: 'Quit #{config.name}',
+                click: function () {
+                    GUI.App.quit();
+                }
+            }));
+        }
+        catch (notOSX) { }
+
+        // Main osx menu
+        function toggleDevTools () {
+            if (WIN.isDevToolsOpen()) {
+                WIN.closeDevTools();
+            } else {
+                WIN.showDevTools();
+            }
+        }
+        nativeMenuBar.items[0].submenu.insert(new GUI.MenuItem({
+            modifiers: 'cmd-alt',
+            key: 'i',
+            label: 'Toggle Developer Tools',
+            click: toggleDevTools
+        }));
+
+        // Window menu
+        nativeMenuBar.items[1].submenu.insert(new GUI.MenuItem({
+            type: 'separator'
+        }));
+        nativeMenuBar.items[1].submenu.insert(new GUI.MenuItem({
+            modifiers: 'cmd',
+            key: 'r',
+            label: 'Reload',
+            click: function () {
+                GUI.Window.get().window.location.reload();
+            }
+        }));
+        nativeMenuBar.items[2].submenu.insert(new GUI.MenuItem({
+            label: 'Main Chat Window',
+            click: showWin
+        }));
+        WIN.menu = nativeMenuBar;
+    }

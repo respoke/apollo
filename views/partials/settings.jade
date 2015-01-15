@@ -31,7 +31,15 @@ div(ng-controller="SettingsController")
     .row
         .col-xs-2
         .col-xs-4: p: strong
-            a(href="https://gravatar.com" target="_blank") Change profile image
+            a(href="https://gravatar.com" target="_blank") Change profile image&nbsp;
+    br
+    .row
+        .col-xs-1.col-xs-offset-1: i.fa.fa-lock.fa-2x.salmon
+        .col-xs-4: p: strong Password
+    .row
+        .col-xs-2
+        .col-xs-4: p: button.btn.btn-primary.btn-sm(ng-click="forgot(account.email)") Request reset
+    
     
     br
     br
@@ -47,7 +55,7 @@ div(ng-controller="SettingsController")
                 key="groupDesktopNotifications"
                 initial="account.settings.groupDesktopNotifications"
             )
-        .col-xs-4: p Group desktop notifications
+        .col-xs-4: p Group message notifications
         .col-xs-1
             ap-toggle-setting(
                 key="groupMessageSounds"
@@ -62,7 +70,7 @@ div(ng-controller="SettingsController")
                 key="privateDesktopNotifications"
                 initial="account.settings.privateDesktopNotifications"
             )
-        .col-xs-4: p Private desktop notifications
+        .col-xs-4: p Private message notifications
         .col-xs-1
             ap-toggle-setting(
                 key="privateMessageSounds"

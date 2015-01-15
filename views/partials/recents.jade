@@ -2,9 +2,7 @@
     br
     h1.lightweight.pulse.infinite.slowly #{config.name}
     br
-    br
-    br
-    br
+    span.help-block(ng-show="tokenRefreshInterval") Retrying after {{ tokenRefreshInterval/1000 }} seconds
     button.btn.btn-xs.btn-default(ng-click="respokeConnect()") reconnect
 
 .panel.left.animated.fadeInLeft(
@@ -60,25 +58,28 @@
                             ng-show="showSettingsDisplayIcon && !showSettings"
                         )
                 
-            tr: td(colspan="3").align-right
+            tr: td(colspan="3")
 
                 input#recents-query.form-control.input-sm(
                     type="text"
                     placeholder="Search"
                     ng-model="recentQuery"
                 )
-                button#newgroup.btn.btn-default.btn-xs(
+                button#newgroup.btn.btn-default.btn-sm.btn-block.align-left(
                     ng-click="showCreateGroup = !showCreateGroup"
-                )
-                    span(ng-show="!showCreateGroup") New group
-                    i.fa.fa-remove(ng-show="showCreateGroup")
+                    ng-show="!showCreateGroup"
+                ) New group
 
 
                 .animated(
                     ng-show="showCreateGroup"
                     ng-class="{ 'flipInX': showCreateGroup }"
                 )
-                    input#new-group-input.form-control(ng-model="newGroupName" autofocus placeholder="Group name")
+                    input#new-group-input.form-control.input-sm(
+                        ng-model="newGroupName"
+                        autofocus
+                        placeholder="Group name - letters and numbers only"
+                    )
                     button.btn.btn-default.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
                         | Cancel
                     button.btn.btn-primary.btn-sm(

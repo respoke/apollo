@@ -61,11 +61,19 @@ router.put('/forgot/:emailOrId', function (req, res, next) {
     }
     req.db.Account.findOne()
     .or([{ email: req.params.emailOrId }, { _id: req.params.emailOrId }])
+    .select('+conf')
     .exec(function (err, account) {
         if (err) {
             return next(err);
         }
-        var message = { message: 'If the account was found with an email on file, a reset will be sent to the email address.' };
+
+        if (account.conf && account.conf.slice(0, 7) === 'confirm') {
+            return res.status(400).send({
+                message: "Your account must be confirmed before you may reset your password."
+            });
+        }
+
+        var message = { message: 'A password reset has been requested. Check your email.' };
         // give no indication if the email was wrong
         if (!account || !account.email) {
             return res.send(message);
@@ -186,6 +194,7 @@ router.post('/accounts', function (req, res, next) {
     newAccount.save(function (err, account) {
         if (err) {
             debug(err);
+            err.status = 400;
             return next(err);
         }
         res.send({ message: 'Account created successfully. Check your email to confirm.'});
@@ -257,27 +266,40 @@ router.get('/groups/:id', middleware.isAuthorized, function (req, res, next) {
 });
 
 router.post('/groups', middleware.isAuthorized, function (req, res, next) {
-    new req.db.Group({
-        _id: req.body._id,
-        owner: req.user._id
-    }).save(function (err, group) {
+    req.db.Group.findById(req.body._id).exec(function (err, existingGroup) {
         if (err) {
+            err.status = 500;
             return next(err);
         }
-        res.send(group);
-
-        req.respoke.groups.publish({
-            groupId: config.systemGroupId,
-            message: JSON.stringify({
-                meta: {
-                    type: 'newgroup',
-                    value: group._id
-                }
-            })
-        }, function (err) {
+        if (existingGroup) {
+            err = new Error("A group by that name already exists.");
+            err.status = 400;
+            return next(err);
+        }
+        new req.db.Group({
+            _id: req.body._id,
+            owner: req.user._id
+        })
+        .save(function (err, group) {
             if (err) {
-                debug('failed to send new account notification', err);
+                err.status = 400;
+                return next(err);
             }
+            res.send(group);
+
+            req.respoke.groups.publish({
+                groupId: config.systemGroupId,
+                message: JSON.stringify({
+                    meta: {
+                        type: 'newgroup',
+                        value: group._id
+                    }
+                })
+            }, function (err) {
+                if (err) {
+                    debug('failed to send new account notification', err);
+                }
+            });
         });
     });
 });
@@ -317,7 +339,6 @@ router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) 
                     if (err) {
                         return cb(err);
                     }
-                    debug('files', ids);
                     req.db.File.remove({
                         _id: { $in: ids }
                     })

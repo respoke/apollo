@@ -1,5 +1,16 @@
-.container-fluid: .animated.fadeInUp(ng-class="{ 'fadeOutUp': justLoggedIn }")
-    h1.align-center= "Sign in to " + config.name
+.container-fluid: .animated.fadeIn(ng-class="{ 'fadeOut': justLoggedIn }")
+    br
+    h3.align-center 
+        img(
+            src="/img/apollo-a.png"
+            height="100px"
+            width="100px"
+        )
+        br
+        br
+        | Apollo
+    br
+        
 
     //- When passport authorization fails, it will redirect here with a querystring message.
     .alert.alert-warning(ng-show="authFailureMessage") {{ authFailureMessage }}
@@ -7,14 +18,10 @@
             i.fa.fa-remove
     
     br
-    .row
-        if(!config.localSignupEnabled)
-            .col-sm-6.col-sm-offset-3
-                include login
-        else
-            .col-sm-6
-                include login
-
+    .row: .col-sm-6.col-sm-offset-3
+        h3 Sign in
+        include login
+    
         if(config.localSignupEnabled)
-            .col-sm-6
-                include register
+            br
+            include register

@@ -114,13 +114,13 @@ exports = module.exports = [
                     if (!$scope.tokenRefreshInterval) {
                         $scope.tokenRefreshInterval = 1000;
                     }
-                    $scope.tokenRefreshInterval = $scope.tokenRefreshInterval * 2;
+                    $scope.tokenRefreshInterval = Math.min($scope.tokenRefreshInterval * 2, 1000*60);
                     $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
                     return;
                 }
                 if (!respokeAuth.token) {
                     $log.error('token request to server did not return token', respokeAuth);
-                    $scope.tokenRefreshInterval = $scope.tokenRefreshInterval * 2;
+                    $scope.tokenRefreshInterval = Math.min($scope.tokenRefreshInterval * 2, 1000*60);
                     $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
                     return;
                 }
@@ -224,7 +224,9 @@ exports = module.exports = [
         };
 
         $scope.register = function () {
+            $rootScope.notifications = [];
             Account.create($scope.signup, function (err, account) {
+                $log.debug(err, account);
                 if (err) {
                     $rootScope.notifications.push(err);
                     return;
@@ -237,12 +239,12 @@ exports = module.exports = [
             });
         };
 
-        $scope.forgot = function () {
-            if (!$scope.signin.email) {
+        $scope.forgot = function (email) {
+            if (!email) {
                 $rootScope.notifications.push("Put in your email first");
                 return;
             }
-            Account.forgotPassword($scope.signin.email, function (err, data) {
+            Account.forgotPassword(email, function (err, data) {
                 if (err) {
                     $rootScope.notifications.push(err);
                     return;

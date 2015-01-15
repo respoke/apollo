@@ -50,6 +50,14 @@
         color: white;
     }
 }
+.alert {
+    font-weight: 300;
+    border-radius: 0;
+}
+.alert-salmon {
+    background: @salmon;
+    color: @text;
+}
 .fa.fa-rotate-45 {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
@@ -94,7 +102,7 @@ html, body {
     margin: 0;
     padding: 0;
     font-weight: 100;
-    .panelGradient();
+    background: @panelGradientStart;
     z-index: -200;
     text-shadow: rgba(0,0,0,.01) 0 0 1px;
     -webkit-font-smoothing: antialiased;
@@ -125,7 +133,6 @@ textarea.form-control {
     top: 0;
     left: 0;
     width: 220px;
-    opacity: .9;
     z-index: 10000;
 }
 
@@ -179,7 +186,7 @@ textarea.form-control {
             right: 0;
             bottom: 0;
             padding: 13px 11px 8px 54px;
-            background: @plainTransGray;
+            background: rgba(0, 0, 0, .05);
 
             .chatstate {
                 position: absolute;
@@ -449,14 +456,17 @@ textarea.form-control {
         }
 
         #newgroup {
+            margin: 0;
             border-radius: 0;
             font-weight: 100;
+            padding-left: 8px;
         }
 
         #recents-query {
             background: rgba(255, 255, 255, .05);
             border: 0;
-            margin-bottom: 1px;
+            margin-bottom: 8px;
+            margin-top: -5px;
             padding-left: 8px;
             transition: background .3s ease;
             &:hover {
@@ -471,7 +481,7 @@ textarea.form-control {
         }
 
         tr.selectedRecent {
-            background: @highlightGray;
+            background: @panelGradientStart;
             color: @salmon;
             td:nth-child(3) h6 {
                 color: @salmon;

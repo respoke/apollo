@@ -85,6 +85,7 @@ config.smtp = {
 
 // Let people sign up using their local account?
 config.localSignupEnabled = true;
+config.localLoginEnabled = true;
 
 // Allow Google OAuth 2.0?
 // Create a project and go to APIs & Auth > Credentials

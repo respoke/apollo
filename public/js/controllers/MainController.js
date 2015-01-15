@@ -72,6 +72,8 @@ exports = module.exports = [
         $scope.messagesDuringBlur = 0;
         $scope.windowInFocus = true;
 
+
+
         $scope.isAllowedToCall = function (item) {
             var isPersonAndOnline = item.display && item.presence !== 'unavailable';
             var isNotSelected = $scope.selectedChat && $scope.selectedChat._id === item._id;
@@ -204,7 +206,7 @@ exports = module.exports = [
             };
         }
 
-        function bindGroup(group) {
+        function bindGroup(group, callback) {
             $rootScope.client.join({
                 id: group._id,
                 onSuccess: function (evt) {
@@ -219,6 +221,9 @@ exports = module.exports = [
                     // seed the chat in the background
                     $scope.fetchChat($rootScope.recents['group-' + group._id]);
                     $rootScope.$apply();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                 },
                 onError: function (evt) {
                     $log.debug('FAIL joining ' + group._id, evt);
@@ -429,7 +434,9 @@ exports = module.exports = [
                     $rootScope.notifications.push(err);
                     return;
                 }
-                bindGroup(group);
+                bindGroup(group, function () {
+                    $scope.switchChat('group-' + group._id);
+                });
             });
         };
 

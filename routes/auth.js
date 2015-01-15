@@ -55,13 +55,18 @@ router.post('/local', function (req, res, next) {
     }
     req.db.Account.findOne()
     .or([{ _id: req.body.email.toLowerCase() }, { email: req.body.email.toLowerCase() }])
-    .select('+password')
+    .select('+password +conf')
     .exec(function (err, account) {
         if (err) {
             return next(err);
         }
         if (!account) {
             return res.status(400).send({ message: 'Incorrect username.' });
+        }
+        if (account.conf && account.conf.slice(0, 7) === 'confirm') {
+            return res.status(400).send({
+                message: 'Your account must be confirmed before you may log in.'
+            });
         }
         if (!account.password) {
             return res.status(401).send({

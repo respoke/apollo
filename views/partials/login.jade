@@ -1,22 +1,23 @@
 if(config.google.enabled)
+    h6 with Google
+    a.passport-btn.btn.btn-primary(href="/auth/google"): i.fa.fa-google.fa-2x
     br
-    .align-center
-        h6 with Google
-        a.passport-btn.btn.btn-primary(href="/auth/google"): i.fa.fa-google.fa-2x
-    br
-    br
-    h6.align-center with  
+if(config.localLoginEnabled)
+    h6 with  
         =config.name
         |  account
+    br
 
 input.form-control(
-    type="text" placeholder="email" ng-model="signin.email" ap-enter="login()"
+    type="text" placeholder="email or username" ng-model="signin.email" ap-enter="login()"
     autofocus
 )
 br
 input.form-control(type="password" placeholder="password" ng-model="signin.password" ap-enter="login()")
 br
 button.btn.btn-primary(ng-click="login()") Sign In
-a.pull-right(href="javascript:void(0)" ng-click="forgot()") Forgot password
+br
+br
+a(href="javascript:void(0)" ng-click="forgot(signin.email)") I forgot my password
 
 br
