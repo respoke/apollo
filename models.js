@@ -84,8 +84,8 @@ AccountSchema.pre('validate', function (next) {
     if (!this._id) {
         return next(new Error("Account username (ID) is required."));
     }
-    if (/[^a-z0-9]/gi.test(this._id)) {
-        return next(new Error("Account username (ID) must be alphanumeric."));
+    if (/[^a-z0-9]/g.test(this._id)) {
+        return next(new Error("Account username (ID) may only have numbers and lowercase letters."));
     }
     if (!this.display) {
         return next(new Error("Display name is required."));
@@ -94,6 +94,7 @@ AccountSchema.pre('validate', function (next) {
         if (!this.email) {
             return next(new Error("Email is required."));
         }
+        this.email = this.email.toLowerCase();
         var emailInvalid = this.isEmailInvalid(this.email);
         if (emailInvalid) {
             return next(new Error("Email address is not in a valid format."));

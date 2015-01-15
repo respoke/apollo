@@ -54,15 +54,23 @@ router.get('/conf/:_id/:conf', function (req, res, next) {
                 return next(err);
             }
 
-            req.login(saved, function (err) {
-                if (err) {
-                    return next(err);
-                }
+            res.render('conf', {
+                title: 'Email confirmed',
+                message: 'Welcome!'
+            });
 
-                res.render('conf', {
-                    title: 'Email confirmed',
-                    message: 'Welcome!'
-                });
+            req.respoke.groups.publish({
+                groupId: config.systemGroupId,
+                message: JSON.stringify({
+                    meta: {
+                        type: 'newaccount',
+                        value: account._id
+                    }
+                })
+            }, function (err) {
+                if (err) {
+                    debug('failed to send new account notification', err);
+                }
             });
 
         });

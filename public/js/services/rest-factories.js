@@ -54,6 +54,18 @@ exports = module.exports = function (app) {
                     })
                     .success(success(callback)).error(fail(callback));
                 },
+                removeUser: function (id, callback) {
+                    $http({
+                        url: '/api/accounts/' + id,
+                        method: 'DELETE'
+                    })
+                    .success(success(callback)).error(fail(callback));
+                },
+                confirmUser: function (id, token, callback) {
+                    $http.get('/conf/' + id + '/' + token)
+                    .success(success(callback))
+                    .error(fail(callback));
+                },
                 get: function (id, callback) {
                     var reqUrl = '/api/accounts';
                     if (id instanceof Function) {

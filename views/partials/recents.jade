@@ -102,7 +102,7 @@
                         ap-avatar email="item.email"
                     )
                 td.col-xs-1.align-center
-                    ap-presence(presence="{{ item.presence }}" ng-if="item.presence")
+                    ap-presence(presence="{{ item.presence }}" ng-if="!item.conf && item.presence")
                 td.col-xs-6
                     h6 {{ item.display || item._id }}                    
                     small.text-primary(
@@ -112,3 +112,5 @@
                         ng-show="!item.unread && item._id !== selectedChat._id"
                         ap-date="item.messages[item.messages.length - 1].created"
                     )
+                    i.fa.fa-user.fa-lg(ng-if="item.conf")
+                    i.fa.fa-plus-circle(ng-if="item.conf")

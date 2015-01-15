@@ -16,17 +16,6 @@ exports = module.exports = [
     'Group',
 
     function ($log, $rootScope, $scope, Account, Group) {
-        $scope.groups = null;
-
-        $scope.loadGroups = function () {
-            Group.getByOwner($rootScope.account._id, function (err, groups) {
-                if (err) {
-                    $rootScope.notification.push(err);
-                    return;
-                }
-                $scope.groups = groups;
-            });
-        };
 
         $scope.updateSetting = function (key, val) {
             $log.debug('setting change', key, val);
@@ -51,7 +40,7 @@ exports = module.exports = [
                     return;
                 }
                 delete $rootScope.recents['group-' + id];
-                $scope.groups.splice(ix, 1);
+                $rootScope.ownedGroups.splice(ix, 1);
                 $rootScope.notifications.push('Removed group successfully.');
             });
         };

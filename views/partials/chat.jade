@@ -109,19 +109,40 @@
         
         //- Chat
         table#chat-table.table(ng-show="!showSettings")
-
+            
+            tr(ng-if="selectedChat.conf")
+                td: img.img-thumbnail(ap-avatar email="selectedChat.email")
+                td
+                    p {{ selectedChat.display }} ({{ selectedChat._id }}) has requested access to
+                        = ' ' + config.name + '.'
+                        br
+                        br
+                        button.btn.btn-primary.col-sm-4.btn-xs(ng-click="confirmUser(selectedChat)")
+                            i.fa.fa-check.fa-2x
+                            br
+                            | Confirm
+                                        
+                        button.btn.btn-salmon.col-sm-4.col-sm-offset-1.btn-xs(
+                            ng-click="removeUser(selectedChat)"
+                        )
+                            i.fa.fa-ban.fa-2x
+                            br
+                            | Deny and delete
+                td
+            
             //- Messages
             tr(
                 ng-repeat="message in selectedChat.messages"
-                ng-init="notSameFrom = message.from._id !== selectedChat.messages[$index -1].from._id"
+                ng-init="prevMessage = selectedChat.messages[$index -1]; notSameFrom = message.from._id !== prevMessage.from._id; beenAWhile = moment(message.created).diff(moment(prevMessage.created)) > 1000 * 60 * 10;"
             )
-                //- avatar for remote party
+                //- avatar
                 td
                     img.img-thumbnail(
-                        ap-avatar email="message.from.email"
+                        ap-avatar
+                        email="message.from.email"
                         ng-click="switchChat(message.from._id)"
                         ng-class="{ clickable: message.from._id !== account._id }"
-                        ng-if="notSameFrom"
+                        ng-if="notSameFrom || beenAWhile"
                     )
 
                 td
@@ -137,9 +158,10 @@
             ng-class="{ fadeOutRight: justLoggedOut }"
         )
             include settings.jade
-    
+        
+        
     //- Text input
-    .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings")
+    .textarea-container(ng-show="selectedChat && selectedChat._id && !showSettings && !selectedChat.conf")
         
         //- display when someone is typing
         .chatstate

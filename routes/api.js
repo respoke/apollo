@@ -149,24 +149,35 @@ router.put('/password-reset/:_id/:conf', function (req, res, next) {
 });
 
 router.get('/accounts', middleware.isAuthorized, function (req, res, next) {
+    var query = req.db.Account.find().select('+conf').lean();
+
     if (req.query.ids && typeof req.query.ids === 'string') {
-        req.db.Account.find()
+        query
         .where('_id').in(req.query.ids.split(','))
         .exec(handler);
     }
     else {
-        req.db.Account.find().exec(handler);
+        query.exec(handler);
     }
     function handler(err, accounts) {
         if (err) {
             return next(err);
         }
+        accounts.forEach(function (acct) {
+            if (acct.conf && acct.conf.slice(0, 5) === 'reset') {
+                delete acct.conf;
+            }
+            if (!acct.conf) {
+                delete acct.conf;
+            }
+            delete acct.settings;
+        });
         res.send(accounts);
     }
 });
 
 router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
-    req.db.Account.findById(req.params.id, function (err, account) {
+    req.db.Account.findById(req.params.id).select('+conf').exec(function (err, account) {
         if (err) {
             return next(err);
         }
@@ -175,6 +186,31 @@ router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
         }
         res.send(account);
     });
+});
+
+router.delete('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
+    req.db.Account.remove({ _id: req.params.id }).exec(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.send({ message: 'Account was removed.'});
+
+        req.respoke.groups.publish({
+            groupId: config.systemGroupId,
+            message: JSON.stringify({
+                meta: {
+                    type: 'removeaccount',
+                    value: req.params.id
+                }
+            })
+        }, function (err) {
+            if (err) {
+                debug('failed to send delete account notification', err);
+            }
+        });
+    });
+    req.db.Message.remove({ from: req.params.id });
+    req.db.File.remove({ owner: req.params.id });
 });
 
 router.post('/accounts', function (req, res, next) {
@@ -187,6 +223,14 @@ router.post('/accounts', function (req, res, next) {
         return res.status(400).send({
             error: 'Name not available'
         });
+    }
+    if (req.body.email && config.restrictLocalAccountsToDomains && config.restrictLocalAccountsToDomains.length) {
+        var emailParts = req.body.email.toLowerCase().split('@');
+        if (emailParts[1] && config.restrictLocalAccountsToDomains.indexOf(emailParts[1]) === -1) {
+            return res.status(400).send({
+                error: 'You must sign up with an email from of the following domains: ' + config.restrictLocalAccountsToDomains.join(',')
+            });
+        }
     }
     debug('trying to create new account', req.body._id);
     var newAccount = new req.db.Account(req.body);
@@ -202,18 +246,43 @@ router.post('/accounts', function (req, res, next) {
         // now send account confirmation email
         // this can take a little while, so send the email in the background
         var confirmURI = config.baseURL + '/conf/' + account._id + '/' + newAccount.conf;
-        req.email.sendMail({
-            from: config.email.from,
-            to: account.email,
-            subject: 'Account confirmation - ' + config.name,
-            text: 'Visit the following link to confirm your ' + config.name + ' account. ' + confirmURI
-        }, function (err) {
-            if (err) {
-                debug('ERROR: Account confirmation email failed to send.', err, "Visit link to confirm.", confirmURI);
-                return;
-            }
-            debug('Sent account confirmation email', account.email, 'with confirmation link', confirmURI)
-        });
+
+        // send email confirmation link if they are allowed in configuration
+        if (config.allowSelfConfirmation) {
+            sendConfirmationEmail();
+
+        }
+        // it is possible that this is the first person to sign up.
+        // if that is the case, they will need to be given a confirmation email.
+        else {
+            req.db.Account.count(function (err, totalAccounts) {
+                if (err) {
+                    debug('Error counting number of accounts', err);
+                    return;
+                }
+                if (totalAccounts === 0) {
+                    sendConfirmationEmail();
+                }
+            });
+        }
+
+        function sendConfirmationEmail() {
+            req.email.sendMail({
+                from: config.email.from,
+                to: account.email,
+                subject: 'Account confirmation - ' + config.name,
+                text: 'Visit the following link to confirm your ' + config.name + ' account. ' + confirmURI
+            }, function (err) {
+                if (err) {
+                    debug('ERROR: Account confirmation email failed to send.', err, "Visit link to confirm.", confirmURI);
+                    return;
+                }
+                debug('Sent account confirmation email', account.email, 'with confirmation link', confirmURI)
+            });
+        }
+
+        account = account.toObject();
+        account.conf = conf;
 
         req.respoke.groups.publish({
             groupId: config.systemGroupId,

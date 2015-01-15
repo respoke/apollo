@@ -108,21 +108,17 @@ div(ng-controller="SettingsController")
         .col-xs-1.col-xs-offset-1
             i.fa.fa-2x.fa-group.salmon
         .col-xs-4: p
-            strong Groups
-            br
-            br
-            button.btn.btn-default.btn-sm(ng-click="loadGroups()") Fetch
-    br
+            strong Owned Groups
     .row
         .col-xs-10.col-xs-offset-2
-            p(ng-show="groups && !groups.length"): em You do not own any groups.
+            p(ng-show="ownedGroups && !ownedGroups.length"): em You do not own any groups.
             table.table
-                tr(ng-repeat="group in groups" ng-init="showConf = false")
+                tr(ng-repeat="group in ownedGroups" ng-init="showConf = false")
                     td.col-sm-7 {{ group._id }}
                     td.col-sm-5
                         button.btn.btn-default.btn-xs(
                             ng-click="showConf = true" ng-show="!showConf"
-                        ): i.fa.fa-remove
+                        ) Remove
                         p(ng-show="showConf")
                             | Removing a group will remove all files and messages, as well as the group.
                             |  This action cannot be undone.

@@ -46,24 +46,13 @@ exports = module.exports = [
         notify
 
     ) {
+        $window.onbeforeunload = function(){
+            return "Do you want really want to leave?";
+        };
         // make available to the view
         $scope.moment = moment;
 
         $scope.showFullChat = true;
-        $scope.showSettings = false;
-        $scope.toggleSettings = function (override) {
-            $scope.showSettings = typeof override !== 'undefined' ? override : !$scope.showSettings;
-            if (!$scope.showSettings) {
-                $timeout(function () {
-                    scrollChatToBottom(true);
-                }, 200);
-            }
-            else {
-                $timeout(function () {
-                    scrollChatToBottom(false);
-                }, 100);
-            }
-        };
         $scope.selectedChat = null;
         $scope.callIsRinging = false;
 
@@ -71,8 +60,6 @@ exports = module.exports = [
         $scope.incomingCall = "";
         $scope.messagesDuringBlur = 0;
         $scope.windowInFocus = true;
-
-
 
         $scope.isAllowedToCall = function (item) {
             var isPersonAndOnline = item.display && item.presence !== 'unavailable';
@@ -265,6 +252,7 @@ exports = module.exports = [
             var hasMetaContent = evt.message.message.meta && evt.message.message.meta.type;
             var msgType;
             var msgValue;
+
             if (hasMetaContent) {
                 msgType = evt.message.message.meta.type;
                 msgValue = evt.message.message.meta.value;
@@ -279,6 +267,11 @@ exports = module.exports = [
 
                 switch (msgType) {
                     case 'newaccount':
+                        // these notifications come through twice.
+                        // when the account is created, and when the account is confirmed.
+                        if ($scope.selectedChat && $scope.selectedChat._id === msgValue) {
+                            $scope.selectedChat = null;
+                        }
                         Account.get(msgValue, function (err, account) {
                             if (err) {
                                 $rootScope.notifications.push(err);
@@ -287,6 +280,18 @@ exports = module.exports = [
                             buildAccount(account)();
                         });
                     break;
+                    case 'removeaccount':
+                        // these notifications come through twice.
+                        // when the account is created, and when the account is confirmed.
+                        $rootScope.recents[msgValue].endpoint.ignore('presence');
+                        if ($scope.selectedChat && $scope.selectedChat._id === msgValue) {
+                            $scope.selectedChat = null;
+                            $rootScope.notifications.push(
+                                'The person you were chatting with has been removed.'
+                            );
+                        }
+                        delete $rootScope.recents[msgValue];
+                        break;
                     case 'newgroup':
                         Group.get(msgValue, function (err, group) {
                             if (err) {

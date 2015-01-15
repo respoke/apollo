@@ -86,6 +86,11 @@ config.smtp = {
 // Let people sign up using their local account?
 config.localSignupEnabled = true;
 config.localLoginEnabled = true;
+// if true, anyone may signup for an account and confirm their identity via email.
+// if false, another user must confirm them before they can log in.
+config.allowSelfConfirmation = false;
+// if not empty, only these domains will be allowed to signup for accounts.
+config.restrictLocalAccountsToDomains = [];
 
 // Allow Google OAuth 2.0?
 // Create a project and go to APIs & Auth > Credentials

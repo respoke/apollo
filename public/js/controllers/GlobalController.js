@@ -17,9 +17,11 @@ exports = module.exports = [
     '$timeout',
 
     'Account',
+    'Group',
     'respoke',
+    'scrollChatToBottom',
 
-    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, respoke) {
+    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, Group, respoke, scrollChatToBottom) {
         respoke.log.setLevel('debug');
         $rootScope.justLoggedIn = false;
         $rootScope.justLoggedOut = false;
@@ -49,6 +51,34 @@ exports = module.exports = [
             }
         }
 
+        // Settings
+        $rootScope.showSettings = false;
+        $rootScope.toggleSettings = function (override) {
+            $rootScope.showSettings = typeof override !== 'undefined' ? override : !$rootScope.showSettings;
+            if (!$rootScope.showSettings) {
+                $timeout(function () {
+                    scrollChatToBottom(true);
+                }, 200);
+            }
+            else {
+                $timeout(function () {
+                    $rootScope.loadGroups();
+                    scrollChatToBottom(false);
+                }, 100);
+            }
+        };
+        $rootScope.ownedGroups = null;
+        $rootScope.loadGroups = function () {
+            Group.getByOwner($rootScope.account._id, function (err, groups) {
+                if (err) {
+                    $rootScope.notification.push(err);
+                    return;
+                }
+                $rootScope.ownedGroups = groups;
+            });
+        };
+
+        // "recents" are the sidebar items
         $rootScope.recents = $window.recents = {};
         $rootScope.notifications = [];
         $rootScope.account = {};
@@ -210,6 +240,7 @@ exports = module.exports = [
         };
 
         $scope.logout = function () {
+            $window.onbeforeunload = null;
             Account.logout(function (err) {
                 if (err) {
                     $rootScope.notifications.push(err.error);
@@ -232,7 +263,9 @@ exports = module.exports = [
                     return;
                 }
                 // do not log them in. need to confirm account first.
-                $rootScope.notifications.push("Success! Check your email to confirm your account.");
+                $rootScope.notifications.push(
+                    "Success! You will be able to log in after your account is confirmed."
+                );
                 $scope.signup = {};
                 $rootScope.account = account;
                 $rootScope.recents[account._id] = account;
@@ -278,6 +311,25 @@ exports = module.exports = [
                     $window.open('/', '_self');
                 }
             );
+        };
+
+        $rootScope.removeUser = function (user) {
+            Account.removeUser(user._id, function (err) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                $rootScope.notifications.push('Success.');
+            });
+        };
+        $rootScope.confirmUser = function (user) {
+            Account.confirmUser(user._id, user.conf, function (err) {
+                if (err) {
+                    $rootScope.notifications.push(err);
+                    return;
+                }
+                $rootScope.notifications.push('Success.');
+            });
         };
 
     }
