@@ -9,7 +9,7 @@ div(ng-controller="SettingsController")
             //- Sign out
             p: button.btn.btn-default.btn-sm(
                 ng-click="logout()"
-            ) Sign out {{ account.display }}
+            ) Sign out
             
 
     br
@@ -38,7 +38,7 @@ div(ng-controller="SettingsController")
         .col-xs-4: p: strong Password
     .row
         .col-xs-2
-        .col-xs-4: p: button.btn.btn-primary.btn-sm(ng-click="forgot(account.email)") Request reset
+        .col-xs-4: p: button.btn.btn-default.btn-sm(ng-click="forgot(account.email)") Request reset
     
     
     br

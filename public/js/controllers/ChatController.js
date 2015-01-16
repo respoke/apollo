@@ -45,6 +45,9 @@ exports = module.exports = [
         $scope.macros = emoMacros;
         $scope.textInput = '';
         $scope.showMacroHelp = false;
+        $scope.showPreview = false;
+        $scope.previewHtml = '';
+
         $scope.addMacro = function (macro) {
             $scope.textInput += macro._id;
             $scope.showMacroHelp = false;
@@ -261,6 +264,18 @@ exports = module.exports = [
                     return;
                 }
             });
+        };
+
+        $scope.previewText = function () {
+            $scope.showMacroHelp = false;
+            if ($scope.showPreview) {
+                $scope.showPreview = false;
+                $scope.previewHtml = '';
+            }
+            else {
+                $scope.previewHtml = $scope.textInput + '';
+                $scope.showPreview = true;
+            }
         };
     }
 ];

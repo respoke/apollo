@@ -11,7 +11,7 @@
                 button.btn.btn-salmon-inverse.btn-sm(ng-click="toggleSettings()") Close
         
         //- Primary header element
-        tr#chat-header-main.animated.fadeInDown.faster(
+        tr#chat-header-main.animated.fadeIn(
             ng-show="!pendingUploads && !activeCall && !showSettings"
         )
             td
@@ -182,13 +182,19 @@
         )
         button#upload-button.btn.btn-default(
             ap-upload="onDropUpload"
+            title="Upload a file"
         ): i.fa.fa-paperclip
         button#macro-button.btn.btn-default(
             ng-click="showMacroHelp = !showMacroHelp"
+            title="Insert an emoticon"
         ): i.fa.fa-smile-o
+        button#preview-button.btn.btn-default(
+            ng-click="previewText()"
+            title="Preview your message"
+        ): i.fa.fa-eye
         textarea#textInput(
             ng-model="textInput"
-            ng-show="!showMacroHelp"
+            ng-show="!showMacroHelp && !showPreview"
             placeholder="Type markdown, @mention, & drag files"
             ap-enter="sendMessage(textInput); textInput = '';"
             ap-paste="onPasteUpload"
@@ -197,6 +203,10 @@
             
             mentio
         )
+        #text-preview(
+            ng-show="showPreview"
+        ): div(ng-if="previewHtml")
+            ap-message(ap-content="previewHtml")
         #macro-help(
             ng-show="showMacroHelp"
         )

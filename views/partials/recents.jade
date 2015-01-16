@@ -1,11 +1,12 @@
+//- Connecting / not connected
 #not-connected.animated.align-center.on-top.relative(ng-show="!client.isConnected()")
     br
-    h1.lightweight.pulse.infinite.slowly #{config.name}
+    h1.lightweight.pulse.infinite.slowly.text-embossed #{config.name}
     br
     span.help-block(ng-show="tokenRefreshInterval") Retrying after {{ tokenRefreshInterval/1000 }} seconds
     button.btn.btn-xs.btn-default(ng-click="respokeConnect()") reconnect
 
-.panel.left.animated.fadeInLeft(
+.panel.left.animated.fadeIn(
     ng-class="{ 'full': showFullChat, 'fadeOutLeft': justLoggedOut }"
     ng-show="client.isConnected()"
 )

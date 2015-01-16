@@ -33,7 +33,6 @@
 .scrollable {
     overflow-y: auto;
     height: 100%;
-    padding-bottom: 150px;
 }
 .img-thumbnail {
     padding: 0;
@@ -96,6 +95,15 @@
 .absolute {
     display: absolute;
 }
+.text-embossed {
+    color: rgba(51, 76, 100, 0.1);
+    text-shadow: rgba(255, 255, 255, .1) 1px 2px 0px;
+}
+.bold {
+    font-weight: 600;
+}
+
+
 html, body {
     height: 100%;
     width: 100%;
@@ -200,30 +208,34 @@ textarea.form-control {
                 }
             }
             /* The next three elements are mashed together. */
-            button#upload-button {
-                position: fixed;
-                margin: 0;
-                margin-left: -41px!important;
-                width: 40px;
-                height: 28px;
-                border-radius: 0;
-                border-top-left-radius: 8px;
-                border-bottom: 1px solid @medBaseGray;
-                padding: 0;
-            }
+            button#upload-button,
+            button#preview-button,
             button#macro-button {
                 position: fixed;
                 margin: 0;
                 margin-left: -41px!important;
-                margin-top: 28px;
-                height: 24px;
                 width: 40px;
-                border-radius: 0;
-                border-bottom-left-radius: 8px;
+                height: 19px;
                 padding: 0;
+                border: 0;
+                background: transparent;
+                i {
+                    font-size: 18px;
+                }
+            }
+            button#upload-button {
+                margin-top: -4px;
+            }
+            button#preview-button {
+                margin-top: 15px;
                 padding-left: 2px;
             }
-            #textInput, #macro-help {
+            button#macro-button {
+                margin-top: 35px;
+                padding-left: 2px;
+
+            }
+            #textInput, #macro-help, #text-preview {
                 resize: none;
                 border: 1px inset white;
                 border-radius: 8px;
@@ -236,7 +248,7 @@ textarea.form-control {
                 color: @textInput;
                 font-weight: 600;
             }
-            #macro-help {
+            #macro-help, #text-preview {
                 border: 1px solid @medBase;
                 color: white;
                 overflow-y: auto;
@@ -338,7 +350,7 @@ textarea.form-control {
                     width: 40px;
                     height: 40px;
                     font-size: 24px;
-                    padding: 0 8px;
+                    padding: 0 6px 0 10px;
                     margin-left: -6px;
                 }
             }
