@@ -152,6 +152,7 @@ exports = module.exports = [
             }
             Message.create(msg, function (err, sentMessage) {
                 if (err) {
+                    $log.error('Failed to send message', err, sentMessage);
                     $rootScope.notifications.push(err);
                     return;
                 }

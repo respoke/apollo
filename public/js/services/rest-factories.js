@@ -107,9 +107,10 @@ exports = module.exports = function (app) {
                 if (!message.offRecord) {
                     $http
                     .post('/api/messages', message)
-                    .success(success()).error(function (err) {
+                    .success(success())
+                    .error(function (err) {
                         if (err) {
-                            $log.error(err);
+                            $log.error('fail while saving message to server history', err);
                         }
                         $rootScope.notifications.push('Failed to save message to the server.');
                     });
@@ -124,6 +125,7 @@ exports = module.exports = function (app) {
                     }
 
                     if (message.group) {
+                        $log.debug('sending group message', message.group, message.content);
                         $rootScope.client.getGroup({ id: message.group })
                         .sendMessage({
                             message: message.content,
@@ -144,7 +146,7 @@ exports = module.exports = function (app) {
                             },
                             onError: fail(callback)
                         };
-                        $log.debug('privateMessage', privateMessage);
+                        $log.debug('sending private message', privateMessage);
                         $rootScope.client.sendMessage(privateMessage);
                     }
                 },
