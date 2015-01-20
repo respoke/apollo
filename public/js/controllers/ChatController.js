@@ -48,6 +48,8 @@ exports = module.exports = [
         $scope.showPreview = false;
         $scope.previewHtml = '';
 
+        $scope.Math = Math;
+
         $scope.addMacro = function (macro) {
             $scope.textInput += macro._id;
             $scope.showMacroHelp = false;

@@ -199,13 +199,15 @@
             title="Preview your message"
         ): i.fa.fa-eye
         textarea#textInput(
+            ng-init="thisHeight = 0"
             ng-model="textInput"
             ng-show="!showMacroHelp && !showPreview"
             placeholder="Type markdown, @mention, & drag files"
             ap-enter="sendMessage(textInput); textInput = '';"
             ap-paste="onPasteUpload"
             ap-drop="onDropUpload"
-            ng-keyup="isTyping()"
+            ng-keyup="isTyping(); thisHeight = $event.target.scrollHeight;"
+            style="{{ textInput && thisHeight && thisHeight > 50 ? 'height: ' + Math.min(thisHeight, 300) + 'px': '50px' }}"
             
             mentio
         )
