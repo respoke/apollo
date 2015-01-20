@@ -9,6 +9,17 @@
  */
 'use strict';
 var reMatchMentions = /\[\~([a-z0-9]+)\]/g;
+/**
+ * # mentionRenderer
+ * 
+ * Synchronously replace a person's username with their actual name.
+ *
+ * Example of its usage is in the apMessage directive.
+ *
+ * @param object people - an object where people's usernames are the hash keys
+ * @param string inputText - the text message
+ * @param function wrapFunction -
+ */
 exports = module.exports = function mentioner(people, inputText, wrapFunction) {
     var matches = inputText.match(reMatchMentions);
     if (!matches || !matches.length) {

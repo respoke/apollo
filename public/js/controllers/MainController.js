@@ -28,6 +28,7 @@ exports = module.exports = [
     'favicon',
     'scrollChatToBottom',
     'notify',
+    'mentionRenderer',
 
     function (
         $log,
@@ -43,7 +44,8 @@ exports = module.exports = [
         moment,
         favicon,
         scrollChatToBottom,
-        notify
+        notify,
+        mentionRenderer
 
     ) {
         $window.onbeforeunload = function(){
@@ -374,9 +376,12 @@ exports = module.exports = [
                 notifTitle = from;
             }
             var thisMessageNotif = function () {
+                var output = mentionRenderer($rootScope.recents, msgValue, function (input) {
+                    return '@' + input;
+                });
                 notify({
                     title: notifTitle,
-                    body: msgValue.substring(0, 80) + (msgValue.length > 80 ? '...' : '')
+                    body: output.substring(0, 80) + (output.length > 80 ? '...' : '')
                 });
             };
             // If you're mentioned, you get notified by sound
