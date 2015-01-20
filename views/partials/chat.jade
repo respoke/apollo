@@ -133,10 +133,12 @@
             //- Messages
             tr(
                 ng-repeat="message in selectedChat.messages"
-                ng-init="prevMessage = selectedChat.messages[$index -1]; notSameFrom = message.from._id !== prevMessage.from._id; beenAWhile = moment(message.created).diff(moment(prevMessage.created)) > 1000 * 60 * 10;"
+                ng-init="prevMessage = selectedChat.messages[$index -1]; notSameFrom = message.from._id !== prevMessage.from._id; beenAWhile = moment(message.created).diff(moment(prevMessage.created)) > 1000 * 60 * 10; todayDiff = moment(message.created).format('ddd MMM Do'); isNewDay = todayDiff !== moment(prevMessage.created).format('ddd MMM Do');"
             )
                 //- avatar
                 td
+                    .spacer(ng-if="isNewDay")
+                    
                     img.img-thumbnail(
                         ap-avatar
                         email="message.from.email"
@@ -146,9 +148,11 @@
                     )
 
                 td
-                    h6(ng-if="notSameFrom") {{ message.from.display }}
+                    .spacer(ng-if="isNewDay") {{ todayDiff }}
+                    h6(ng-if="notSameFrom || beenAWhile") {{ message.from.display }}
                     ap-message(ap-content="message.content.text" ap-file="message.file")
                 td.align-right
+                    .spacer(ng-if="isNewDay")
                     span.chat-date(ap-date="message.created")
                     
 
@@ -183,7 +187,9 @@
         button#upload-button.btn.btn-default(
             ap-upload="onDropUpload"
             title="Upload a file"
-        ): i.fa.fa-paperclip
+        ): i.fa.fa-cloud-upload(
+            style="margin-left: 1px"
+        )
         button#macro-button.btn.btn-default(
             ng-click="showMacroHelp = !showMacroHelp"
             title="Insert an emoticon"

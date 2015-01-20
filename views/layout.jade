@@ -20,8 +20,11 @@ html
 
         //- Notification Area
         .notifications(ng-cloak)
+            //- When there are duplicate messages, angular will display a little error.
+            //- that's actually OK, we don't need to display duplicate messages to the
+            //- end user.
             .alert.alert-salmon(
-                ng-repeat="notif in notifications track by $index"
+                ng-repeat="notif in notifications"
                 ng-class="{{ notif.class || '' }}"
             )
                 | {{ notif.message || notif.error || notif }}

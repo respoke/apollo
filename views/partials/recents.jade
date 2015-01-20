@@ -1,7 +1,9 @@
 //- Connecting / not connected
-#not-connected.animated.align-center.on-top.relative(ng-show="!client.isConnected()")
+#not-connected.animated.align-center.on-top.relative(ng-if="!client.isConnected()")
     br
-    h1.lightweight.pulse.infinite.slowly.text-embossed #{config.name}
+    h1.animated.pulse.infinite.slowly.text-embossed #{config.name}
+    br
+    img.animated.flip.pulse.infinite(src="/img/apollo-plain.png" style="width: 20px; height: 20px")
     br
     span.help-block(ng-show="tokenRefreshInterval") Retrying after {{ tokenRefreshInterval/1000 }} seconds
     button.btn.btn-xs.btn-default(ng-click="respokeConnect()") reconnect
@@ -50,14 +52,10 @@
                                 ap-presence(presence="{{'away'}}")
                                 | away
                 td.col-xs-6.clickable(
-                    ng-mouseover="showSettingsDisplayIcon = true"
-                    ng-mouseout="showSettingsDisplayIcon = false"
                     ng-click="toggleSettings()"
                 )
-                    h6 {{ account.display }}   
-                        i.fa.fa-cog.fa-sm(
-                            ng-show="showSettingsDisplayIcon && !showSettings"
-                        )
+                    h6#own-name {{ account.display }}&nbsp;&nbsp;
+                        i.fa.fa-chevron-down-square.fa-sm
                 
             tr: td(colspan="3")
 
@@ -89,7 +87,10 @@
         
         tbody
             //- all the other stuff
-            tr(style="height: 140px")
+            
+            //- space the top of the sidebar so it is not overlapped by the head
+            tr(style="height: 135px")
+            
             tr.clickable(
                 ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
                 ng-if="item && item._id !== account._id"

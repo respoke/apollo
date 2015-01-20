@@ -8,6 +8,9 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
+/**
+ * Desktop notifications.
+ */
 exports = module.exports = ['$window', '$timeout', function ($window, $timeout) {
     var supportsNotifications = true;
     if (typeof Notification !== 'undefined') {

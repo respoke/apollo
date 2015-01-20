@@ -29,8 +29,7 @@ router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
     req.respoke.auth.endpoint(authSettings, function (err, authData) {
         if (err) {
             debug('auth.endpoint', err);
-            err.status = 500;
-            return next(err);
+            return next(new Error("Failed to get connection credentials for the chat provider."));
         }
 
         if (!authData || !authData.tokenId) {

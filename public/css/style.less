@@ -110,7 +110,7 @@ html, body {
     margin: 0;
     padding: 0;
     font-weight: 100;
-    background: @panelGradientStart;
+    background: @background;
     z-index: -200;
     text-shadow: rgba(0,0,0,.01) 0 0 1px;
     -webkit-font-smoothing: antialiased;
@@ -198,8 +198,8 @@ textarea.form-control {
 
             .chatstate {
                 position: absolute;
-                top: -14px;
-                left: 30px;
+                top: -22px;
+                left: 13px;
                 img {
                     float: left;
                     margin-right: 6px;
@@ -213,7 +213,7 @@ textarea.form-control {
             button#macro-button {
                 position: fixed;
                 margin: 0;
-                margin-left: -41px!important;
+                margin-left: -43px!important;
                 width: 40px;
                 height: 19px;
                 padding: 0;
@@ -361,8 +361,23 @@ textarea.form-control {
 
                 tr, td {
                     border: none;
-                    padding-top: 10px;
                     padding-bottom: 0;
+                }
+                tr {
+                    padding-top: 30px;
+                }
+                td {
+                    padding-top: 10px;
+                    .spacer {
+                        width: 100%;
+                        margin: 0;
+                        height: 60px;
+                        text-align: center!important;
+                        padding-top: 20px;
+                        font-weight: 600;
+                        font-size: .8em;
+                        color: @fadedText;
+                    }
                 }
                 td:first-child {
                     padding-left: 13px;
@@ -461,6 +476,12 @@ textarea.form-control {
             position: fixed;
             background: rgb(45, 51, 58);
             width: 270px;
+            td {
+                vertical-align: middle;
+                h6#own-name {
+                    margin-top: 1px;
+                }
+            }
         }
 
         tr, td {
@@ -494,7 +515,7 @@ textarea.form-control {
         }
 
         tr.selectedRecent {
-            background: @panelGradientStart;
+            background: @background;
             color: @salmon;
             td:nth-child(3) h6 {
                 color: @salmon;

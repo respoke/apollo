@@ -164,11 +164,6 @@ if (fs.existsSync(normalizedPath)) {
     });
 }
 
-// An example plugin - feel free to delete this.
-if (process.env.NODE_ENV !== 'production') {
-    require('./example-plugin.js')(pluginVars, app);
-}
-
 // Error handling routes
 // after plugins in case the plugins extend the app routes
 app.use(middleware.fourOhFour);
