@@ -25,6 +25,7 @@ router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
         endpointId: req.user._id,
         roleId: config.respoke.roleId
     };
+    // return next(new Error('testing'));
 
     req.respoke.auth.endpoint(authSettings, function (err, authData) {
         if (err) {

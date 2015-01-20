@@ -115,11 +115,6 @@ html, body {
     text-shadow: rgba(0,0,0,.01) 0 0 1px;
     -webkit-font-smoothing: antialiased;
 }
-input[type="text"].form-control,
-input[type="password"].form-control,
-textarea.form-control {
-    border-radius: 0;
-}
 #apollo {
     z-index: 70;
 }
@@ -180,7 +175,7 @@ textarea.form-control {
 
     &.left {
         left: 0;
-        background-color: @medBaseGray;
+        background-color: @panelLeft;
         width: 200px;
         &.full {
             width: 270px;
@@ -194,7 +189,7 @@ textarea.form-control {
             right: 0;
             bottom: 0;
             padding: 13px 11px 8px 54px;
-            background: rgba(0, 0, 0, .05);
+            background: darken(@background, 5%);
 
             .chatstate {
                 position: absolute;
@@ -257,6 +252,9 @@ textarea.form-control {
                     color: @salmon;
                 }
             }
+            #text-preview {
+                height: 140px;
+            }
         }
         &.full {
             background: transparent;
@@ -271,7 +269,7 @@ textarea.form-control {
 
             table.table {
                 margin: 0;
-                background: rgba(0, 0, 0, .05);
+                background: darken(@background, 5%);
                 td {
                     background: rgba(0, 0, 0, .05);
                     padding-bottom: 8px;
@@ -350,7 +348,7 @@ textarea.form-control {
                     width: 40px;
                     height: 40px;
                     font-size: 24px;
-                    padding: 0 6px 0 10px;
+                    padding: 0 6px 0 7px;
                     margin-left: -6px;
                 }
             }
@@ -491,27 +489,24 @@ textarea.form-control {
 
         #newgroup {
             margin: 0;
-            border-radius: 0;
+            border-radius: 3px;
             font-weight: 100;
             padding-left: 8px;
         }
 
         #recents-query {
-            background: rgba(255, 255, 255, .05);
+            background: rgba(0, 0, 0, .4);
             border: 0;
             margin-bottom: 8px;
             margin-top: -5px;
             padding-left: 8px;
-            transition: background .3s ease;
+            transition: background .25s ease;
             &:hover {
                 background: rgba(0, 0, 0, .25);
             }
             &:focus {
                 background: white;
             }
-        }
-        #new-group-input {
-            border-radius: 0;
         }
 
         tr.selectedRecent {
@@ -532,7 +527,7 @@ textarea.form-control {
         }
         tr>td:nth-child(2) {
             ap-presence .presence {
-                padding: 0 4px;
+                padding: 0;
                 i.fa-circle {
                     font-size: 10px;
                     vertical-align: middle;

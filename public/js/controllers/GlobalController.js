@@ -30,6 +30,7 @@ exports = module.exports = [
         // When failing to get a token from the server, the interval will count up
         // during respokeConnect() and continue to request tokens.
         $scope.tokenRefreshInterval = 0;
+        $scope.nextRetry = 0;
 
         $rootScope.systemGroupId = '';
         $rootScope.systemEndpointId = '';
@@ -145,6 +146,7 @@ exports = module.exports = [
                         $scope.tokenRefreshInterval = 1000;
                     }
                     $scope.tokenRefreshInterval = Math.min($scope.tokenRefreshInterval * 2, 1000*60);
+                    $scope.nextRetry = +new Date() + $scope.tokenRefreshInterval;
                     $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
                     return;
                 }
@@ -152,9 +154,11 @@ exports = module.exports = [
                     $log.error('token request to server did not return token', respokeAuth);
                     $scope.tokenRefreshInterval = Math.min($scope.tokenRefreshInterval * 2, 1000*60);
                     $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
+                    $scope.nextRetry = +new Date() + $scope.tokenRefreshInterval;
                     return;
                 }
                 $scope.tokenRefreshInterval = 0;
+                $scope.nextRetry = 0;
 
                 $log.debug('respoke auth', respokeAuth);
                 $rootScope.client.ignore('disconnect');

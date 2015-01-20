@@ -1,12 +1,15 @@
 //- Connecting / not connected
-#not-connected.animated.align-center.on-top.relative(ng-if="!client.isConnected()")
+#not-connected.animated.align-center.relative(ng-if="!client.isConnected()")
     br
     h1.animated.pulse.infinite.slowly.text-embossed #{config.name}
     br
-    img.animated.flip.pulse.infinite(src="/img/apollo-plain.png" style="width: 20px; height: 20px")
-    br
+    img.animated.flip.pulse.infinite(
+        src="/img/apollo-plain.png"
+        style="width: 20px; height: 20px"
+        ng-if="!tokenRefreshInterval"
+    )
     span.help-block(ng-show="tokenRefreshInterval") Retrying after {{ tokenRefreshInterval/1000 }} seconds
-    button.btn.btn-xs.btn-default(ng-click="respokeConnect()") reconnect
+    button.btn.btn-xs.btn-default(ng-click="respokeConnect()") reconnect now
 
 .panel.left.animated.fadeIn(
     ng-class="{ 'full': showFullChat, 'fadeOutLeft': justLoggedOut }"
@@ -55,9 +58,9 @@
                     ng-click="toggleSettings()"
                 )
                     h6#own-name {{ account.display }}&nbsp;&nbsp;
-                        i.fa.fa-chevron-down-square.fa-sm
+                        i.fa.fa-cogs.fa-sm
                 
-            tr: td(colspan="3")
+            tr: td(colspan="3" style="padding-left: 6px")
 
                 input#recents-query.form-control.input-sm(
                     type="text"
@@ -79,9 +82,9 @@
                         autofocus
                         placeholder="Group name - letters and numbers only"
                     )
-                    button.btn.btn-default.btn-sm(ng-click="showCreateGroup = false; newGroupName = '';")
+                    button.btn.btn-default.btn-xs(ng-click="showCreateGroup = false; newGroupName = '';")
                         | Cancel
-                    button.btn.btn-primary.btn-sm(
+                    button.btn.btn-primary.btn-xs(
                         ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
                     ) Create
         
