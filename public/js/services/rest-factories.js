@@ -8,7 +8,20 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
-exports = module.exports = function (app) {
+
+/**
+ * This function applies the following factories to the `app`. It is not using the angular
+ * service $resource.
+ *
+ * The signature of a rest factory is as follows. It may accept some or no arguments.
+ * The last argument is always the callback in the format below.
+ *
+ *     Account.someMethod(some, args, function (httpErrorRes, httpSuccessData) {
+ *
+ *     });
+ *
+ */
+exports = module.exports = function bindRestFactories(app) {
     var success = function (callback) {
         callback = callback || function () { };
         return function (data) { callback(null, data); };
@@ -20,33 +33,64 @@ exports = module.exports = function (app) {
 
     // Account
     app.factory('Account', ['$http',
-        function ($http) {
+        /**
+         * The Account REST functionality.
+         */
+        function Account($http) {
             return {
+                /**
+                 * @param string _id username
+                 * @param string conf token
+                 * @param callback
+                 */
                 confirm: function (_id, conf, callback) {
                     $http
                     .put('/api/confirmation/' + _id + '/' + conf)
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param string _id username
+                 * @param string conf token
+                 * @param string password the new password
+                 * @param callback
+                 */
                 resetPassword: function (_id, conf, password, callback) {
                     $http
                     .put('/api/password-reset/' + _id + '/' + conf, { password: password })
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param string email
+                 * @param callback
+                 */
                 forgotPassword: function (email, callback) {
                     $http
                     .put('/api/forgot/' + email)
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param object account
+                 * @param callback
+                 */
                 create: function (account, callback) {
                     $http
                     .post('/api/accounts', account)
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param object params data to post when logging in via local auth
+                 * @param string params._id
+                 * @param string params.password
+                 * @param callback
+                 */
                 login: function (params, callback) {
                     $http
                     .post('/auth/local', params)
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param callback
+                 */
                 logout: function (callback) {
                     $http({
                         url: '/auth/session',
@@ -54,6 +98,10 @@ exports = module.exports = function (app) {
                     })
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param string id account._id
+                 * @param callback
+                 */
                 removeUser: function (id, callback) {
                     $http({
                         url: '/api/accounts/' + id,
@@ -61,11 +109,20 @@ exports = module.exports = function (app) {
                     })
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param string id account._i
+                 * @param string token conf token
+                 * @param callback
+                 */
                 confirmUser: function (id, token, callback) {
                     $http.get('/conf/' + id + '/' + token)
                     .success(success(callback))
                     .error(fail(callback));
                 },
+                /**
+                 * @param string id account._id
+                 * @param callback
+                 */
                 get: function (id, callback) {
                     var reqUrl = '/api/accounts';
                     if (id instanceof Function) {
@@ -80,14 +137,26 @@ exports = module.exports = function (app) {
                     $http.get(reqUrl)
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * @param callback
+                 */
                 getMe: function (callback) {
                     $http.get('/api/me')
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * Get an authorization token for the Respoke api
+                 * @param callback
+                 */
                 getToken: function (callback) {
                     $http.get('/auth/tokens')
                     .success(success(callback)).error(fail(callback));
                 },
+                /**
+                 * Update my account data.
+                 * @param object params
+                 * @param callback
+                 */
                 update: function (params, callback) {
                     $http({
                         url: '/api/me',
@@ -102,7 +171,11 @@ exports = module.exports = function (app) {
 
     // Message
     app.factory('Message', ['$http', '$rootScope', '$log',
-        function ($http, $rootScope, $log) {
+        /**
+         * The Message REST functionality.
+         */
+        function Message($http, $rootScope, $log) {
+
             function addMessageToServerHistory(message) {
                 if (!message.offRecord) {
                     $http
@@ -116,6 +189,7 @@ exports = module.exports = function (app) {
                     });
                 }
             }
+
             return {
                 create: function (message, callback) {
                     // message.content is a JSON string
@@ -180,7 +254,10 @@ exports = module.exports = function (app) {
 
     // Group
     app.factory('Group', ['$http', '$rootScope',
-        function ($http, $rootScope) {
+        /**
+         * The Group REST functionality.
+         */
+        function Group($http, $rootScope) {
             return {
                 create: function (group, callback) {
                     $http
@@ -219,7 +296,10 @@ exports = module.exports = function (app) {
 
     // File
     app.factory('File', ['$http',
-        function ($http) {
+        /**
+         * The File REST functionality.
+         */
+        function File($http) {
             return {
                 create: function (params, callback) {
                     $http
