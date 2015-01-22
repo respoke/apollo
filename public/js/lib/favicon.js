@@ -10,7 +10,12 @@
 /* global WIN */
 'use strict';
 /**
- * Favicon with count of unread messages.
+ * Mess with the favicon displayed in your browser. It will update the
+ * image to show the count of unread messages. Zero will display nothing.
+ *
+ * This function also handles desktop badges in node-webkit.
+ *
+ * @param number count
  */
 exports = module.exports = function (count) {
     var canvas = document.createElement('canvas');

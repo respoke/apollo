@@ -10,6 +10,7 @@
 'use strict';
 /**
  * Change the scroll position so it is "n" elements down.
+ *
  * This fixes the scroll position from being at the very top
  * when loading previous messages on scroll.
  */
@@ -21,7 +22,7 @@ exports = module.exports = function () {
             return;
         }
         var totalHeight = 0;
-        for (var i=0; i<nRows && i<rows.length; i++) {
+        for (var i=0; i < nRows && i < rows.length; i++) {
             totalHeight += rows[i].offsetHeight;
         }
         chat.scrollTop = totalHeight;

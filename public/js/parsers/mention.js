@@ -8,17 +8,22 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
+/**
+ * Regular expression for matching the mention format. The format is as follows: `[~username]`
+ * where `username` is the `account._id`.
+ */
 var reMatchMentions = /\[\~([a-z0-9]+)\]/g;
 /**
  * # mentionRenderer
- * 
+ *
  * Synchronously replace a person's username with their actual name.
  *
  * Example of its usage is in the apMessage directive.
  *
  * @param object people - an object where people's usernames are the hash keys
  * @param string inputText - the text message
- * @param function wrapFunction -
+ * @param function wrapFunction - used to wrap the display name in stuff.
+ *     Example: `function (input) { return '@' + input; }`
  */
 exports = module.exports = function mentioner(people, inputText, wrapFunction) {
     var matches = inputText.match(reMatchMentions);

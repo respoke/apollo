@@ -11,10 +11,13 @@
 /**
  * Default file renderer. Outputs some markdown and special symbol formats
  * for showing file icons (rendered by `emo`).
+ *
  * This can support async operations.
- * `next(err, strFileTextOrHtml)`
+ *
+ * @params object file - the file record from Apollo's database
+ * @params function next - `next(err, strFileTextOrHtml)`
  */
-exports = module.exports = function (file, next) {
+exports = module.exports = function renderFile(file, next) {
     if (!file) {
         return next();
     }

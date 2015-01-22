@@ -9,7 +9,11 @@
  */
 'use strict';
 /**
- * Desktop notifications.
+ * Angular factory. Provides desktop notifications, when supported by node-webkit or the
+ * browser. It will initiate the prompt for browser permission once, when the angular app
+ * is loading.
+ *
+ *     notify({ title: 'Chatroom X', body: 'Willy Nelson is my fav...' });
  */
 exports = module.exports = ['$window', '$timeout', function ($window, $timeout) {
     var supportsNotifications = true;

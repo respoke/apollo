@@ -10,7 +10,7 @@
 /* global $ */
 'use strict';
 /**
- * Setting respoke video
+ * A service for setting respoke video streams to the elements.
  */
 function setRemoteVideoSize() {
     var $parent = $('#respokeRemoteVideo');
