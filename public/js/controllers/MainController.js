@@ -48,9 +48,6 @@ exports = module.exports = [
         mentionRenderer
 
     ) {
-        $window.onbeforeunload = function(){
-            return "Do you want really want to leave?";
-        };
         // make available to the view
         $scope.moment = moment;
 
