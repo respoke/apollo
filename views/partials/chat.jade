@@ -27,7 +27,7 @@
                 strong(ng-show="selectedChat && !selectedChat.display")
                     | {{ selectedChat._id }}
             td
-                div(ng-show="selectedChat && isAllowedToCall(selectedChat)")
+                .chat-private-buttons(ng-show="selectedChat && isAllowedToCall(selectedChat)")
                     //- audio call
                     button.btn.btn-salmon.btn-sm(
                         ng-click="audioCall(selectedChat._id)"
@@ -37,7 +37,7 @@
                         ng-click="videoCall(selectedChat._id)"
                     ): i.fa.fa-video-camera.fa-lg
                 //- Group buttons
-                div(ng-show="selectedChat && !selectedChat.display")
+                .chat-group-buttons(ng-show="selectedChat && !selectedChat.display")
                     button.btn.btn-salmon.btn-sm(
                         ng-click="toggleGroupMute(selectedChat._id)"
                     )
