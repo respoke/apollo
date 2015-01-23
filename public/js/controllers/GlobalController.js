@@ -222,40 +222,35 @@ exports = module.exports = [
                 $rootScope.notifications.push("Missing password");
                 return;
             }
+            $rootScope.notifications = [];
+
+            $rootScope.justLoggedIn = true;
 
             Account.login({
                 email: $scope.signin.email,
                 password: $scope.signin.password
             }, function (err, data) {
                 if (err) {
+                    $rootScope.justLoggedIn = false;
                     $rootScope.notifications.push(err);
                     return;
                 }
-                $rootScope.notifications = [];
-                $scope.signin = {};
-                $rootScope.account = $rootScope.recents[data._id] = data;
-                $rootScope.justLoggedIn = true;
-                $scope.respokeConnect();
-                $timeout(function () {
-                    $location.search('authFailure', null).path('/');
-                    $rootScope.justLoggedIn = false;
-                });
+                $window.open('/', '_self');
             });
         };
 
         $scope.logout = function () {
-            $window.onbeforeunload = null;
-            Account.logout(function (err) {
-                if (err) {
-                    $rootScope.notifications.push(err.error);
-                    return;
-                }
-                $rootScope.account = null;
-                $rootScope.justLoggedOut = true;
-                $timeout(function () {
+            $rootScope.justLoggedOut = true;
+            $timeout(function () {
+                Account.logout(function (err) {
+                    if (err) {
+                        $rootScope.justLoggedOut = false;
+                        $rootScope.notifications.push(err.error);
+                        return;
+                    }
                     $window.location.reload();
                 });
-            });
+            }, 500); // let animations finish
         };
 
         $scope.register = function () {

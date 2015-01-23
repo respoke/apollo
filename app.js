@@ -8,6 +8,7 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
+process.env.DEBUG = process.env.DEBUG || 'apollo-app,apollo-db,apollo-api,apollo-auth,passport,apollo-plugin';
 var express = require('express');
 var path = require('path');
 var fs = require('fs');

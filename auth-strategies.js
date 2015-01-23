@@ -33,21 +33,25 @@ function strategize(respoke) {
                 debug('google profile', profile);
 
                 var email = "";
+                // just so there is something.
+                // TODO: something better
                 var display = uuid.v4();
 
                 if (profile.emails && profile.emails.length && profile.emails[0]) {
                     email = profile.emails[0].value;
                 }
                 if (!email) {
-                    debug('ERROR google - no email');
+                    debug('ERROR google - no email', profile);
                     return done(new Error("Google auth succeeded, but we did not get your email address."));
                 }
-
+                // Ensure the email address is available from google,
+                // for apollo account creation.
                 if (config.google.domains && config.google.domains.length) {
                     var emailArr = email.split('@');
                     var emailDomain = emailArr[emailArr.length - 1];
                     if (config.google.domains.indexOf(emailDomain) === -1) {
                         var errMsg = "Please use an email address from an authorized domain.";
+                        debug('ERROR google - unauthorized email attempted to signup.', profile);
                         return done(new Error(errMsg));
                     }
                 }
@@ -61,16 +65,21 @@ function strategize(respoke) {
                 Account
                 .findOne()
                 .or([{ google: profile.id }, { email: email }])
+                .select('+google')
                 .exec(function (err, account) {
                     if (err) {
-                        debug('ERROR google', err);
+                        debug('Error while trying to lookup a google auth user account in Mongo', err, profile);
                         return;
                     }
 
                     // Create one if doesnt exist
                     if (!account) {
                         debug('new google account', email);
-                        var newId = email.split('@')[0];
+                        // TODO: implement a more proper solution throughout the app for
+                        // _id / endpointId.
+                        // currently we'll just force it lowercase and remove any characters
+                        // that we don't like
+                        var newId = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/gi, '');
                         new Account({
                             _id: newId,
                             email: email,
@@ -79,10 +88,12 @@ function strategize(respoke) {
                         }).save(function (err, saved) {
                             if (err) {
                                 debug('ERROR google new account save', err);
-                                return;
+                                var userError = new Error("Something did not work quite right when creating your account. Please contact support.");
+                                return done(userError);
                             }
                             done(null, saved);
 
+                            // Let people who are logged in know that a new account was created
                             respoke.groups.publish({
                                 groupId: config.systemGroupId,
                                 message: JSON.stringify({
@@ -108,7 +119,8 @@ function strategize(respoke) {
                         account.google = profile.id;
                         account.save(function (err, saved) {
                             if (err) {
-                                debug('ERROR google linking account save', err);
+                                debug('ERROR google linking account save', err, profile);
+                                done(new Error("Oops. Something broke when we tried to link your Google account. Please contact support."));
                                 return;
                             }
                             done(null, saved);

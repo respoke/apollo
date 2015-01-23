@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth,apollo-passport,apollo-plugin node app.js",
+    "start": "DEBUG=apollo-app,apollo-db,apollo-api,apollo-auth,passport,apollo-plugin node app.js",
     "jshint": "node_modules/.bin/jshint app.js models.js lib/*.js public/js/**/*.js --exclude=public/js/parsers/marked.js"
   },
   "license": "AGPL-3.0",
