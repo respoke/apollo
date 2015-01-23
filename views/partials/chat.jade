@@ -56,7 +56,7 @@
                 strong Processing {{ pendingUploads }} {{ pendingUploads === 1 ? 'file' : 'files' }}
             
         //- Call
-        tr#audio-call-controls.notify.animated.fadeInDown.faster(ng-show="activeCall")
+        tr#audio-call-controls.notify.animated.fadeInDown.faster(ng-show="activeCall && !pendingUploads")
             td
                 i.fa.fa-phone.fa-3x(
                     ng-show="(incomingCall && !activeCall.incomingMedia.hasVideo()) || (callIsRinging && !activeCall.outgoingMedia.hasVideo())"
@@ -83,6 +83,9 @@
                     ng-click="answer();"
                     ng-show="incomingCall"
                 ) Answer
+                | &nbsp;
+                //- Hang up
+                button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hang up' }}
                 
                 //- Mute
                 button#toggle-audio.btn.btn-salmon.btn-xs(
@@ -92,11 +95,9 @@
                     i.fa.fa-microphone-slash.fa-lg(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
                     i.fa.fa-microphone.fa-lg(ng-show="activeCall.outgoingMedia.isAudioMuted()")
                 
-                //- Hang up
-                button.btn.btn-salmon.btn-xs(ng-click="hangup()") {{ incomingCall ? 'Decline' : 'Hang up' }}
                 | &nbsp;
                 //- Join video call
-                a.btn.btn-primary.btn-xs(
+                a.btn.btn-salmon.btn-xs(
                     href="/private"
                     ng-show="activeCall.hasVideo"
                     target="_blank"): i.fa.fa-external-link

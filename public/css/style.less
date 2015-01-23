@@ -298,7 +298,7 @@ html, body {
                     padding-left: 10px;
                 }
                 td:nth-child(3) {
-                    width: 135px;
+                    width: 150px;
                     padding-right: 12px;
                     text-align: right;
                 }
@@ -563,9 +563,10 @@ html, body {
         right: 0;
         left: auto;
         width: 300px;
+        box-shadow: 0 0 3px black;
     }
     #chat {
-        background: rgba(0, 0, 0, .1);
+        background: rgba(0, 0, 0, .2);
         margin-top: 0;
     }
     #chat-table {
@@ -574,6 +575,9 @@ html, body {
             float: left;
         }
     }
+    .textarea-container {
+        background: rgba(0, 0, 0, .2);
+    }
     #video-call-controls {
         position: fixed;
         left: 20px;
@@ -581,11 +585,13 @@ html, body {
         z-index: 200;
 
         button#toggle-audio {
-            width: 45px;
+            width: 27px;
+            height: 27px;
         }
 
         button#toggle-video {
-            width: 46px;
+            width: 27px;
+            height: 27px;
 
             &.btn-default {
                 .fa-video-camera {
@@ -604,21 +610,30 @@ html, body {
     }
     #respokeLocalVideo {
         position: fixed;
-        left: 0;
-        top: 0;
+        left: 10px;
+        top: 10px;
         width: 200px;
         min-height: 110px;
-        z-index: 100;
+        z-index: 1000;
 
         .btn-group {
             position: absolute;
             left: 5px;
-            bottom: 5px;
+            bottom: 10px;
+
+            .btn {
+                z-index: 10000;
+                width: 27px;
+                height: 27px;
+            }
         }
 
         video {
             height: 100%;
             width: 100%;
+            border-radius: 5px;
+            cursor: move;
+            box-shadow: 0 0 3px black;
         }
     }
     #respokeRemoteVideo {

@@ -4,23 +4,23 @@ block content
     #video-call-container(ng-controller="PrivateCallController")
         h3#chat-title(ng-show="errorMessage") {{ errorMessage }}
 
-        #respokeLocalVideo(ap-draggable)
+        #respokeLocalVideo.animated.fadeIn.slower(ap-draggable)
             .btn-group
                 button#toggle-audio.btn.btn-xs(
                     ng-click="activeCall.toggleAudio()"
-                    ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isAudioMuted(), 'btn-default': activeCall.outgoingMedia.isAudioMuted() }"
+                    ng-class="{ 'btn-salmon-inverse': !activeCall.outgoingMedia.isAudioMuted(), 'btn-default': activeCall.outgoingMedia.isAudioMuted() }"
                 )
                     i.fa.fa-microphone-slash.fa-lg(ng-show="!activeCall.outgoingMedia.isAudioMuted()")
                     i.fa.fa-microphone.fa-lg(ng-show="activeCall.outgoingMedia.isAudioMuted()")
                 | &nbsp;
                 button#toggle-video.btn.btn-xs(
                     ng-click="activeCall.toggleVideo()"
-                    ng-class="{ 'btn-primary': !activeCall.outgoingMedia.isVideoMuted(), 'btn-default': activeCall.outgoingMedia.isVideoMuted() }"
+                    ng-class="{ 'btn-salmon-inverse': !activeCall.outgoingMedia.isVideoMuted(), 'btn-default': activeCall.outgoingMedia.isVideoMuted() }"
                 )
                     i.fa.fa-video-camera.fa-lg(ng-show="activeCall.outgoingMedia.isVideoMuted()")
                     i.fa.fa-ban.fa-lg(ng-show="!activeCall.outgoingMedia.isVideoMuted()"
                     )
-        #respokeRemoteVideo
+        #respokeRemoteVideo.animated.fadeIn.slower
             
             
 
@@ -28,19 +28,19 @@ block content
             include partials/chat
 
         #video-call-controls(ng-show="activeCall")
-            button.btn.btn-sm.btn-default(ng-click="hangup()") Hang up
+            button.btn.btn-xs.btn-salmon(ng-click="hangup()") Hang up
             | &nbsp;
             .btn-group
-                button#toggle-audio.btn.btn-sm(
+                button#toggle-audio.btn.btn-xs(
                     ng-click="activeCall.incomingMedia.isAudioMuted() ? activeCall.incomingMedia.unmuteAudio() : activeCall.incomingMedia.muteAudio()"
-                    ng-class="{ 'btn-primary': !activeCall.incomingMedia.isAudioMuted(), 'btn-default': activeCall.incomingMedia.isAudioMuted() }"
+                    ng-class="{ 'btn-salmon-inverse': !activeCall.incomingMedia.isAudioMuted(), 'btn-default': activeCall.incomingMedia.isAudioMuted() }"
                 )
-                    i.fa.fa-volume-off.fa-2x(ng-show="!activeCall.incomingMedia.isAudioMuted()")
-                    i.fa.fa-volume-up.fa-2x(ng-show="activeCall.incomingMedia.isAudioMuted()")
-                button#toggle-video.btn.btn-sm(
+                    i.fa.fa-volume-off.fa-lg(ng-show="!activeCall.incomingMedia.isAudioMuted()")
+                    i.fa.fa-volume-up.fa-lg(ng-show="activeCall.incomingMedia.isAudioMuted()")
+                button#toggle-video.btn.btn-xs(
                     ng-click="activeCall.incomingMedia.isVideoMuted() ? activeCall.incomingMedia.unmuteVideo() : activeCall.incomingMedia.muteVideo()"
-                    ng-class="{ 'btn-primary': !activeCall.incomingMedia.isVideoMuted(), 'btn-default': activeCall.incomingMedia.isVideoMuted() }"
+                    ng-class="{ 'btn-salmon-inverse': !activeCall.incomingMedia.isVideoMuted(), 'btn-default': activeCall.incomingMedia.isVideoMuted() }"
                 )
-                    i.fa.fa-play.fa-2x(ng-show="activeCall.incomingMedia.isVideoMuted()")
-                    i.fa.fa-pause.fa-2x(ng-show="!activeCall.incomingMedia.isVideoMuted()")
+                    i.fa.fa-play.fa-lg(ng-show="activeCall.incomingMedia.isVideoMuted()")
+                    i.fa.fa-pause.fa-lg(ng-show="!activeCall.incomingMedia.isVideoMuted()")
                 
