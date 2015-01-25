@@ -27,6 +27,22 @@
    color: @text;
 }
 
+.welcome {
+    /* Placeholder text. Yeah. */
+    .form-control::-webkit-input-placeholder {
+       color: black;
+    }
+    .form-control:-moz-placeholder { /* Firefox 18- */
+       color: black;
+    }
+    .form-control::-moz-placeholder {  /* Firefox 19+ */
+       color: black;
+    }
+    .form-control:-ms-input-placeholder {
+       color: black;
+    }
+}
+
 .translationReset () {
     -webkit-transform: translate(0%,0px);
     -moz-transform: translate(0%,0px);
@@ -72,6 +88,7 @@
 .alert-salmon {
     background: @salmon;
     color: @text;
+    font-weight: 400;
 }
 .fa.fa-rotate-45 {
     transform: rotate(45deg);
@@ -583,10 +600,12 @@ textarea {
                     color: black;
                 }
                 .busy {
-                    color: #FF9100;
+                    color: #FFA500;
+                    text-shadow: 0 0 1px #E2A638;
                 }
                 .available {
-                    color: #26D029;
+                    color: #74FC77;
+                    text-shadow: 0 0 1px #27B600;
                 }
                 .unavailable {
                     color: @textInput;
@@ -715,6 +734,7 @@ textarea {
     }
 }
 
+/* Links in the chat table */
 table a:not(.btn), .table a:not(.btn) {
     color: @link;
     text-decoration: none !important;

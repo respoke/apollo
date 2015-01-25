@@ -18,9 +18,9 @@ if(config.localLoginEnabled)
     br
     input.form-control(type="password" placeholder="password" ng-model="signin.password" ap-enter="login()")
     br
-    button.btn.btn-primary(ng-click="login()") Sign In
+    button.btn.btn-salmon-inverse(ng-click="login()") Sign In
     br
     br
-    a(href="javascript:void(0)" ng-click="forgot(signin.email)") I forgot my password
+    button.btn.btn-xs.btn-default(href="javascript:void(0)" ng-click="forgot(signin.email)") I forgot my password
 
 br
