@@ -11,13 +11,13 @@ var passport = require('passport');
 var mongoose = require('mongoose');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var config = require('./config');
-var debug = require('debug')('passport');
 var uuid = require('uuid');
 
 /**
+ * Setup passport. Creating account.
  * @param object respoke - Respoke client instance
  */
-function strategize(respoke) {
+function strategize(respoke, log) {
     // bind passport strategies here
 
 
@@ -28,9 +28,9 @@ function strategize(respoke) {
                 callbackURL: config.google.callbackURL
             },
             function (accessToken, refreshToken, profile, done) {
-                debug('google accessToken', accessToken);
-                debug('google refreshToken', refreshToken);
-                debug('google profile', profile);
+                console.info('google accessToken', accessToken);
+                console.info('google refreshToken', refreshToken);
+                console.info('google profile', profile);
 
                 var email = "";
                 // just so there is something.
@@ -41,7 +41,7 @@ function strategize(respoke) {
                     email = profile.emails[0].value;
                 }
                 if (!email) {
-                    debug('ERROR google - no email', profile);
+                    console.error('ERROR google - no email', profile);
                     return done(new Error("Google auth succeeded, but we did not get your email address."));
                 }
                 // Ensure the email address is available from google,
@@ -51,7 +51,7 @@ function strategize(respoke) {
                     var emailDomain = emailArr[emailArr.length - 1];
                     if (config.google.domains.indexOf(emailDomain) === -1) {
                         var errMsg = "Please use an email address from an authorized domain.";
-                        debug('ERROR google - unauthorized email attempted to signup.', profile);
+                        console.error('ERROR google - unauthorized email attempted to signup.', profile);
                         return done(new Error(errMsg));
                     }
                 }
@@ -68,13 +68,13 @@ function strategize(respoke) {
                 .select('+google')
                 .exec(function (err, account) {
                     if (err) {
-                        debug('Error while trying to lookup a google auth user account in Mongo', err, profile);
+                        console.error('Error while trying to lookup a google auth user account in Mongo', err, profile);
                         return;
                     }
 
                     // Create one if doesnt exist
                     if (!account) {
-                        debug('new google account', email);
+                        console.info('new google account', email);
                         // TODO: implement a more proper solution throughout the app for
                         // _id / endpointId.
                         // currently we'll just force it lowercase and remove any characters
@@ -87,7 +87,7 @@ function strategize(respoke) {
                             display: display
                         }).save(function (err, saved) {
                             if (err) {
-                                debug('ERROR google new account save', err);
+                                console.error('ERROR google new account save', err);
                                 var userError = new Error("Something did not work quite right when creating your account. Please contact support.");
                                 return done(userError);
                             }
@@ -104,7 +104,7 @@ function strategize(respoke) {
                                 })
                             }, function (err) {
                                 if (err) {
-                                    debug('failed to send new account notification', err);
+                                    console.error('failed to send new account notification', err);
                                 }
                             });
 
@@ -115,11 +115,11 @@ function strategize(respoke) {
                     // auto-link to the google account if it already exists
                     // for this email
                     if (!account.google) {
-                        debug('linking google account', email);
+                        console.info('linking google account', email);
                         account.google = profile.id;
                         account.save(function (err, saved) {
                             if (err) {
-                                debug('ERROR google linking account save', err, profile);
+                                console.error('ERROR google linking account save', err, profile);
                                 done(new Error("Oops. Something broke when we tried to link your Google account. Please contact support."));
                                 return;
                             }
@@ -128,7 +128,7 @@ function strategize(respoke) {
                         return;
                     }
 
-                    debug('google auth successful', email);
+                    console.log('google auth successful', email);
                     done(null, account);
                 });
             }

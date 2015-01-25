@@ -8,7 +8,6 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
-var debug = require('debug')('apollo-db');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var uuid = require('uuid');
@@ -18,10 +17,10 @@ var appUtilities = require('./lib/app-utilities');
 
 mongoose.connect(config.mongoURI);
 mongoose.connection.on('connected', function () {
-    debug('connected');
+    console.info('mongo connected');
 });
 mongoose.connection.on('error', function (err) {
-    debug('error', err);
+    console.error('mongo connect error', err);
 });
 
 var models = {};
@@ -70,7 +69,8 @@ var AccountSchema = new mongoose.Schema({
             offlineNotifications: true,
             htmlEmails: true,
             notifyOnMention: true,
-            mutedGroups: []
+            mutedGroups: [],
+            theme: 'dark'
         },
         required: true
     },
@@ -113,7 +113,7 @@ AccountSchema.pre('validate', function (next) {
     if (this.isNew && !this.google) {
         this.conf = 'confirm-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4();
         this._id = this._id.toLowerCase();
-        debug('new account conf', config.baseURL + '/conf/' + this._id + '/' + this.conf);
+        console.info('new account conf', config.baseURL + '/conf/' + this._id + '/' + this.conf);
     }
 
     if (this.isDirectModified('password')) {

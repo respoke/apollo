@@ -39,21 +39,21 @@
                                 href="javascript:void(0)"
                             )
                                 ap-presence(presence="{{'available'}}")
-                                | available
+                                | &nbsp;&nbsp;available
                             li: a(
                                 tabindex="-1"
                                 ng-click="setPresence('busy')"
                                 href="javascript:void(0)"
                             )
                                 ap-presence(presence="{{'busy'}}")
-                                | busy
+                                | &nbsp;&nbsp;busy
                             li: a(
                                 tabindex="-1"
                                 ng-click="setPresence('away')"
                                 href="javascript:void(0)"
                             )
                                 ap-presence(presence="{{'away'}}")
-                                | away
+                                | &nbsp;&nbsp;away
                 td.col-xs-6.clickable(
                     ng-click="toggleSettings()"
                 )
@@ -84,7 +84,7 @@
                     )
                     button.btn.btn-default.btn-xs(ng-click="showCreateGroup = false; newGroupName = '';")
                         | Cancel
-                    button.btn.btn-primary.btn-xs(
+                    button.btn.btn-salmon-inverse.btn-xs(
                         ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
                     ) Create
         

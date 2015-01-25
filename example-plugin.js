@@ -8,7 +8,6 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
-var debug = require('debug')('apollo-plugin');
 
 /**
  * An example Apollo plugin.
@@ -28,8 +27,8 @@ var debug = require('debug')('apollo-plugin');
  */
 exports = module.exports = function (locals, app) {
 
-    // debug('server config', locals.config);
-    // debug('browser config', locals.clientConfig);
+    // console.log('server config', locals.config);
+    // console.log('browser config', locals.clientConfig);
 
 
     // Bind any additional routes to the Express app
@@ -45,13 +44,13 @@ exports = module.exports = function (locals, app) {
             groupId: 'Apollo',
             message: JSON.stringify({ text: 'System says: Hey there' })
         };
-        debug('Sending message');
+        console.log('Sending message');
         locals.respoke.groups.publish(msg, function (err, data) {
             if (err) {
-                debug(err);
+                console.error(err);
                 return;
             }
-            debug('Message was sent. Response from Respoke: ', data);
+            console.log('Message was sent. Response from Respoke: ', data);
         });
 
     });
@@ -59,16 +58,16 @@ exports = module.exports = function (locals, app) {
     // Do database queries
     locals.db.Account.count().exec(function (err, count) {
         if (err) {
-            debug(err);
+            console.error(err);
             return;
         }
-        debug('There are ' + count + ' accounts.');
+        console.log('There are ' + count + ' accounts.');
     });
 
 
     // Do stuff after the Express server is listening
     app.on('loaded', function () {
-        debug('Apollo loaded!');
+        console.log('Apollo loaded!');
     });
 
 };

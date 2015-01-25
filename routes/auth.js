@@ -12,7 +12,6 @@ var router = express.Router();
 var passport = require('passport');
 var middleware = require('../lib/middleware');
 var config = require('../config');
-var debug = require('debug')('apollo-auth');
 
 router.delete('/session', function (req, res) {
     req.logout();
@@ -29,12 +28,12 @@ router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
 
     req.respoke.auth.endpoint(authSettings, function (err, authData) {
         if (err) {
-            debug('auth.endpoint', err);
+            req.log.error('auth.endpoint', err);
             return next(new Error("Failed to get connection credentials for the chat provider."));
         }
 
         if (!authData || !authData.tokenId) {
-            debug('invalid response from Respoke auth.endpoint method', authData);
+            req.log.error('invalid response from Respoke auth.endpoint method', authData);
             return next(new Error("Invalid response from server. Please try again later."));
         }
 

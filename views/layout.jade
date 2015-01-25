@@ -6,7 +6,7 @@ html
             rel='stylesheet'
             href='https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
         )
-        link(rel='stylesheet' href='/css/style.css')
+        link(rel='stylesheet' href='/css/themes/' + (user ? user.settings.theme || 'dark' : 'dark') + '.css')
         link#favicon(rel="shortcut icon" href="/favicon.ico")
         
         include nodewebkit-scripts
@@ -17,7 +17,6 @@ html
         script(src="/js/apollo.js")
 
     body(ng-app="apollo" ng-controller="GlobalController")
-
         //- Notification Area
         .notifications(ng-cloak)
             //- When there are duplicate messages, angular will display a little error.

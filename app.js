@@ -8,17 +8,16 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
-process.env.DEBUG = process.env.DEBUG || 'apollo-app,apollo-db,apollo-api,apollo-auth,passport,apollo-plugin';
+// process.env.DEBUG = process.env.DEBUG || 'apollo-app,apollo-db,apollo-api,apollo-auth,passport,apollo-plugin';
 var express = require('express');
 var path = require('path');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
 var Respoke = require('respoke-admin');
-var debug = require('debug')('apollo-app');
 
 // Express middleware
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var logger = require('express-bunyan-logger');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var jadeStatic = require('connect-jade-static');
@@ -44,9 +43,19 @@ var clientConfig;
     } catch (ex) {
         console.warn('\nYou did not set up browser config correctly at ./public/js/client-config.js');
         console.warn('Attempting to use ./public/js/client-config.example.js instead.\n');
-        debug(ex, '\n');
+        console.warn(ex, '\n');
         clientConfig = require('./public/js/client-config.example.js');
     }
+})();
+var themes = [];
+(function () {
+    var files = fs.readdirSync(__dirname + '/public/css/themes');
+    files.forEach(function (f) {
+        var parts = f.split('.');
+        var ext = parts[1];
+        if (ext === 'less') themes.push(parts[0]);
+    });
+    console.warn('loaded themes', themes);
 })();
 
 var mailTransport = nodemailer.createTransport(config.smtp);
@@ -65,37 +74,36 @@ var respoke = new Respoke({
 });
 respoke.auth.connect({ endpointId: config.systemEndpointId });
 respoke.on('connect', function () {
-    debug('connected to respoke');
+    console.info('connected to respoke');
     respoke.groups.join({ groupId: config.systemGroupId }, function (err) {
         if (err) {
-            debug('failed to join system group', config.systemGroupId, err);
+            console.info('failed to join system group', config.systemGroupId, err);
             return;
         }
-        debug('joined system group', config.systemGroupId);
+        console.info('joined system group', config.systemGroupId);
     });
 });
 respoke.on('error', function (err) {
-    debug('failed to connect to respoke', err);
+    console.info('failed to connect to respoke', err);
 });
 var passport = require('./auth-strategies')(respoke);
 
-// Attaching app locals and utils to request
-app.use(function (req, res, next) {
-    // res.set('Access-Control-Allow-Origin', '*');
-    res.locals = req.locals || {};
-    res.locals.config = config;
-    res.locals.clientConfig = clientConfig;
-
-    req.db = models;
-    req.email = mailTransport;
-    req.utils = appUtilities;
-    req.respoke = respoke;
-
-    next();
-});
-
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+//- Logger
+app.use(logger({
+    name: config.name,
+    streams: [{
+        stream: process.stdout,
+        level: 'info',
+        format: ''
+    }, {
+        type: 'rotating-file',
+        path: __dirname + "/apollo.log",
+        period: '1d',   // daily rotation
+        level: 'info',
+        count: 3 // a week
+    }]
+}));
 
 // Sessions in mongo
 app.use(session({
@@ -125,9 +133,25 @@ app.use(jadeStatic({
     baseUrl: '/partials',
     jade: {
         pretty: true,
-        config: config
+        config: config,
+        themes: themes
     }
 }));
+// Attaching app locals and utils to request
+app.use(function (req, res, next) {
+    // res.set('Access-Control-Allow-Origin', '*');
+    res.locals = req.locals || {};
+    res.locals.config = config;
+    res.locals.clientConfig = clientConfig;
+    res.locals.themes = themes;
+
+    req.db = models;
+    req.email = mailTransport;
+    req.utils = appUtilities;
+    req.respoke = respoke;
+
+    next();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -142,13 +166,23 @@ passport.serializeUser(function (account, done) {
 passport.deserializeUser(function (id, done) {
     models.Account.findById(id, done);
 });
+app.use(function (req, res, next) {
+    if (req.user) {
+        res.locals.user = req.user;
+    }
+    next();
+});
+
 
 // Bind application routes
+
 app.use('/', require('./routes/home'));
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
 
+
 // Loading Apollo plugins
+
 var normalizedPath = path.join(__dirname, 'plugins');
 var pluginVars = {
     db: models,
@@ -160,10 +194,11 @@ var pluginVars = {
 if (fs.existsSync(normalizedPath)) {
     fs.readdirSync(normalizedPath).forEach(function (file) {
         var fullPath = './plugins/' + file;
-        debug('loading plugin', fullPath);
+        console.info('loading plugin', fullPath);
         require(fullPath)(pluginVars, app);
     });
 }
+
 
 // Error handling routes
 // after plugins in case the plugins extend the app routes
@@ -175,6 +210,6 @@ module.exports = app;
 
 
 var server = app.listen(config.port, function() {
-    debug(config.name + ' is listening at http://localhost:' + server.address().port + '/');
+    console.info(config.name + ' is listening at http://localhost:' + server.address().port + '/');
     app.emit('loaded');
 });

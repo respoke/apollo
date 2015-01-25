@@ -10,7 +10,6 @@
 var express = require('express');
 var router = express.Router();
 var config = require('../config');
-var debug = require('debug')('apollo-api');
 var middleware = require('../lib/middleware');
 var async = require('async');
 
@@ -81,7 +80,7 @@ router.put('/forgot/:emailOrId', function (req, res, next) {
 
         account.passwordReset(function (err, acct) {
             if (err) {
-                debug(err);
+                req.log.error(err);
                 return next(err);
             }
 
@@ -94,7 +93,7 @@ router.put('/forgot/:emailOrId', function (req, res, next) {
                     + config.baseURL + '/password-reset/' + acct._id + '/' + acct.conf
             }, function (err) {
                 if (err) {
-                    debug(err);
+                    req.log.error(err);
                     return next(err);
                 }
                 res.send(message);
@@ -140,7 +139,7 @@ router.put('/password-reset/:_id/:conf', function (req, res, next) {
                 text: 'This is a notification that the password has been reset on your ' + config.name + ' account.'
             }, function (err) {
                 if (err) {
-                    debug(err);
+                    req.log.error(err);
                 }
             });
 
@@ -205,7 +204,7 @@ router.delete('/accounts/:id', middleware.isAuthorized, function (req, res, next
             })
         }, function (err) {
             if (err) {
-                debug('failed to send delete account notification', err);
+                req.log.error('failed to send delete account notification', err);
             }
         });
     });
@@ -232,12 +231,12 @@ router.post('/accounts', function (req, res, next) {
             });
         }
     }
-    debug('trying to create new account', req.body._id);
+    req.log.info('trying to create new account', req.body._id);
     var newAccount = new req.db.Account(req.body);
     var conf = newAccount.conf;
     newAccount.save(function (err, account) {
         if (err) {
-            debug(err);
+            req.log.error(err);
             err.status = 400;
             return next(err);
         }
@@ -257,7 +256,7 @@ router.post('/accounts', function (req, res, next) {
         else {
             req.db.Account.count(function (err, totalAccounts) {
                 if (err) {
-                    debug('Error counting number of accounts', err);
+                    req.log.error('Error counting number of accounts', err);
                     return;
                 }
                 if (totalAccounts === 0) {
@@ -274,10 +273,10 @@ router.post('/accounts', function (req, res, next) {
                 text: 'Visit the following link to confirm your ' + config.name + ' account. ' + confirmURI
             }, function (err) {
                 if (err) {
-                    debug('ERROR: Account confirmation email failed to send.', err, "Visit link to confirm.", confirmURI);
+                    req.log.error('Account confirmation email failed to send.', err, "Visit link to confirm.", confirmURI);
                     return;
                 }
-                debug('Sent account confirmation email', account.email, 'with confirmation link', confirmURI)
+                req.log.error('Sent account confirmation email', account.email, 'with confirmation link', confirmURI)
             });
         }
 
@@ -294,7 +293,7 @@ router.post('/accounts', function (req, res, next) {
             })
         }, function (err) {
             if (err) {
-                debug('failed to send new account notification', err);
+                req.log.error('failed to send new account notification', err);
             }
         });
     });
@@ -366,7 +365,7 @@ router.post('/groups', middleware.isAuthorized, function (req, res, next) {
                 })
             }, function (err) {
                 if (err) {
-                    debug('failed to send new account notification', err);
+                    req.log.error('failed to send new account notification', err);
                 }
             });
         });
@@ -395,7 +394,7 @@ router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) 
             })
         }, function (err) {
             if (err) {
-                debug('failed to send new account notification', err);
+                req.log.error('failed to send new account notification', err);
             }
         });
 
@@ -558,7 +557,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
             }
             req.db.Account.findById(req.body.to).exec(function (err, account) {
                 if (err) {
-                    debug(err);
+                    req.log.error(err);
                 }
                 if (!account) {
                     return;
@@ -589,10 +588,10 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
 
                 req.email.sendMail(emailContent, function (err) {
                     if (err) {
-                        debug(err);
+                        req.log.error(err);
                         return;
                     }
-                    debug('offline conversation email sent', req.user.email, account.email);
+                    req.log.info('offline conversation email sent', req.user.email, account.email);
                 });
             });
         }
@@ -603,7 +602,7 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
 
             req.db.Account.find().where('_id').in(mentions).exec(function (err, accounts) {
                 if (err) {
-                    debug(err);
+                    req.log.error(err);
                     return;
                 }
 
@@ -633,10 +632,10 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
 
                     req.email.sendMail(emailContent, function (err) {
                         if (err) {
-                            debug(err);
+                            req.log.error(err);
                             return;
                         }
-                        debug('offline mention email sent', req.user.email, account.email);
+                        req.log.info('offline mention email sent', req.user.email, account.email);
                     });
                 });
             });

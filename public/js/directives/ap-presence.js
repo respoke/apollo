@@ -21,10 +21,10 @@ exports = module.exports = [
             },
             link: function (scope, element, attrs) {
                 scope.colors = {
-                    'unavailable': 'gray',
-                    'available': 'text-success',
-                    'busy': 'text-warning',
-                    'away': 'text-danger',
+                    'unavailable': 'unavailable',
+                    'available': 'available',
+                    'busy': 'busy',
+                    'away': 'away',
                 };
             },
             template: '<span class="presence"><i class="fa fa-circle {{colors[presence]}}"></i></span>'

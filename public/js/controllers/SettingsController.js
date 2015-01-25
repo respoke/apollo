@@ -10,14 +10,15 @@
 'use strict';
 exports = module.exports = [
     '$log',
+    '$window',
     '$rootScope',
     '$scope',
     'Account',
     'Group',
 
-    function ($log, $rootScope, $scope, Account, Group) {
+    function ($log, $window, $rootScope, $scope, Account, Group) {
 
-        $scope.updateSetting = function (key, val) {
+        $scope.updateSetting = function (key, val, callback) {
             $log.debug('setting change', key, val);
             var settings = $rootScope.account.settings;
             settings[key] = val;
@@ -29,6 +30,9 @@ exports = module.exports = [
                     return;
                 }
                 $rootScope.account = acct;
+                if (callback) {
+                    callback();
+                }
             });
         };
 
@@ -42,6 +46,12 @@ exports = module.exports = [
                 delete $rootScope.recents['group-' + id];
                 $rootScope.ownedGroups.splice(ix, 1);
                 $rootScope.notifications.push('Removed group successfully.');
+            });
+        };
+
+        $scope.changeTheme = function (theme) {
+            $scope.updateSetting('theme', theme, function () {
+                $window.open('/', '_self');
             });
         };
 

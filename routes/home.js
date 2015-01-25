@@ -13,6 +13,7 @@ var config = require('../config');
 var middleware = require('../lib/middleware');
 
 router.get('/', function (req, res) {
+    req.log.info('saying something here');
     res.render('index', { title: config.name });
 });
 
@@ -42,7 +43,7 @@ router.get('/conf/:_id/:conf', function (req, res, next) {
         var genericMessage = new Error("Invalid ID or confirmation code. It may have already been used.");
         genericMessage.status = 404;
         if (err) {
-            debug('confirmation error', err);
+            req.log.error('confirmation error', err);
             return next(genericMessage);
         }
         if (!account) {
@@ -69,7 +70,7 @@ router.get('/conf/:_id/:conf', function (req, res, next) {
                 })
             }, function (err) {
                 if (err) {
-                    debug('failed to send new account notification', err);
+                    req.log.error('failed to send new account notification', err);
                 }
             });
 
@@ -85,7 +86,7 @@ router.get('/password-reset/:_id/:conf', function(req, res, next) {
         var genericMessage = new Error("Invalid ID or reset code.");
         genericMessage.status = 404;
         if (err) {
-            debug('password reset error', err);
+            req.log.error('password reset error', err);
             return next(genericMessage);
         }
         if (!account) {

@@ -7,9 +7,25 @@
  *
  * For all details and documentation:  https://www.respoke.io
  */
-@import 'colors.less';
-@import 'cyborg.less';
+@import 'bootstrap.less';
 @import 'animate.less';
+
+/* used various places */
+.salmon { color: @primary; }
+
+/* Placeholder text. Yeah. */
+.form-control::-webkit-input-placeholder {
+   color: @text;
+}
+.form-control:-moz-placeholder { /* Firefox 18- */
+   color: @text;
+}
+.form-control::-moz-placeholder {  /* Firefox 19+ */
+   color: @text;
+}
+.form-control:-ms-input-placeholder {
+   color: @text;
+}
 
 .translationReset () {
     -webkit-transform: translate(0%,0px);
@@ -96,13 +112,16 @@
     display: absolute;
 }
 .text-embossed {
-    color: rgba(51, 76, 100, 0.1);
-    text-shadow: rgba(255, 255, 255, .1) 1px 2px 0px;
+    color: rgba(51, 76, 100, 0.1); // keep
+    text-shadow: rgba(255, 255, 255, .1) 1px 2px 0px; // keep
 }
 .bold {
     font-weight: 600;
 }
 
+h1 {
+    font-size: 55px;
+}
 
 html, body {
     height: 100%;
@@ -112,8 +131,8 @@ html, body {
     font-weight: 100;
     background: @background;
     z-index: -200;
-    text-shadow: rgba(0,0,0,.01) 0 0 1px;
     -webkit-font-smoothing: antialiased;
+    color: @text;
 }
 
 input[type="text"],
@@ -223,6 +242,7 @@ textarea {
                 border: 0;
                 background: transparent;
                 i {
+                    color: @text;
                     font-size: 18px;
                 }
             }
@@ -246,12 +266,15 @@ textarea {
                 width: 100%;
                 height: 52px;
                 font-size: 12px;
-                color: @textInput;
+                color: @text;
                 font-weight: 600;
             }
+            #textInput {
+                background: white;
+                color: black;
+            }
             #macro-help, #text-preview {
-                border: 1px solid @medBase;
-                color: white;
+                border: 1px solid darken(@background, 50%);
                 overflow-y: auto;
                 margin-bottom: 5px;
                 .macro-preview:hover {
@@ -260,6 +283,7 @@ textarea {
             }
             #text-preview {
                 height: 140px;
+                background: darken(@background, 10%);
             }
         }
         &.full {
@@ -274,6 +298,9 @@ textarea {
             left: 0;
 
             #chat-header-main {
+                td {
+                    border-top: none;
+                }
                 .chat-private-buttons,
                 .chat-group-buttons {
                     .btn {
@@ -288,7 +315,6 @@ textarea {
                 margin: 0;
                 background: darken(@background, 5%);
                 td {
-                    background: rgba(0, 0, 0, .05);
                     padding-bottom: 8px;
                     height: 70px;
                     font-weight: 400;
@@ -352,7 +378,7 @@ textarea {
             margin-top: 70px;
 
             #settings {
-                color: #fff;
+                color: @text;
                 overflow-x: hidden;
 
                 div.col-xs-*>p {
@@ -453,7 +479,7 @@ textarea {
                     font-size: 10px;
                     font-weight: 400;
                     padding-right: 6px;
-                    .textGradient();
+                    color: @fadedText;
                 }
             }
         }
@@ -476,7 +502,6 @@ textarea {
     padding: 8px 14px;
     font-size: 20px;
     border-color: transparent;
-    .panelGradient();
 }
 
 #buddies {
@@ -489,7 +514,7 @@ textarea {
 
         thead {
             position: fixed;
-            background: rgb(45, 51, 58);
+            background: lighten(@panelLeft, 8%);
             width: 270px;
             td {
                 vertical-align: middle;
@@ -504,6 +529,22 @@ textarea {
             height: 56px;
         }
 
+        #newgroup,
+        #recents-query {
+            color: @text;
+            background: darken(@panelLeft, 5%);
+            transition: background .2s ease;
+            border: 1px solid darken(@panelLeft, 10%) !important;
+
+            &:hover {
+                background: darken(@textInput, 5%);
+            }
+            &:focus {
+                background: white;
+                color: black;
+            }
+        }
+
         #newgroup {
             margin: 0;
             border-radius: 3px;
@@ -512,26 +553,15 @@ textarea {
         }
 
         #recents-query {
-            background: rgba(0, 0, 0, .4);
             border: 0;
             margin-bottom: 8px;
             margin-top: -5px;
             padding-left: 8px;
-            transition: background .25s ease;
-            &:hover {
-                background: rgba(0, 0, 0, .25);
-            }
-            &:focus {
-                background: white;
-            }
         }
 
         tr.selectedRecent {
-            background: @background;
-            color: @salmon;
-            td:nth-child(3) h6 {
-                color: @salmon;
-            }
+            background: @selectedBackground;
+            color: @selectedText;
         }
         tr>td:first-child {
             padding-left: 5px;
@@ -546,14 +576,32 @@ textarea {
             ap-presence .presence {
                 padding: 0;
                 i.fa-circle {
-                    font-size: 10px;
+                    font-size: 13px;
                     vertical-align: middle;
                 }
+                .away {
+                    color: black;
+                }
+                .busy {
+                    color: #FF9100;
+                }
+                .available {
+                    color: #26D029;
+                }
+                .unavailable {
+                    color: @textInput;
+                }
             }
-            .dropdown {
+            .dropdown > .dropdown-menu {
+                background: @background;
                 li>a {
                     font-size: 12px;
                     color: @text;
+                }
+                li>a:hover,
+                li>a:focus {
+                    color: @background;
+                    background: @text;
                 }
             }
         }
@@ -585,7 +633,7 @@ textarea {
         box-shadow: 0 0 3px black;
     }
     #chat {
-        background: rgba(0, 0, 0, .2);
+        background: rgba(0, 0, 0, .2); // transparent
         margin-top: 0;
     }
     #chat-table {
@@ -595,7 +643,7 @@ textarea {
         }
     }
     .textarea-container {
-        background: rgba(0, 0, 0, .2);
+        background: rgba(0, 0, 0, .2); // transparent
     }
     #video-call-controls {
         position: fixed;
@@ -668,7 +716,7 @@ textarea {
 }
 
 table a:not(.btn), .table a:not(.btn) {
-    color: @yellow;
+    color: @link;
     text-decoration: none !important;
 }
 
