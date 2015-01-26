@@ -14,6 +14,7 @@
 var config = {};
 config.name = 'Apollo';
 config.port = process.env.PORT || 3000;
+config.logfilePath = __dirname + '/apollo.log';
 
 // Password hashing salt.
 // Once implemented, DO NOT CHANGE or all passwords will cease to work
@@ -47,8 +48,9 @@ config.mongoSessions = {
     url: 'mongodb://localhost:27017/apollosessions'
 };
 
-// miliseconds for cookie to live
-config.cookieMaxAge = 1000 * 60 * 60 * 24 * 7; // one week
+// milliseconds for cookie to live
+var day = 1000 * 60 * 60 * 24;
+config.cookieMaxAge = day * 14;
 
 config.email = {
     from: 'Apollo <system@example.com>'

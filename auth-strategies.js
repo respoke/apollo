@@ -17,7 +17,7 @@ var uuid = require('uuid');
  * Setup passport. Creating account.
  * @param object respoke - Respoke client instance
  */
-function strategize(respoke, log) {
+function strategize(respoke, logger) {
     // bind passport strategies here
 
 
@@ -28,9 +28,11 @@ function strategize(respoke, log) {
                 callbackURL: config.google.callbackURL
             },
             function (accessToken, refreshToken, profile, done) {
-                console.info('google accessToken', accessToken);
-                console.info('google refreshToken', refreshToken);
-                console.info('google profile', profile);
+                logger.info('google auth', {
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                    profile: profile
+                });
 
                 var email = "";
                 // just so there is something.
@@ -41,7 +43,7 @@ function strategize(respoke, log) {
                     email = profile.emails[0].value;
                 }
                 if (!email) {
-                    console.error('ERROR google - no email', profile);
+                    logger.error('ERROR google - no email', profile);
                     return done(new Error("Google auth succeeded, but we did not get your email address."));
                 }
                 // Ensure the email address is available from google,
@@ -51,7 +53,7 @@ function strategize(respoke, log) {
                     var emailDomain = emailArr[emailArr.length - 1];
                     if (config.google.domains.indexOf(emailDomain) === -1) {
                         var errMsg = "Please use an email address from an authorized domain.";
-                        console.error('ERROR google - unauthorized email attempted to signup.', profile);
+                        logger.error('ERROR google - unauthorized email attempted to signup.', profile);
                         return done(new Error(errMsg));
                     }
                 }
@@ -68,13 +70,17 @@ function strategize(respoke, log) {
                 .select('+google')
                 .exec(function (err, account) {
                     if (err) {
-                        console.error('Error while trying to lookup a google auth user account in Mongo', err, profile);
+                        logger.error(
+                            'Error while trying to lookup a google auth user account in Mongo',
+                            err,
+                            profile
+                        );
                         return;
                     }
 
                     // Create one if doesnt exist
                     if (!account) {
-                        console.info('new google account', email);
+                        logger.info('new google account', email);
                         // TODO: implement a more proper solution throughout the app for
                         // _id / endpointId.
                         // currently we'll just force it lowercase and remove any characters
@@ -87,7 +93,7 @@ function strategize(respoke, log) {
                             display: display
                         }).save(function (err, saved) {
                             if (err) {
-                                console.error('ERROR google new account save', err);
+                                logger.error('ERROR google new account save', err);
                                 var userError = new Error("Something did not work quite right when creating your account. Please contact support.");
                                 return done(userError);
                             }
@@ -104,7 +110,7 @@ function strategize(respoke, log) {
                                 })
                             }, function (err) {
                                 if (err) {
-                                    console.error('failed to send new account notification', err);
+                                    logger.error('failed to send new account notification', err);
                                 }
                             });
 
@@ -115,11 +121,11 @@ function strategize(respoke, log) {
                     // auto-link to the google account if it already exists
                     // for this email
                     if (!account.google) {
-                        console.info('linking google account', email);
+                        logger.info('linking google account', email);
                         account.google = profile.id;
                         account.save(function (err, saved) {
                             if (err) {
-                                console.error('ERROR google linking account save', err, profile);
+                                logger.error('ERROR google linking account save', err, profile);
                                 done(new Error("Oops. Something broke when we tried to link your Google account. Please contact support."));
                                 return;
                             }
@@ -128,7 +134,7 @@ function strategize(respoke, log) {
                         return;
                     }
 
-                    console.log('google auth successful', email);
+                    logger.info('google auth successful', email);
                     done(null, account);
                 });
             }

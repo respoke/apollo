@@ -15,14 +15,11 @@ var emailValidation = require('email-validation');
 var config = require('./config');
 var appUtilities = require('./lib/app-utilities');
 
-mongoose.connect(config.mongoURI);
-mongoose.connection.on('connected', function () {
-    console.info('mongo connected');
-});
-mongoose.connection.on('error', function (err) {
-    console.error('mongo connect error', err);
-});
+var logger;
 
+/**
+ * For the most part, all errors would be passed back and not logged here.
+ */
 var models = {};
 
 
@@ -113,7 +110,7 @@ AccountSchema.pre('validate', function (next) {
     if (this.isNew && !this.google) {
         this.conf = 'confirm-' + uuid.v4() + '-' + uuid.v4() + '-' + uuid.v4();
         this._id = this._id.toLowerCase();
-        console.info('new account conf', config.baseURL + '/conf/' + this._id + '/' + this.conf);
+        logger.info('new account conf', config.baseURL + '/conf/' + this._id + '/' + this.conf);
     }
 
     if (this.isDirectModified('password')) {
@@ -329,4 +326,14 @@ var FileSchema = new mongoose.Schema({
 models.File = mongoose.model('File', FileSchema);
 
 
-exports = module.exports = models;
+exports = module.exports = function (initializedLogger) {
+    logger = initializedLogger;
+    mongoose.connect(config.mongoURI);
+    mongoose.connection.on('connected', function () {
+        logger.info('mongo connected');
+    });
+    mongoose.connection.on('error', function (err) {
+        logger.error('mongo connect error', err);
+    });
+    return models;
+};

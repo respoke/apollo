@@ -8,28 +8,22 @@
  * For all details and documentation:  https://www.respoke.io
  */
 'use strict';
-// process.env.DEBUG = process.env.DEBUG || 'apollo-app,apollo-db,apollo-api,apollo-auth,passport,apollo-plugin';
-var express = require('express');
-var path = require('path');
+
+// Some libs
 var fs = require('fs');
+var path = require('path');
+var express = require('express');
 var nodemailer = require('nodemailer');
 var Respoke = require('respoke-admin');
+var bunyan = require('bunyan');
 
-// Express middleware
-var favicon = require('serve-favicon');
-var logger = require('express-bunyan-logger');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var jadeStatic = require('connect-jade-static');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-var browserify = require('browserify-middleware');
-var middleware = require('./lib/middleware');
-
-// local configuration settings
+// Local configuration settings.
+// Make sure we have the things that we need and give some friendly messages
+// if stuff is missing.
 var config;
 var clientConfig;
 (function () {
+    // server configuration file.
     try {
         config = require('./config');
     } catch (ex) {
@@ -38,15 +32,70 @@ var clientConfig;
         console.error('For setup instructions see ./README.md\n');
         throw ex;
     }
+    // Ensure all of the config values are filled out. Otherwise the app will crash later anyways.
+    var errors = require('./lib/check-server-config')(config);
+    if (errors.length) {
+        console.warn('\nSome configuration options are not setup properly. The app may be unstable.');
+        console.warn(errors, '\n');
+    }
+})();
+
+
+// Logging
+var logfilePath = config.logfilePath || __dirname + "/apollo.log";
+var loggerOpts = {
+    name: config.name,
+    serializers: {
+        req: bunyan.stdSerializers.req,
+        res: bunyan.stdSerializers.res,
+        err: bunyan.stdSerializers.err
+    },
+    streams: [{
+        stream: process.stdout,
+        level: 'info'
+    }, {
+        type: 'file',
+        path: logfilePath,
+        level: 'info'
+    }]
+};
+var logger = require('bunyan')(loggerOpts);
+var loggerMiddleware = require('express-bunyan-logger')({ logger: logger });
+// if logstash rotates the files, bunyan needs to know
+process.on('SIGHUP', function () {
+    logger.reopenFileStreams();
+});
+
+
+// Browser configuration file
+
+(function () {
     try {
         clientConfig = require('./public/js/client-config');
     } catch (ex) {
-        console.warn('\nYou did not set up browser config correctly at ./public/js/client-config.js');
-        console.warn('Attempting to use ./public/js/client-config.example.js instead.\n');
-        console.warn(ex, '\n');
+        logger.warn('\nYou did not set up browser config correctly at ./public/js/client-config.js');
+        logger.warn('Attempting to use ./public/js/client-config.example.js instead.\n');
+        logger.warn('To get rid of this message, copy "client-config.example.js" to "client-config.js"\n');
+        logger.warn(ex, '\n');
         clientConfig = require('./public/js/client-config.example.js');
     }
 })();
+
+
+// Express middleware
+
+var favicon = require('serve-favicon');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var jadeStatic = require('connect-jade-static');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var browserify = require('browserify-middleware');
+var middleware = require('./lib/middleware');
+
+
+// Chat style themes
+
 var themes = [];
 (function () {
     var files = fs.readdirSync(__dirname + '/public/css/themes');
@@ -55,14 +104,17 @@ var themes = [];
         var ext = parts[1];
         if (ext === 'less') themes.push(parts[0]);
     });
-    console.warn('loaded themes', themes);
+    logger.warn('loaded themes', themes);
 })();
 
+// Email sending service
 var mailTransport = nodemailer.createTransport(config.smtp);
+
 // app utilities
 var appUtilities = require('./lib/app-utilities');
-// mongoose ODM models
-var models = require('./models');
+
+// MongoDB - Mongoose ODM models
+var models = require('./models')(logger);
 
 var app = express();
 
@@ -74,36 +126,21 @@ var respoke = new Respoke({
 });
 respoke.auth.connect({ endpointId: config.systemEndpointId });
 respoke.on('connect', function () {
-    console.info('connected to respoke');
+    logger.info('connected to respoke');
     respoke.groups.join({ groupId: config.systemGroupId }, function (err) {
         if (err) {
-            console.info('failed to join system group', config.systemGroupId, err);
+            logger.info('failed to join system group', config.systemGroupId, err);
             return;
         }
-        console.info('joined system group', config.systemGroupId);
+        logger.info('joined system group', config.systemGroupId);
     });
 });
 respoke.on('error', function (err) {
-    console.info('failed to connect to respoke', err);
+    logger.error('failed to connect to respoke', err);
 });
 var passport = require('./auth-strategies')(respoke);
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
-//- Logger
-app.use(logger({
-    name: config.name,
-    streams: [{
-        stream: process.stdout,
-        level: 'info',
-        format: ''
-    }, {
-        type: 'rotating-file',
-        path: __dirname + "/apollo.log",
-        period: '1d',   // daily rotation
-        level: 'info',
-        count: 3 // a week
-    }]
-}));
 
 // Sessions in mongo
 app.use(session({
@@ -137,9 +174,12 @@ app.use(jadeStatic({
         themes: themes
     }
 }));
+
+
 // Attaching app locals and utils to request
 app.use(function (req, res, next) {
     // res.set('Access-Control-Allow-Origin', '*');
+    res.set('X-Powered-By', '100-duck-sized-horses');
     res.locals = req.locals || {};
     res.locals.config = config;
     res.locals.clientConfig = clientConfig;
@@ -156,6 +196,9 @@ app.use(function (req, res, next) {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+// Logger comes after the static files
+app.use(loggerMiddleware);
 
 // Passport sessions and user population on req.user
 app.use(passport.initialize());
@@ -194,7 +237,7 @@ var pluginVars = {
 if (fs.existsSync(normalizedPath)) {
     fs.readdirSync(normalizedPath).forEach(function (file) {
         var fullPath = './plugins/' + file;
-        console.info('loading plugin', fullPath);
+        logger.info('loading plugin', fullPath);
         require(fullPath)(pluginVars, app);
     });
 }
@@ -208,8 +251,7 @@ app.use(middleware.errorHandler);
 
 module.exports = app;
 
-
 var server = app.listen(config.port, function() {
-    console.info(config.name + ' is listening at http://localhost:' + server.address().port + '/');
+    logger.info(config.name + ' is listening at http://localhost:' + server.address().port + '/');
     app.emit('loaded');
 });
