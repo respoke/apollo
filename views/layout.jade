@@ -6,7 +6,10 @@ html
             rel='stylesheet'
             href='https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
         )
-        link(rel='stylesheet' href='/css/themes/' + (user ? user.settings.theme || 'dark' : 'dark') + '.css')
+        - var userTheme = 'dark';
+        - if (user && user.settings.theme) userTheme = user.settings.theme;
+        - if (themes.indexOf(userTheme) === -1) userTheme = 'dark';
+        link(rel='stylesheet' href='/css/themes/' + userTheme + '.css')
         link#favicon(rel="shortcut icon" href="/favicon.ico")
         
         include nodewebkit-scripts
