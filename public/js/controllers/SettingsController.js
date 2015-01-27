@@ -51,7 +51,7 @@ exports = module.exports = [
 
         $scope.changeTheme = function (theme) {
             $scope.updateSetting('theme', theme, function () {
-                $window.open('/', '_self');
+                $window.location.reload();
             });
         };
 
