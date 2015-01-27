@@ -27,6 +27,11 @@ exports = module.exports = [
 
         $scope.hideCallPanel = true;
 
+        $scope.isScreensharing = false;
+        $scope.needsChromeExtension = $window.respoke.needsChromeExtension;
+        $scope.hasChromeExtension = $window.respoke.hasChromeExtension;
+
+
         // prevent global scope from creating a second connection to respoke
         $rootScope.doNotConnectRespoke = true;
 

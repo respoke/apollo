@@ -632,8 +632,8 @@ textarea {
             // The group icon indicator
             i.fa-comments {
                 background: @selectedText;
-                padding: 3px;
-                font-size: 32px;
+                padding: 7px;
+                font-size: 24px;
                 color: @salmon;
             }
         }
@@ -807,15 +807,22 @@ table a:not(.btn), .table a:not(.btn) {
     ul.mention-list {
         position: fixed;
         bottom: 51px;
-        right: 22px;
+        right: 17px;
+        left: 330px;
         z-index: 10000;
         max-height: 120px;
         overflow-x: auto;
-        left: 382px;
 
         .list-group-item {
             padding: 5px 13px;
             font-weight: 600;
+            background: @text;
+            color: @background;
+            border: 1px solid darken(@background, 5%);
+        }
+        .list-group-item.active {
+            background: @selectedBackground;
+            color: @selectedText;
         }
         .list-group-item:last-child {
             border-bottom-right-radius: 0;
