@@ -101,7 +101,7 @@
                 ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
             )
                 td.col-xs-2.align-center
-                    i.fa.fa-comments.fa-3x(ng-if="!item.email")
+                    i.fa.fa-comments(ng-if="!item.email")
                     img(
                         ng-if="item.email"
                         ap-avatar email="item.email"

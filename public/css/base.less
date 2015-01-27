@@ -583,10 +583,17 @@ textarea {
         tr>td:first-child {
             padding-left: 5px;
             vertical-align: middle;
-            img {
+            img, i {
                 width: 40px;
                 height: 40px;
                 border-radius: 5px;
+            }
+            // The group icon indicator
+            i.fa-comments {
+                background: @background;
+                padding: 3px;
+                font-size: 32px;
+                color: @salmon;
             }
         }
         tr>td:nth-child(2) {
