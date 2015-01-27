@@ -330,7 +330,10 @@ textarea {
 
             table.table {
                 margin: 0;
-                background: darken(@background, 5%);
+                td, tr {
+                    border-bottom: 1px solid darken(@background, 3%);
+                    border-top: 0;
+                }
                 td {
                     padding-bottom: 8px;
                     height: 70px;
@@ -339,6 +342,7 @@ textarea {
                 }
                 tr.notify>td {
                     background: @salmon;
+                    color: @selectedText;
                 }
 
                 td:first-child {
@@ -525,60 +529,96 @@ textarea {
     .btn {
         border-radius: 0;
     }
+    position: fixed;
+    top: 0;
+    left: 0;
 
     table.table {
         background: transparent;
+        width: 270px;
+        margin-bottom: 0;
+        border-right: 1px solid darken(@panelLeft, 5%);
 
-        thead {
-            position: fixed;
+        tr, td {
+            border: none;
+        }
+
+        &#top-table {
             background: lighten(@panelLeft, 8%);
-            width: 270px;
+            border-bottom: 1px solid darken(@panelLeft, 8%);
+
             td {
                 vertical-align: middle;
                 h6#own-name {
                     margin-top: 1px;
                 }
             }
-        }
 
-        tr, td {
-            border: none;
-            height: 56px;
-        }
-
-        #newgroup,
-        #recents-query {
-            color: @text;
-            background: darken(@panelLeft, 5%);
-            transition: background .2s ease;
-            border: 1px solid darken(@panelLeft, 10%) !important;
-
-            &:hover {
-                background: darken(@textInput, 5%);
+            #newgroup {
+                margin: 0;
+                border-radius: 3px;
+                font-weight: 100;
             }
-            &:focus {
-                background: white;
-                color: black;
+
+            #recents-query {
+                border: 0;
+                margin-bottom: 8px;
+                margin-top: -5px;
+                height: 25px;
+            }
+
+            #newgroup,
+            #recents-query {
+                color: lighten(@textInput, 50%);
+                background: darken(@panelLeft, 5%);
+                transition: background .2s ease;
+                border: 1px solid darken(@panelLeft, 10%) !important;
+                padding-top: 2px;
+                padding-bottom: 2px;
+                padding-left: 6px;
+                font-weight: 400;
+
+                &:hover {
+                    background: darken(@textInput, 5%);
+                }
+                &:focus {
+                    background: white;
+                    color: black;
+                    &.form-control::-webkit-input-placeholder {
+                       color: @text;
+                    }
+                    &.form-control:-moz-placeholder { /* Firefox 18- */
+                       color: @text;
+                    }
+                    &.form-control::-moz-placeholder {  /* Firefox 19+ */
+                       color: @text;
+                    }
+                    &.form-control:-ms-input-placeholder {
+                       color: @text;
+                    }
+                }
+
+                &.form-control::-webkit-input-placeholder {
+                   color: lighten(@textInput, 50%);
+                }
+                &.form-control:-moz-placeholder { /* Firefox 18- */
+                   color: lighten(@textInput, 50%);
+                }
+                &.form-control::-moz-placeholder {  /* Firefox 19+ */
+                   color: lighten(@textInput, 50%);
+                }
+                &.form-control:-ms-input-placeholder {
+                   color: lighten(@textInput, 50%);
+                }
             }
         }
 
-        #newgroup {
-            margin: 0;
-            border-radius: 3px;
-            font-weight: 100;
-            padding-left: 8px;
-        }
-
-        #recents-query {
-            border: 0;
-            margin-bottom: 8px;
-            margin-top: -5px;
-            padding-left: 8px;
-        }
-
-        tr.selectedRecent {
-            background: @selectedBackground;
-            color: @selectedText;
+        &#bottom-table {
+            border-top: darken(@panelLeft, 3%);
+            tr.selectedRecent {
+                background: @selectedBackground;
+                color: @selectedText;
+            }
         }
         tr>td:first-child {
             padding-left: 5px;
@@ -590,17 +630,18 @@ textarea {
             }
             // The group icon indicator
             i.fa-comments {
-                background: @background;
+                background: @selectedText;
                 padding: 3px;
                 font-size: 32px;
                 color: @salmon;
             }
         }
+
         tr>td:nth-child(2) {
             ap-presence .presence {
                 padding: 0;
                 i.fa-circle {
-                    font-size: 13px;
+                    font-size: 12px;
                     vertical-align: middle;
                 }
                 .away {

@@ -17,10 +17,9 @@
 )
 
     //- Display group and buddy list
-    #buddies.scrollable: table.table
+    #buddies.scrollable
+        table.table#top-table
         
-        //- mememememe
-        thead
             tr
                 td.col-xs-2.align-center
                     img(
@@ -88,11 +87,7 @@
                         ng-click="createGroup(newGroupName); newGroupName = ''; showCreateGroup = false;"
                     ) Create
         
-        tbody
-            //- all the other stuff
-            
-            //- space the top of the sidebar so it is not overlapped by the head
-            tr(style="height: 135px")
+        table#bottom-table.table
             
             tr.clickable(
                 ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
