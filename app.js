@@ -138,7 +138,7 @@ respoke.on('connect', function () {
 respoke.on('error', function (err) {
     logger.error('failed to connect to respoke', err);
 });
-var passport = require('./auth-strategies')(respoke);
+var passport = require('./auth-strategies')(respoke, logger);
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
@@ -152,7 +152,10 @@ app.use(session({
         maxAge: config.cookieMaxAge
     }
 }));
-
+app.use(function (req, res, next) {
+    req.session.touch();
+    next();
+});
 // Request parsers
 app.use(bodyParser.json({ limit: config.maxUploadSize }));
 app.use(bodyParser.urlencoded({ extended: false, limit: config.maxUploadSize }));
