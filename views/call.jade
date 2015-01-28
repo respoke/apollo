@@ -2,7 +2,12 @@ extends layout
 
 block content
     #video-call-container(ng-controller="PrivateCallController")
-        h3#chat-title(ng-show="errorMessage") {{ errorMessage }}
+        h3.chat-title(ng-show="errorMessage") {{ errorMessage }}
+        h3.chat-title(ng-show="showPromptInstall")
+            a(href="https://google.com" target="_blank")
+                | Hey, you need to install a plugin before you can screenshare!
+            | &nbsp;&nbsp;
+            i.fa.fa-remove(ng-click="showPromptInstall = false")
 
         #respokeLocalVideo.animated.fadeIn.slower(ap-draggable)
             .btn-group
@@ -24,13 +29,13 @@ block content
                 
                 //- Share my screen
                 button.btn.btn-xs(
-                    ng-show="!isScreensharing"
+                    ng-if="!isScreensharing"
                 )
                     i.fa.fa-desktop
                 
                 //- Stop screensharing
                 button.btn.btn-xs(
-                    ng-show="isScreensharing"
+                    ng-if="isScreensharing"
                 )
                     i.fa.fa-stop
                 

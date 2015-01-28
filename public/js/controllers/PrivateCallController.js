@@ -30,7 +30,7 @@ exports = module.exports = [
         $scope.isScreensharing = false;
         $scope.needsChromeExtension = $window.respoke.needsChromeExtension;
         $scope.hasChromeExtension = $window.respoke.hasChromeExtension;
-
+        $scope.showPromptInstall = false;
 
         // prevent global scope from creating a second connection to respoke
         $rootScope.doNotConnectRespoke = true;
@@ -73,7 +73,7 @@ exports = module.exports = [
 
         $scope.screenshare = function () {
             if (!$scope.needsChromeExtension && !$scope.hasChromeExtension) {
-                $rootScope.notifications.push('Screensharing requires a plugin. Click here to install it.');
+                $scope.showPromptInstall = true;
             }
         };
 
