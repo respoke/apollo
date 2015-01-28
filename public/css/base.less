@@ -10,6 +10,12 @@
 @import 'bootstrap.less';
 @import 'animate.less';
 
+@color-away: #FC605B;
+@color-busy: #FDBE41;
+@color-available: #34C849;
+@color-unavailable: #E0E0E0;
+
+
 /* used various places */
 .salmon { color: @primary; }
 
@@ -26,6 +32,8 @@
 .form-control:-ms-input-placeholder {
    color: @text;
 }
+
+.noradius { border-radius: 0 !important; }
 
 .welcome {
     /* Placeholder text. Yeah. */
@@ -646,20 +654,20 @@ textarea {
                     vertical-align: middle;
                 }
                 .away {
-                    color: red;
-                    text-shadow: 0 0 1px #BA0000;
+                    color: @color-away;
+                    text-shadow: 0 0 1px darken(@color-away, 25%);
                 }
                 .busy {
-                    color: #FFA500;
-                    text-shadow: 0 0 1px #E2A638;
+                    color: @color-busy;
+                    text-shadow: 0 0 1px darken(@color-busy, 25%);
                 }
                 .available {
-                    color: #74FC77;
-                    text-shadow: 0 0 1px #27B600;
+                    color: @color-available;
+                    text-shadow: 0 0 1px darken(@color-available, 25%);
                 }
                 .unavailable {
-                    color: #e0e0e0;
-                    text-shadow: 0 0 1px #767676;
+                    color: @color-unavailable;
+                    text-shadow: 0 0 1px darken(@color-unavailable, 25%);
                 }
             }
             .dropdown > .dropdown-menu {

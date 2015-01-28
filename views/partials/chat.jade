@@ -15,7 +15,7 @@
             ng-show="!pendingUploads && !activeCall && !showSettings"
         )
             td
-                img(src="/img/apollo-a.png" ng-if="!selectedChat")
+                img.noradius(src="/img/apollo-a.png" ng-if="!selectedChat")
                 i.fa.fa-comments.fa-3x(ng-if="selectedChat && !selectedChat.email")
                 img(
                     ng-if="selectedChat && selectedChat.email"
@@ -184,6 +184,7 @@
             mentio-trigger-char="'@'"
             mentio-template-url="/partials/mentions.html"
             mentio-items="allRecents"
+            mentio-require-leading-space="true"
         )
         button#upload-button.btn.btn-default(
             ap-upload="onDropUpload"

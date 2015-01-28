@@ -20,20 +20,19 @@ block content
                     ng-class="{ 'btn-salmon-inverse': !activeCall.outgoingMedia.isVideoMuted(), 'btn-default': activeCall.outgoingMedia.isVideoMuted() }"
                 )
                     i.fa.fa-video-camera.fa-lg(ng-show="activeCall.outgoingMedia.isVideoMuted()")
-                    i.fa.fa-ban.fa-lg(ng-show="!activeCall.outgoingMedia.isVideoMuted()"
-                    )
+                    i.fa.fa-video-camera.fa-lg(ng-show="!activeCall.outgoingMedia.isVideoMuted()")
                 
                 //- Share my screen
-                //- button.btn.btn-xs(
-                //-     ng-show="isScreensharing"
-                //- )
-                //-     i.fa.fa-desktop
-                //- 
-                //- //- Stop screensharing
-                //- button.btn.btn-xs(
-                //-     ng-show="isScreensharing"
-                //- )
-                //-     i.fa.fa-stop
+                button.btn.btn-xs(
+                    ng-show="!isScreensharing"
+                )
+                    i.fa.fa-desktop
+                
+                //- Stop screensharing
+                button.btn.btn-xs(
+                    ng-show="isScreensharing"
+                )
+                    i.fa.fa-stop
                 
         #respokeRemoteVideo.animated.fadeIn.slower
             

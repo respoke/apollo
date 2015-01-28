@@ -70,5 +70,12 @@ exports = module.exports = [
             $window.opener.activeCall = null;
             $window.close();
         };
+
+        $scope.screenshare = function () {
+            if (!$scope.needsChromeExtension && !$scope.hasChromeExtension) {
+                $rootScope.notifications.push('Screensharing requires a plugin. Click here to install it.');
+            }
+        };
+
     }
 ];
