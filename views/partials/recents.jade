@@ -93,7 +93,7 @@
                 ng-repeat="(id, item) in recents | orderRecents | filter: filterRecents"
                 ng-if="item && item._id !== account._id"
                 ng-class="{ 'selectedRecent': selectedChat._id === item._id }"
-                ng-click="switchChat(item.display ? item._id : 'group-' + item._id)"
+                ng-mousedown="switchChat(item.display ? item._id : 'group-' + item._id)"
             )
                 td.col-xs-2.align-center
                     i.fa.fa-comments(ng-if="!item.email")

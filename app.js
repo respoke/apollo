@@ -96,16 +96,21 @@ var middleware = require('./lib/middleware');
 
 // Chat style themes
 
-var themes = [];
-(function () {
-    var files = fs.readdirSync(__dirname + '/public/css/themes');
-    files.forEach(function (f) {
-        var parts = f.split('.');
-        var ext = parts[1];
-        if (ext === 'less') themes.push(parts[0]);
-    });
-    logger.warn('loaded themes', themes);
-})();
+var themes;
+if (process.env.NODE_ENV !== 'production') {
+    themes = [];
+    (function () {
+        var files = fs.readdirSync(__dirname + '/public/css/themes');
+        files.forEach(function (f) {
+            var parts = f.split('.');
+            var ext = parts[1];
+            if (ext === 'less') themes.push(parts[0]);
+        });
+    })();
+} else {
+    themes = ['light', 'dark'];
+}
+logger.info('loaded themes', themes);
 
 // Email sending service
 var mailTransport = nodemailer.createTransport(config.smtp);
