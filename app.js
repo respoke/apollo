@@ -39,7 +39,7 @@ var clientConfig;
         console.warn(errors, '\n');
     }
 })();
-
+config.respoke.screenshareExtensionLink = config.respoke.screenshareExtensionLink 'https://chrome.google.com/webstore/detail/apollo-screensharing-by-r/noadkfcnaibmpopkkifjangclhfgpcoo';
 
 // Logging
 var logfilePath = config.logfilePath || __dirname + "/apollo.log";
