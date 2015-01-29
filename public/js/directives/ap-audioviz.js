@@ -32,7 +32,7 @@ exports = module.exports = function () {
         },
         link: function (scope, element, attrs) {
 
-            var WIDTH = 50;
+            var WIDTH = 40;
             var HEIGHT = 40;
 
             scope.audioContext = audioContext;

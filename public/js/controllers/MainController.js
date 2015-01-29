@@ -533,7 +533,9 @@ exports = module.exports = [
         };
         var onCallConnect = function (evt) {
             $log.debug('call connected', evt);
-            if (evt.target.hasScreenShare) {
+            
+            if ($scope.activeCall && evt.target.incomingMedia.hasScreenShare()) {
+                $log.debug('call is screenshare');
                 $window.activeScreenshare = evt.target;
                 return;
             }
@@ -554,6 +556,20 @@ exports = module.exports = [
             constraints: {audio: true, video: true},
             onConnect: onCallConnect
         };
+        var receiveScreenshareConstraints = {
+            constraints: {audio: false, video: false},
+            onConnect: function (evt) {
+                $log.debug('receive screenshare - onConnect', evt);
+                $rootScope.client.fire('screenshare-added');
+            },
+            onHangup: function (evt) {
+                $log.debug('receive screenshare - onHangup', evt);
+                $rootScope.client.fire('screenshare-removed');
+            },
+            onError: function (evt) {
+                $log.error('receive screenshare - onError', evt);
+            }
+        };
 
         var onCallReceived = function (evt) {
             $log.debug('call incoming', evt);
@@ -568,7 +584,8 @@ exports = module.exports = [
 
             // only allow one call at a time, unless you're already on a call and
             // adding a screenshare
-            if ($scope.activeCall && !evt.target.hasScreenShare) {
+            var hasScreenShare = evt.call.incomingMedia.hasScreenShare();
+            if ($scope.activeCall && !hasScreenShare) {
                 $rootScope.notifications.push(
                     $rootScope.recents[evt.endpoint.id].display
                     + ' tried to call you.'
@@ -585,8 +602,10 @@ exports = module.exports = [
             // Assume that you can only add a screenshare during an existing video call.
             // There are many ways to implement it, and that's what we decided for the
             // first crack at screensharing.
-            if (evt.target.hasScreenShare) {
+            if (hasScreenShare) {
                 // TODO: notify and do screenshare
+                $window.activeScreenshare = evt.call;
+                $window.activeScreenshare.answer(receiveScreenshareConstraints);
                 return;
             }
 

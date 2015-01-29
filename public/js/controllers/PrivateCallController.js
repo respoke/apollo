@@ -21,16 +21,22 @@ exports = module.exports = [
     function ($log, $rootScope, $scope, $window, respokeVideo, moment, scrollChatToBottom) {
 
         if (!$window.opener || !$window.opener.activeCall) {
-            $scope.errorMessage = "The call is already over.";
+            $scope.errorMessage = "The call has ended.";
             return;
         }
 
         $scope.hideCallPanel = true;
 
         $scope.isScreensharing = false;
-        $scope.needsChromeExtension = $window.respoke.needsChromeExtension;
-        $scope.hasChromeExtension = $window.respoke.hasChromeExtension;
-        $scope.screenshareAvailable = $scope.needsChromeExtension || $scope.hasChromeExtension;
+        $scope.needsChromeExtension = function () {
+            return $window.respoke.needsChromeExtension;
+        };
+        $scope.hasChromeExtension = function () {
+            return $window.respoke.hasChromeExtension;
+        };
+        $scope.screenshareAvailable = function () {
+            return $scope.needsChromeExtension() || $scope.hasChromeExtension();
+        };
         $scope.showPromptInstall = false;
 
         // prevent global scope from creating a second connection to respoke
@@ -51,6 +57,7 @@ exports = module.exports = [
             $log.debug('got hangup');
             respokeVideo.cleanup();
             $scope.errorMessage = "The call has ended.";
+            $scope.$apply();
         };
 
         var privateChatMessageListener = function (evt) {
@@ -73,7 +80,7 @@ exports = module.exports = [
         };
 
         $scope.screenshare = function () {
-            if ($scope.needsChromeExtension) {
+            if (!$scope.hasChromeExtension() && $scope.needsChromeExtension()) {
                 $scope.showPromptInstall = true;
                 return;
             }
@@ -81,19 +88,43 @@ exports = module.exports = [
         };
 
         var doScreenshare = function () {
-            $scope.activeCall.remoteEndpoint.startScreenShare({
+            $scope.isScreensharing = true;
+            $window.opener.activeScreenshare = $scope.activeCall.remoteEndpoint.startScreenShare({
                 onConnect: function (evt) {
-
+                    $log.debug('doScreenshare onConnect', evt);
+                    respokeVideo.setLocalVideo(evt.target.outgoingMedia.stream);
+                },
+                onHangup: function (evt) {
+                    $log.error('doScreenshare onHangup', evt);
+                    $scope.isScreensharing = false;
+                    $scope.$apply();
                 },
                 onError: function (evt) {
-                    
+                    $log.error('doScreenshare onError', evt);
+                    $scope.isScreensharing = false;
+                    $scope.errorMessage = "An error occurred during screenshare.";
+                    $scope.$apply();
                 }
             });
+            $log.debug('starting screenshare', $window.opener.activeScreenshare);
         };
 
         $scope.stopScreenshare = function () {
-
+            // end screenshare call
+            $scope.isScreensharing = false;
+            // reset local screen display
+            $window.opener.activeScreenshare.hangup();
+            respokeVideo.setLocalVideo($scope.activeCall.outgoingMedia.stream);
         };
+
+        $window.opener.client.listen('screenshare-added', function () {
+            $log.debug('screenshare-added');
+            respokeVideo.setRemoteVideo($window.opener.activeScreenshare.incomingMedia.stream);
+        });
+        $window.opener.client.listen('screenshare-removed', function () {
+            $log.debug('screenshare-removed');
+            respokeVideo.setRemoteVideo($scope.activeCall.incomingMedia.stream);
+        });
 
     }
 ];
