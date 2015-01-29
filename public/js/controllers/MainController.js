@@ -533,6 +533,10 @@ exports = module.exports = [
         };
         var onCallConnect = function (evt) {
             $log.debug('call connected', evt);
+            if (evt.target.hasScreenShare) {
+                $window.activeScreenshare = evt.target;
+                return;
+            }
 
             $window.activeCall = $scope.activeCall;
             $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
@@ -557,13 +561,14 @@ exports = module.exports = [
             if (evt.call.caller) {
                 return;
             }
-            // nodewebkit
+            // in nodewebkit, open a special window inside the app
             if (window.nwDispatcher) {
                 showWin();
             }
 
-            // only allow one call at a time.
-            if ($scope.activeCall) {
+            // only allow one call at a time, unless you're already on a call and
+            // adding a screenshare
+            if ($scope.activeCall && !evt.target.hasScreenShare) {
                 $rootScope.notifications.push(
                     $rootScope.recents[evt.endpoint.id].display
                     + ' tried to call you.'
@@ -574,6 +579,14 @@ exports = module.exports = [
                 evt.call.hangup();
                 stopRinging();
                 $scope.$apply();
+                return;
+            }
+
+            // Assume that you can only add a screenshare during an existing video call.
+            // There are many ways to implement it, and that's what we decided for the
+            // first crack at screensharing.
+            if (evt.target.hasScreenShare) {
+                // TODO: notify and do screenshare
                 return;
             }
 

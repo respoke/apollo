@@ -1,13 +1,13 @@
 extends layout
 
 block content
-    #video-call-container(ng-controller="PrivateCallController")
+    #video-call-container(ng-controller="PrivateCallController" ng-cloak)
         h3.chat-title(ng-show="errorMessage") {{ errorMessage }}
-        h3.chat-title(ng-show="showPromptInstall")
+        h1.chat-title(ng-show="showPromptInstall")
             a(href="https://google.com" target="_blank")
-                | Hey, you need to install a plugin before you can screenshare!
+                | Hey. <br /> You'll have to install a plugin before you can screenshare &raquo;
             | &nbsp;&nbsp;
-            i.fa.fa-remove(ng-click="showPromptInstall = false")
+            i.fa.fa-remove.clickable(ng-click="showPromptInstall = false")
 
         #respokeLocalVideo.animated.fadeIn.slower(ap-draggable)
             .btn-group
@@ -28,14 +28,16 @@ block content
                     i.fa.fa-video-camera.fa-lg(ng-show="!activeCall.outgoingMedia.isVideoMuted()")
                 
                 //- Share my screen
-                button.btn.btn-xs(
-                    ng-if="!isScreensharing"
+                //-button.btn.btn-xs(
+                    ng-if="screenshareAvailable && !isScreensharing"
+                    ng-click="screenshare()"
                 )
                     i.fa.fa-desktop
                 
                 //- Stop screensharing
-                button.btn.btn-xs(
-                    ng-if="isScreensharing"
+                //-button.btn.btn-xs(
+                    ng-if="screenshareAvailable && isScreensharing"
+                    ng-click="stopScreenshare()"
                 )
                     i.fa.fa-stop
                 
@@ -62,6 +64,6 @@ block content
                     ng-click="activeCall.incomingMedia.isVideoMuted() ? activeCall.incomingMedia.unmuteVideo() : activeCall.incomingMedia.muteVideo()"
                     ng-class="{ 'btn-salmon-inverse': !activeCall.incomingMedia.isVideoMuted(), 'btn-default': activeCall.incomingMedia.isVideoMuted() }"
                 )
-                    i.fa.fa-play.fa-lg(ng-show="activeCall.incomingMedia.isVideoMuted()")
-                    i.fa.fa-pause.fa-lg(ng-show="!activeCall.incomingMedia.isVideoMuted()")
+                    i.fa.fa-video-camera.fa-lg(ng-show="activeCall.incomingMedia.isVideoMuted()")
+                    i.fa.fa-video-camera.fa-lg(ng-show="!activeCall.incomingMedia.isVideoMuted()")
                 

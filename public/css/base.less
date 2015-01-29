@@ -73,6 +73,7 @@
 .scrollable {
     overflow-y: auto;
     height: 100%;
+    overflow-x: hidden;
 }
 .img-thumbnail {
     padding: 0;
@@ -700,9 +701,15 @@ textarea {
 
 #video-call-container {
     .chat-title {
+        color: white;
+        position: absolute;
         padding-left: 20px;
-        opacity: .4;
-        z-index: 75;
+        z-index: 10000;
+
+        a, a:visited, a:hover {
+            color: white;
+            text-decoration: none;
+        }
     }
     .panel.right.full {
         right: 0;
@@ -737,17 +744,6 @@ textarea {
         button#toggle-video {
             width: 27px;
             height: 27px;
-
-            &.btn-default {
-                .fa-video-camera {
-                    position: absolute;
-                    right: 3px;
-                    top: 2px;
-                }
-                .fa-ban {
-                    margin-left: -10px;
-                }
-            }
         }
     }
     #respokeLocalVideo, #respokeRemoteVideo {

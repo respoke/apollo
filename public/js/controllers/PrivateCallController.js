@@ -30,6 +30,7 @@ exports = module.exports = [
         $scope.isScreensharing = false;
         $scope.needsChromeExtension = $window.respoke.needsChromeExtension;
         $scope.hasChromeExtension = $window.respoke.hasChromeExtension;
+        $scope.screenshareAvailable = $scope.needsChromeExtension || $scope.hasChromeExtension;
         $scope.showPromptInstall = false;
 
         // prevent global scope from creating a second connection to respoke
@@ -43,8 +44,8 @@ exports = module.exports = [
         $scope.moment = moment;
         $scope.showFullChat = true;
 
-        $scope.selectedChat = $window.opener.activeCall.chat;
         $scope.activeCall = $window.opener.activeCall;
+        $scope.selectedChat = $scope.activeCall.chat;
 
         var cleanUpCall = function (evt) {
             $log.debug('got hangup');
@@ -55,26 +56,43 @@ exports = module.exports = [
         var privateChatMessageListener = function (evt) {
             scrollChatToBottom();
         };
-        $window.opener.activeCall.ignore(privateChatMessageListener);
-        $window.opener.activeCall.listen('message', privateChatMessageListener);
+        $scope.activeCall.ignore(privateChatMessageListener);
+        $scope.activeCall.listen('message', privateChatMessageListener);
 
-        $window.opener.activeCall.listen('hangup', cleanUpCall);
+        $scope.activeCall.listen('hangup', cleanUpCall);
 
         respokeVideo.setLocalVideo($scope.activeCall.outgoingMedia.stream);
         respokeVideo.setRemoteVideo($scope.activeCall.incomingMedia.stream);
 
         $scope.hangup = function () {
-            if ($window.opener.activeCall.hangup) {
-                $window.opener.activeCall.hangup();
+            if ($scope.activeCall.hangup) {
+                $scope.activeCall.hangup();
             }
             $window.opener.activeCall = null;
             $window.close();
         };
 
         $scope.screenshare = function () {
-            if (!$scope.needsChromeExtension && !$scope.hasChromeExtension) {
+            if ($scope.needsChromeExtension) {
                 $scope.showPromptInstall = true;
+                return;
             }
+            doScreenshare();
+        };
+
+        var doScreenshare = function () {
+            $scope.activeCall.remoteEndpoint.startScreenShare({
+                onConnect: function (evt) {
+
+                },
+                onError: function (evt) {
+                    
+                }
+            });
+        };
+
+        $scope.stopScreenshare = function () {
+
         };
 
     }
