@@ -44,6 +44,7 @@
     "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-jade": "^0.13.0",
     "grunt-node-webkit-builder": "^0.2.3",
+    "jsdoxy": "^0.8.0",
     "jshint": "^2.5.6"
   }
 }

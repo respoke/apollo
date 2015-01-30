@@ -104,6 +104,12 @@ If you would like to build the desktop app, proceed with the following steps.
 1. It only works over `https`.
 1. Using a tunnel like ngrok helps. Make sure you add it to the extension manifest.
 
+## Documentation
+
+Run `grunt jsdoxy`.
+
+Output goes to `.docs/`.
+
 ## License
 
 AGPL v3

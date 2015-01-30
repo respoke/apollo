@@ -1,0 +1,484 @@
+<!-- Copyright 2014, Digium, Inc.--><!-- All rights reserved.--><!----><!-- This source code is licensed under The MIT License found in the--><!-- LICENSE file in the root directory of this source tree.--><!----><!-- For all details and documentation:  https://www.respoke.io--><!DOCTYPE html><html><head><title>api - routes/api.js</title><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="https://highlightjs.org/static/styles/github.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script><script src="https://highlightjs.org/static/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body><div class="container"><h3 class="help-block">routes/api.js</h3><hr><h1>api</h1><div id="api" class="comment"><p>Router attached at <code>/api</code>.</p>
+<div></div><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;class&quot;,
+            &quot;string&quot;: &quot;api&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;Router attached at &lt;code&gt;/api&lt;/code&gt;.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;Router attached at &lt;code&gt;/api&lt;/code&gt;.&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;var router = express.Router();\nvar config = require('../config');\nvar middleware = require('../lib/middleware');\nvar async = require('async');&quot;,
+    &quot;ctx&quot;: {
+        &quot;type&quot;: &quot;declaration&quot;,
+        &quot;name&quot;: &quot;api&quot;,
+        &quot;value&quot;: &quot;express.Router()&quot;,
+        &quot;string&quot;: &quot;router&quot;,
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-GET--me--p--" class="comment"><h3><a href="#-p-GET--me--p--" class="bold"><p>GET /me</p>
+</a></h3><div><p>Get my Account. Also good for checking if you are logged in.</p>
+</div><p><strong>returns&nbsp;<code>object Account || null</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;GET /me&lt;/p&gt;\n&lt;p&gt;Get my Account. Also good for checking if you are logged in.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;GET /me&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Get my Account. Also good for checking if you are logged in.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object Account || null&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.get('/me', function (req, res, next) {\n    if (!req.user) {\n        return res.send(req.user);\n    }\n    req.db.Account.findById(req.user._id).exec(function (err, account) {\n        if (err) {\n            return next(err);\n        }\n        res.send(account);\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-PATCH--me--p--" class="comment"><h3><a href="#-p-PATCH--me--p--" class="bold"><p>PATCH /me</p>
+</a></h3><div><p>Update my own account. All body properties are optional.</p>
+</div><p><strong>returns&nbsp;<code>object Account</code></strong></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>password</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5"></div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>display</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5"></div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>email</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5"></div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>settings</code></div><div class="col-sm-3"><strong>object</strong></div><div class="col-sm-5"></div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;password&quot;,
+            &quot;description&quot;: &quot;&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;display&quot;,
+            &quot;description&quot;: &quot;&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;email&quot;,
+            &quot;description&quot;: &quot;&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;object&quot;
+            ],
+            &quot;name&quot;: &quot;settings&quot;,
+            &quot;description&quot;: &quot;&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;PATCH /me&lt;/p&gt;\n&lt;p&gt;Update my own account. All body properties are optional.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;PATCH /me&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Update my own account. All body properties are optional.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object Account&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.patch('/me', middleware.isAuthorized, function (req, res, next) {\n    var updateFields = {};\n    ['password', 'display', 'email', 'settings'].forEach(function (field) {\n        if (req.body[field]) {\n            updateFields[field] = req.body[field];\n        }\n    });\n    if (!Object.keys(updateFields).length) {\n        return res.send(req.user);\n    }\n    req.db.Account.findById(req.user._id).exec(function (err, account) {\n        if (err) {\n            return next(err);\n        }\n        for (var f in updateFields) {\n            account[f] = updateFields[f]\n        }\n        var settings = account.settings;\n        account.save(function (err, saved) {\n            if (err) {\n                return next(err);\n            }\n            saved = saved.toObject();\n            saved.settings = settings; // these are normally excluded\n            res.send(saved);\n        });\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-PUT--forgot--emailOrId--p--" class="comment"><h3><a href="#-p-PUT--forgot--emailOrId--p--" class="bold"><p>PUT /forgot/:emailOrId</p>
+</a></h3><div><p>Forgot password.</p>
+</div><p><strong>returns&nbsp;<code>object { message: &quot;&quot; }</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;PUT /forgot/:emailOrId&lt;/p&gt;\n&lt;p&gt;Forgot password.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;PUT /forgot/:emailOrId&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Forgot password.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object { message: \&quot;\&quot; }&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.put('/forgot/:emailOrId', function (req, res, next) {\n    if (!req.params.emailOrId) {\n        return res.send(400, { error: \&quot;Missing identifier for password reset. Need email or account ID.\&quot; });\n    }\n    req.db.Account.findOne()\n    .or([{ email: req.params.emailOrId }, { _id: req.params.emailOrId }])\n    .select('+conf')\n    .exec(function (err, account) {\n        if (err) {\n            return next(err);\n        }\n\n        if (account.conf &amp;&amp; account.conf.slice(0, 7) === 'confirm') {\n            return res.status(400).send({\n                message: \&quot;Your account must be confirmed before you may reset your password.\&quot;\n            });\n        }\n\n        var message = { message: 'A password reset has been requested. Check your email.' };\n        // give no indication if the email was wrong\n        if (!account || !account.email) {\n            return res.send(message);\n        }\n\n        account.passwordReset(function (err, acct) {\n            if (err) {\n                req.log.error(err);\n                return next(err);\n            }\n\n            // send an e-mail\n            req.email.sendMail({\n                from: config.email.from,\n                to: acct.email,\n                subject: 'Password reset - ' + config.name,\n                text: 'Visit the following link to reset your ' + config.name + ' password.\\n\\n'\n                    + config.baseURL + '/password-reset/' + acct._id + '/' + acct.conf\n            }, function (err) {\n                if (err) {\n                    req.log.error(err);\n                    return next(err);\n                }\n                res.send(message);\n            });\n\n        });\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-PUT--password-reset---id--conf--p--" class="comment"><h3><a href="#-p-PUT--password-reset---id--conf--p--" class="bold"><p>PUT /password-reset/:_id/:conf</p>
+</a></h3><div><p>Reset password using confirmation token.</p>
+</div><p><strong>returns&nbsp;<code>object Account</code></strong></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>password</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5"></div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;password&quot;,
+            &quot;description&quot;: &quot;&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;PUT /password-reset/:_id/:conf&lt;/p&gt;\n&lt;p&gt;Reset password using confirmation token.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;PUT /password-reset/:_id/:conf&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Reset password using confirmation token.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object Account&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.put('/password-reset/:_id/:conf', function (req, res, next) {\n    req.db.Account\n    .findOne({ _id: req.params._id, conf: req.params.conf })\n    .select('+conf')\n    .exec(function (err, account) {\n        if (err) {\n            return next(err);\n        }\n        if (!account) {\n            return res.send(404);\n        }\n        var passCheckFail = account.isPasswordInvalid(req.body.password);\n        if (passCheckFail) {\n            return res.send(400, { error: passCheckFail });\n        }\n        account.password = req.body.password;\n        account.conf = null;\n        account.save(function (err, saved) {\n            if (err) {\n                return next(err);\n            }\n            req.login(saved, function (err) {\n                if (err) {\n                    return next(err);\n                }\n                res.send(saved);\n            });\n\n            // notify people that their password was reset\n            req.email.sendMail({\n                from: config.email.from,\n                to: account.email,\n                subject: 'Your ' + config.name + ' password was reset',\n                text: 'This is a notification that the password has been reset on your ' + config.name + ' account.'\n            }, function (err) {\n                if (err) {\n                    req.log.error(err);\n                }\n            });\n\n        });\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-GET--accounts--p--" class="comment"><h3><a href="#-p-GET--accounts--p--" class="bold"><p>GET /accounts</p>
+</a></h3><div><p>List all accounts.</p>
+</div><p><strong>returns&nbsp;<code>Array of Accounts</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;GET /accounts&lt;/p&gt;\n&lt;p&gt;List all accounts.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;GET /accounts&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;List all accounts.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;Array of Accounts&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.get('/accounts', middleware.isAuthorized, function (req, res, next) {\n    var query = req.db.Account.find().select('+conf').lean();\n\n    if (req.query.ids &amp;&amp; typeof req.query.ids === 'string') {\n        query\n        .where('_id').in(req.query.ids.split(','))\n        .exec(handler);\n    }\n    else {\n        query.exec(handler);\n    }\n    function handler(err, accounts) {\n        if (err) {\n            return next(err);\n        }\n        accounts.forEach(function (acct) {\n            if (acct.conf &amp;&amp; acct.conf.slice(0, 5) === 'reset') {\n                delete acct.conf;\n            }\n            if (!acct.conf) {\n                delete acct.conf;\n            }\n            delete acct.settings;\n        });\n        res.send(accounts);\n    }\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-GET--accounts--id--p--" class="comment"><h3><a href="#-p-GET--accounts--id--p--" class="bold"><p>GET /accounts/:id</p>
+</a></h3><div><p>Fetch a specific account.</p>
+</div><p><strong>returns&nbsp;<code>object Account</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;GET /accounts/:id&lt;/p&gt;\n&lt;p&gt;Fetch a specific account.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;GET /accounts/:id&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Fetch a specific account.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object Account&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {\n    req.db.Account.findById(req.params.id).select('+conf').exec(function (err, account) {\n        if (err) {\n            return next(err);\n        }\n        if (!account) {\n            return res.status(404).send({ error: 'Account not found by id ' + req.params.id });\n        }\n        res.send(account);\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-DELETE--account--id--p--" class="comment"><h3><a href="#-p-DELETE--account--id--p--" class="bold"><p>DELETE /account/:id</p>
+</a></h3><div><h4 id="todo-rework-this">TODO: rework this</h4>
+<p>Remove an account. Does not delete all of their messages/files so may cause breakage or
+orphan data.</p>
+</div><p><strong>returns&nbsp;<code>object { message: &quot;&quot; }</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;DELETE /account/:id&lt;/p&gt;\n&lt;h4 id=\&quot;todo-rework-this\&quot;&gt;TODO: rework this&lt;/h4&gt;\n&lt;p&gt;Remove an account. Does not delete all of their messages/files so may cause breakage or\norphan data.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;DELETE /account/:id&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;h4 id=\&quot;todo-rework-this\&quot;&gt;TODO: rework this&lt;/h4&gt;\n&lt;p&gt;Remove an account. Does not delete all of their messages/files so may cause breakage or\norphan data.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object { message: \&quot;\&quot; }&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.delete('/accounts/:id', middleware.isAuthorized, function (req, res, next) {\n    req.db.Account.remove({ _id: req.params.id }).exec(function (err) {\n        if (err) {\n            return next(err);\n        }\n        res.send({ message: 'Account was removed.'});\n\n        req.respoke.groups.publish({\n            groupId: config.systemGroupId,\n            message: JSON.stringify({\n                meta: {\n                    type: 'removeaccount',\n                    value: req.params.id\n                }\n            })\n        }, function (err) {\n            if (err) {\n                req.log.error('failed to send delete account notification', err);\n            }\n        });\n    });\n    req.db.Message.remove({ from: req.params.id });\n    req.db.File.remove({ owner: req.params.id });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-POST--accounts--p--" class="comment"><h3><a href="#-p-POST--accounts--p--" class="bold"><p>POST /accounts</p>
+</a></h3><div><p>Create a new local account and kick off confirmation by email (if required by configuration).</p>
+</div><p><strong>returns&nbsp;<code>object Account, { error: &quot;&quot; }</code></strong></p><p><strong>fires</strong><code>newaccount</code></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>_id</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">The username and unique identifier and endpoint.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>email</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5"></div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>display</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">The display name for this user.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>password</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5"></div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;_id&quot;,
+            &quot;description&quot;: &quot;The username and unique identifier and endpoint.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;email&quot;,
+            &quot;description&quot;: &quot;&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;display&quot;,
+            &quot;description&quot;: &quot;The display name for this user.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;password&quot;,
+            &quot;description&quot;: &quot;&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;POST /accounts&lt;/p&gt;\n&lt;p&gt;Create a new local account and kick off confirmation by email (if required by configuration).&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;POST /accounts&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Create a new local account and kick off confirmation by email (if required by configuration).&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [
+        &quot;newaccount&quot;
+    ],
+    &quot;returns&quot;: &quot;object Account, { error: \&quot;\&quot; }&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.post('/accounts', function (req, res, next) {\n    if (!config.localSignupEnabled) {\n        return res.status(403).send({\n            error: 'Local account signups are disabled by the system administrator.'\n        });\n    }\n    if (req.body._id === config.systemEndpointId) {\n        return res.status(400).send({\n            error: 'Name not available'\n        });\n    }\n    if (req.body.email &amp;&amp; config.restrictLocalAccountsToDomains &amp;&amp; config.restrictLocalAccountsToDomains.length) {\n        var emailParts = req.body.email.toLowerCase().split('@');\n        if (emailParts[1] &amp;&amp; config.restrictLocalAccountsToDomains.indexOf(emailParts[1]) === -1) {\n            return res.status(400).send({\n                error: 'You must sign up with an email from of the following domains: ' + config.restrictLocalAccountsToDomains.join(',')\n            });\n        }\n    }\n    req.log.info('trying to create new account', req.body._id);\n    var newAccount = new req.db.Account(req.body);\n    var conf = newAccount.conf;\n    newAccount.save(function (err, account) {\n        if (err) {\n            req.log.error(err);\n            err.status = 400;\n            return next(err);\n        }\n        res.send({ message: 'Account created successfully. Check your email to confirm.'});\n\n        // now send account confirmation email\n        // this can take a little while, so send the email in the background\n        var confirmURI = config.baseURL + '/conf/' + account._id + '/' + newAccount.conf;\n\n        // send email confirmation link if they are allowed in configuration\n        if (config.allowSelfConfirmation) {\n            sendConfirmationEmail();\n\n        }\n        // it is possible that this is the first person to sign up.\n        // if that is the case, they will need to be given a confirmation email.\n        else {\n            req.db.Account.count(function (err, totalAccounts) {\n                if (err) {\n                    req.log.error('Error counting number of accounts', err);\n                    return;\n                }\n                if (totalAccounts === 0) {\n                    sendConfirmationEmail();\n                }\n            });\n        }\n\n        function sendConfirmationEmail() {\n            req.email.sendMail({\n                from: config.email.from,\n                to: account.email,\n                subject: 'Account confirmation - ' + config.name,\n                text: 'Visit the following link to confirm your ' + config.name + ' account. ' + confirmURI\n            }, function (err) {\n                if (err) {\n                    req.log.error('Account confirmation email failed to send.', err, \&quot;Visit link to confirm.\&quot;, confirmURI);\n                    return;\n                }\n                req.log.error('Sent account confirmation email', account.email, 'with confirmation link', confirmURI)\n            });\n        }\n\n        account = account.toObject();\n        account.conf = conf;\n\n        req.respoke.groups.publish({\n            groupId: config.systemGroupId,\n            message: JSON.stringify({\n                meta: {\n                    type: 'newaccount',\n                    value: account._id\n                }\n            })\n        }, function (err) {\n            if (err) {\n                req.log.error('failed to send new account notification', err);\n            }\n        });\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-GET--groups--p--" class="comment"><h3><a href="#-p-GET--groups--p--" class="bold"><p>GET /groups</p>
+</a></h3><div><p>List the groups this person can see. (currently all groups!)</p>
+</div><p><strong>returns&nbsp;<code>Array of Groups</code></strong></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>?ids=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Optional comma separated list of ids only you are wanting to list.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?owner=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Optional Account._id to limit only to that user's groups.</div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;?ids=&quot;,
+            &quot;description&quot;: &quot;Optional comma separated list of ids only you are wanting to list.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;?owner=&quot;,
+            &quot;description&quot;: &quot;Optional Account._id to limit only to that user's groups.&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;GET /groups&lt;/p&gt;\n&lt;p&gt;List the groups this person can see. (currently all groups!)&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;GET /groups&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;List the groups this person can see. (currently all groups!)&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;Array of Groups&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.get('/groups', middleware.isAuthorized, function (req, res, next) {\n    if (req.query.ids) {\n        req.db.Group.find()\n        .where('_id').in(req.query.ids.split(','))\n        .exec(handler);\n    }\n    else if (req.query.owner) {\n        req.db.Group.find()\n        .where('owner', req.query.owner)\n        .exec(handler);\n    }\n    else {\n        req.db.Group.find().exec(handler);\n    }\n    function handler(err, groups) {\n        if (err) {\n            return next(err);\n        }\n        res.send(groups);\n    }\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-GET--groups--id--p--" class="comment"><h3><a href="#-p-GET--groups--id--p--" class="bold"><p>GET /groups/:id</p>
+</a></h3><div><p>Get a specific group object by <code>_id</code>.</p>
+</div><p><strong>returns&nbsp;<code>object Group || 404 { error: '' }</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;GET /groups/:id&lt;/p&gt;\n&lt;p&gt;Get a specific group object by &lt;code&gt;_id&lt;/code&gt;.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;GET /groups/:id&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Get a specific group object by &lt;code&gt;_id&lt;/code&gt;.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object Group || 404 { error: '' }&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.get('/groups/:_id', middleware.isAuthorized, function (req, res, next) {\n    req.db.Group.findById(req.params._id, function (err, group) {\n        if (err) {\n            return next(err);\n        }\n        if (!group) {\n            return res.status(404).send({ error: 'Group not found by id ' + req.params._id });\n        }\n        res.send(group);\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-POST--groups--p--" class="comment"><h3><a href="#-p-POST--groups--p--" class="bold"><p>POST /groups</p>
+</a></h3><div><p>Create a new group. Forces you to be the owner.</p>
+</div><p><strong>returns&nbsp;<code>object Group</code></strong></p><p><strong>fires</strong><code>newgroup</code></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>_id</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">The group name.</div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;_id&quot;,
+            &quot;description&quot;: &quot;The group name.&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;POST /groups&lt;/p&gt;\n&lt;p&gt;Create a new group. Forces you to be the owner.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;POST /groups&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Create a new group. Forces you to be the owner.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [
+        &quot;newgroup&quot;
+    ],
+    &quot;returns&quot;: &quot;object Group&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.post('/groups', middleware.isAuthorized, function (req, res, next) {\n    req.db.Group.findById(req.body._id).exec(function (err, existingGroup) {\n        if (err) {\n            err.status = 500;\n            return next(err);\n        }\n        if (existingGroup) {\n            err = new Error(\&quot;A group by that name already exists.\&quot;);\n            err.status = 400;\n            return next(err);\n        }\n        new req.db.Group({\n            _id: req.body._id,\n            owner: req.user._id\n        })\n        .save(function (err, group) {\n            if (err) {\n                err.status = 400;\n                return next(err);\n            }\n            res.send(group);\n\n            req.respoke.groups.publish({\n                groupId: config.systemGroupId,\n                message: JSON.stringify({\n                    meta: {\n                        type: 'newgroup',\n                        value: group._id\n                    }\n                })\n            }, function (err) {\n                if (err) {\n                    req.log.error('failed to send new account notification', err);\n                }\n            });\n        });\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-POST--groups--p--" class="comment"><h3><a href="#-p-POST--groups--p--" class="bold"><p>POST /groups</p>
+</a></h3><div><p>Create a new group. Forces you to be the owner.</p>
+</div><p><strong>returns&nbsp;<code>object Group</code></strong></p><p><strong>fires</strong><code>newgroup</code></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>_id</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">The group name.</div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;_id&quot;,
+            &quot;description&quot;: &quot;The group name.&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;POST /groups&lt;/p&gt;\n&lt;p&gt;Create a new group. Forces you to be the owner.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;POST /groups&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Create a new group. Forces you to be the owner.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [
+        &quot;newgroup&quot;
+    ],
+    &quot;returns&quot;: &quot;object Group&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) {\n    req.db.Group.findById(req.params.id, function (err, group) {\n        if (err) {\n            return next(err);\n        }\n        if (!group) {\n            return res.status(404).send({ error: 'Group not found by id ' + req.params.id });\n        }\n        if (group.owner.toString() !== req.user._id.toString()) {\n            return res.status(401).send({ error: 'Unable to remove group that does not belong to you.' });\n        }\n\n        // kick everyone out first\n        req.respoke.groups.publish({\n            groupId: config.systemGroupId,\n            message: JSON.stringify({\n                meta: {\n                    type: 'removegroup',\n                    value:  group._id\n                }\n            })\n        }, function (err) {\n            if (err) {\n                req.log.error('failed to send new account notification', err);\n            }\n        });\n\n        async.series([\n            function (cb) {\n                req.db.Message.distinct('file', {\n                    group: req.params.id\n                })\n                .exec(function (err, ids) {\n                    if (err) {\n                        return cb(err);\n                    }\n                    req.db.File.remove({\n                        _id: { $in: ids }\n                    })\n                    .exec(cb);\n                });\n            },\n            function (cb) {\n                req.db.Message.remove({\n                    group: req.params.id\n                })\n                .exec(function (err) {\n                    if (err) {\n                        return cb(err);\n                    }\n                    cb();\n                });\n            },\n            function (cb) {\n                group.remove(cb);\n            }\n        ], function (err) {\n            if (err) {\n                return next(err);\n            }\n            res.send({ message: 'Group was removed successfully.' });\n        });\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-PATCH--groups---id-owner--accountId--p--" class="comment"><h3><a href="#-p-PATCH--groups---id-owner--accountId--p--" class="bold"><p>PATCH /groups/:_id/owner/:accountId</p>
+</a></h3><div><p>Change ownership of a group (param <code>_id</code>).</p>
+<p>New owner is the <code>Account._id</code> in URL param <code>accountId</code>.</p>
+</div><p><strong>returns&nbsp;<code>object Group</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;PATCH /groups/:_id/owner/:accountId&lt;/p&gt;\n&lt;p&gt;Change ownership of a group (param &lt;code&gt;_id&lt;/code&gt;).&lt;/p&gt;\n&lt;p&gt;New owner is the &lt;code&gt;Account._id&lt;/code&gt; in URL param &lt;code&gt;accountId&lt;/code&gt;.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;PATCH /groups/:_id/owner/:accountId&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Change ownership of a group (param &lt;code&gt;_id&lt;/code&gt;).&lt;/p&gt;\n&lt;p&gt;New owner is the &lt;code&gt;Account._id&lt;/code&gt; in URL param &lt;code&gt;accountId&lt;/code&gt;.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object Group&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.patch('/groups/:_id/owner/:accountId', middleware.isAuthorized, function (req, res, next) {\n    req.db.Group\n    .findById(req.params._id)\n    .populate('owner')\n    .exec(function (err, group) {\n        if (err) {\n            return next(err);\n        }\n        if (!group) {\n            return res.status(404).send({ error: 'Group ' + req.params._id + ' was not found.' });\n        }\n        if (group.owner._id.toString() !== req.user._id.toString()) {\n            return res.status(401).send({\n                error: 'Group ' + req.params._id + ' is owned by ' + group.owner.display + '.'\n            });\n        }\n        req.db.Account.findById(req.params.accountId, function (err, account) {\n            if (err) {\n                return next(err);\n            }\n            if (!account) {\n                return res.status(404).send({ error: \&quot;Account \&quot; + req.params.accountId + \&quot; does not exist.\&quot;});\n            }\n            group.owner = req.params.accountId;\n            group.save(function (err, group) {\n                if (err) {\n                    return next(err);\n                }\n                res.send(group);\n            });\n        });\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-GET--messages--p--" class="comment"><h3><a href="#-p-GET--messages--p--" class="bold"><p>GET /messages</p>
+</a></h3><div><p>Fetch messages. Requires one or more querystring params to determine what you need.</p>
+<p>Always sorts <em>descending by <code>created</code></em> (most recent are last).</p>
+<p>The following properties are <strong>populated</strong> with the objects, instead of being
+just an _id field:</p>
+<ul>
+<li>from</li>
+<li>to</li>
+<li>group</li>
+</ul>
+</div><p><strong>returns&nbsp;<code>Array of Messages</code></strong></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>?ids=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Comma separated list of `Message._id`s.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?group=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">`Message.group` of the messages.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?account=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Messages between the logged in user and another account.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?limit=50</code></div><div class="col-sm-3"><strong>number</strong></div><div class="col-sm-5">Integer; how many messages to fetch.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?skip=0</code></div><div class="col-sm-3"><strong>number</strong></div><div class="col-sm-5">Integer; how many messages to skip when fetching (descending order by created).</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?before=</code></div><div class="col-sm-3"><strong>date</strong></div><div class="col-sm-5">Fetch messages that were created no later than this date.</div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;?ids=&quot;,
+            &quot;description&quot;: &quot;Comma separated list of `Message._id`s.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;?group=&quot;,
+            &quot;description&quot;: &quot;`Message.group` of the messages.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;?account=&quot;,
+            &quot;description&quot;: &quot;Messages between the logged in user and another account.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;number&quot;
+            ],
+            &quot;name&quot;: &quot;?limit=50&quot;,
+            &quot;description&quot;: &quot;Integer; how many messages to fetch.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;number&quot;
+            ],
+            &quot;name&quot;: &quot;?skip=0&quot;,
+            &quot;description&quot;: &quot;Integer; how many messages to skip when fetching (descending order by created).&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;date&quot;
+            ],
+            &quot;name&quot;: &quot;?before=&quot;,
+            &quot;description&quot;: &quot;Fetch messages that were created no later than this date.&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;GET /messages&lt;/p&gt;\n&lt;p&gt;Fetch messages. Requires one or more querystring params to determine what you need.&lt;/p&gt;\n&lt;p&gt;Always sorts &lt;em&gt;descending by &lt;code&gt;created&lt;/code&gt;&lt;/em&gt; (most recent are last).&lt;/p&gt;\n&lt;p&gt;The following properties are &lt;strong&gt;populated&lt;/strong&gt; with the objects, instead of being\njust an _id field:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;from&lt;/li&gt;\n&lt;li&gt;to&lt;/li&gt;\n&lt;li&gt;group&lt;/li&gt;\n&lt;/ul&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;GET /messages&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Fetch messages. Requires one or more querystring params to determine what you need.&lt;/p&gt;\n&lt;p&gt;Always sorts &lt;em&gt;descending by &lt;code&gt;created&lt;/code&gt;&lt;/em&gt; (most recent are last).&lt;/p&gt;\n&lt;p&gt;The following properties are &lt;strong&gt;populated&lt;/strong&gt; with the objects, instead of being\njust an _id field:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;from&lt;/li&gt;\n&lt;li&gt;to&lt;/li&gt;\n&lt;li&gt;group&lt;/li&gt;\n&lt;/ul&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;Array of Messages&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.get('/messages', middleware.isAuthorized, function (req, res, next) {\n\n    // Build a message query.\n    // Always sorted descending by created.\n\n    var DEFAULT_LIMIT = 50;\n\n    var query = req.db.Message.find().sort('-created');\n\n    // specific message _id list\n    if (req.query.ids) {\n        query = query.where('_id').in(req.query.ids.split(','));\n    }\n\n    // messages for a group\n    if (req.query.group) {\n        query = query.where('group', req.query.group);\n    }\n\n    // messages between two accounts\n    if (req.query.account) {\n        query = query.or([\n            { to: req.query.account,   from: req.user._id },\n            { from: req.query.account, to: req.user._id }\n        ]);\n    }\n\n    // limit\n    if (req.query.limit) {\n        query = query.limit(req.query.limit);\n    }\n    else {\n        query = query.limit(DEFAULT_LIMIT);\n    }\n\n    // skip\n    if (req.params.skip) {\n        query = query.skip(req.query.skip);\n    }\n\n    if (req.query.before) {\n        query = query.where('created').lt(req.query.before);\n    }\n\n    query\n    .populate('from to group')\n    .exec(function (err, messages) {\n        if (err) {\n            return next(err);\n        }\n        res.send(messages);\n    });\n\n});\n\nrouter.post('/messages', middleware.isAuthorized, function (req, res, next) {\n    if (req.body.content &amp;&amp; req.body.content.length &gt; 4096) {\n        var err = new Error('Message is too long. Consider breaking it into smaller chunks.');\n        err.status = 400;\n        return next(err);\n    }\n    new req.db.Message({\n        from: req.user._id,\n        to: req.body.to,\n        group: req.body.group,\n        content: req.body.content,\n        file: req.body.file\n    }).save(function (err, message) {\n        if (err) {\n            return next(err);\n        }\n        res.send(message);\n\n        var content;\n        try {\n            content = JSON.parse(req.body.content);\n        }\n        catch (ex) {\n            return;\n        }\n\n        // send offline notification email\n        if (req.body.recipientOffline) {\n            if (req.body.file) {\n                return;\n            }\n            req.db.Account.findById(req.body.to).exec(function (err, account) {\n                if (err) {\n                    req.log.error(err);\n                }\n                if (!account) {\n                    return;\n                }\n                if (!account.settings.offlineNotifications) {\n                    return;\n                }\n\n                var emailContent = {\n                    from: config.email.from,\n                    replyTo: req.user.email,\n                    to: account.email,\n                    subject: '[' + config.name + '] '\n                        + req.user.display + ' sent you a message while you were offline',\n                    text: req.user.display + ' said:\\n\\n' + content.text\n                        + '\\n---\\nUnsubscribe from these messages in the '\n                        + config.name + ' settings. '\n                        + config.baseURL\n                };\n\n                if (account.settings.htmlEmails) {\n                    emailContent.html = '&lt;em&gt;' + req.user.display + '&lt;/em&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;'\n                        + content.text\n                        + '&lt;br /&gt;---&lt;br /&gt;&lt;a href=\&quot;' + config.baseURL + '\&quot;&gt;'\n                        + 'Unsubscribe from these messages in the '\n                        + config.name + ' settings&lt;/a&gt;';\n                }\n\n                req.email.sendMail(emailContent, function (err) {\n                    if (err) {\n                        req.log.error(err);\n                        return;\n                    }\n                    req.log.info('offline conversation email sent', req.user.email, account.email);\n                });\n            });\n        }\n\n        // send offline mention email, but only for groups.\n        if (req.body.group &amp;&amp; req.body.offlineMentions) {\n            var mentions = req.body.offlineMentions instanceof Array ? req.body.offlineMentions : req.body.offlineMentions.split(',');\n\n            req.db.Account.find().where('_id').in(mentions).exec(function (err, accounts) {\n                if (err) {\n                    req.log.error(err);\n                    return;\n                }\n\n                accounts.forEach(function sendNotifEmail(account) {\n                    if (!account) {\n                        return;\n                    }\n\n                    var emailContent = {\n                        from: config.email.from,\n                        replyTo: req.user.email,\n                        to: account.email,\n                        subject: '[' + config.name + '] '\n                            + req.user.display + ' mentioned you in ' + req.body.group,\n                        text: req.user.display + ' said:\\n\\n' + content.text\n                            + '\\n---\\n'\n                            + config.name + '   '\n                            + config.baseURL\n                    };\n\n                    if (account.settings.htmlEmails) {\n                        emailContent.html = '&lt;em&gt;' + req.user.display + '&lt;/em&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;'\n                            + content.text\n                            + '&lt;br /&gt;---&lt;br /&gt;&lt;a href=\&quot;' + config.baseURL + '\&quot;&gt;'\n                            + config.name + '&lt;/a&gt;';\n                    }\n\n                    req.email.sendMail(emailContent, function (err) {\n                        if (err) {\n                            req.log.error(err);\n                            return;\n                        }\n                        req.log.info('offline mention email sent', req.user.email, account.email);\n                    });\n                });\n            });\n        }\n\n\n    });\n});\n\nrouter.post('/files', middleware.isAuthorized, function (req, res, next) {\n    var contentType = req.body.contentType || 'text/plain';\n\n    new req.db.File({\n        content: req.body.content,\n        contentType: contentType,\n        name: req.body.name,\n        owner: req.user._id\n    }).save(function (err, file) {\n        if (err) {\n            return next(err);\n        }\n        res.send(file);\n    });\n});\n\n// this is /api/files/:id\n// get the actual file at /files/:id\nrouter.get('/files/:id', middleware.isAuthorized, function (req, res, next) {\n    req.db.File.findById(req.params.id, function (err, file) {\n        if (err) {\n            return next(err);\n        }\n        if (!file) {\n            return res.status(404).send({ error: 'Not found'});\n        }\n        res.send(file);\n    });\n});\n\nmodule.exports = router;&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br></div></body><br><br><br><br><br><br><br></html>

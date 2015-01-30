@@ -1,0 +1,24 @@
+[
+    {
+        "tags": [],
+        "description": {
+            "full": "<p>Copyright 2014, Digium, Inc.\nAll rights reserved.</p>\n<p>This source code is licensed under The AGPL v3 License found in the\nLICENSE file in the root directory of this source tree.</p>\n<p>For all details and documentation:  <a href=\"https://www.respoke.io\">https://www.respoke.io</a></p>\n",
+            "summary": "<p>Copyright 2014, Digium, Inc.\nAll rights reserved.</p>\n",
+            "body": "<p>This source code is licensed under The AGPL v3 License found in the\nLICENSE file in the root directory of this source tree.</p>\n<p>For all details and documentation:  <a href=\"https://www.respoke.io\">https://www.respoke.io</a></p>\n"
+        },
+        "isPrivate": false,
+        "fires": [],
+        "ignore": true,
+        "code": "var express = require('express');\nvar router = express.Router();\nvar passport = require('passport');\nvar middleware = require('../lib/middleware');\nvar config = require('../config');\n\nrouter.delete('/session', function (req, res) {\n    req.logout();\n    res.send({ message: 'Logged out' });\n});\n\n// Respoke token brokered authentication\nrouter.get('/tokens', middleware.isAuthorized, function (req, res, next) {\n    var authSettings = {\n        endpointId: req.user._id,\n        roleId: config.respoke.roleId\n    };\n    // return next(new Error('testing'));\n\n    req.respoke.auth.endpoint(authSettings, function (err, authData) {\n        if (err) {\n            req.log.error('auth.endpoint', err);\n            return next(new Error(\"Failed to get connection credentials for the chat provider.\"));\n        }\n\n        if (!authData || !authData.tokenId) {\n            req.log.error('invalid response from Respoke auth.endpoint method', authData);\n            return next(new Error(\"Invalid response from server. Please try again later.\"));\n        }\n\n        res.send({\n            token: authData.tokenId,\n            appId: req.respoke.appId,\n            baseURL: config.respoke.baseURL,\n            systemGroupId: config.systemGroupId,\n            systemEndpointId: config.systemEndpointId\n        });\n    });\n});\n\n// Local login\nrouter.post('/local', function (req, res, next) {\n    if (typeof req.body.email !== 'string') {\n        return res.status(400).send({ message: 'Missing email or username.'});\n    }\n    req.db.Account.findOne()\n    .or([{ _id: req.body.email.toLowerCase() }, { email: req.body.email.toLowerCase() }])\n    .select('+password +conf')\n    .exec(function (err, account) {\n        if (err) {\n            return next(err);\n        }\n        if (!account) {\n            return res.status(400).send({ message: 'Incorrect username.' });\n        }\n        if (account.conf && account.conf.slice(0, 7) === 'confirm') {\n            return res.status(400).send({\n                message: 'Your account must be confirmed before you may log in.'\n            });\n        }\n        if (!account.password) {\n            return res.status(401).send({\n                message: 'A password has not been set for this account yet.'\n            });\n        }\n        var hashedPassword = req.utils.hash(req.body.password);\n        if (hashedPassword !== account.password) {\n            return res.status(401).send({ message: 'Incorrect password.' });\n        }\n        account = account.toObject();\n        delete account.password;\n        req.login(account, function (err) {\n            if (err) {\n                return next(err);\n            }\n            res.send(req.user);\n        });\n    });\n});\n\n// Redirect the user to Google for authentication.  When complete, Google\n// will redirect the user back to the application at /auth/google/callback\nrouter.get(\n    '/google',\n    passport.authenticate('google', {\n        scope: [\n            'https://www.googleapis.com/auth/userinfo.profile',\n            'https://www.googleapis.com/auth/userinfo.email'\n        ]\n    })\n);\nrouter.get('/google/callback', passport.authenticate('google', {\n    failureRedirect: '/#/welcome?authFailure=Google+auth+failed'\n}), function (req, res) {\n    res.redirect('/');\n});\n\nmodule.exports = router;",
+        "ctx": {
+            "type": "declaration",
+            "name": "express",
+            "value": "require('express')",
+            "string": "express",
+            "file": {
+                "input": "routes/auth.js",
+                "output": "docs/routes/auth.js.json"
+            }
+        }
+    }
+]

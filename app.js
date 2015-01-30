@@ -182,7 +182,10 @@ app.use(jadeStatic({
         themes: themes
     }
 }));
-
+// serve the docs if not production mode
+if (process.env.NODE_ENV !== 'production') {
+    app.use('/docs', express.static(path.join(__dirname, 'docs')));
+}
 
 // Attaching app locals and utils to request
 app.use(function (req, res, next) {
