@@ -410,9 +410,9 @@ orphan data.</p>
 <p>The following properties are <strong>populated</strong> with the objects, instead of being
 just an _id field:</p>
 <ul>
-<li>from</li>
-<li>to</li>
-<li>group</li>
+<li><code>message.from</code></li>
+<li><code>message.to</code></li>
+<li><code>message.group</code></li>
 </ul>
 </div><p><strong>returns&nbsp;<code>Array of Messages</code></strong></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>?ids=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Comma separated list of `Message._id`s.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?group=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">`Message.group` of the messages.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?account=</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Messages between the logged in user and another account.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?limit=50</code></div><div class="col-sm-3"><strong>number</strong></div><div class="col-sm-5">Integer; how many messages to fetch.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?skip=0</code></div><div class="col-sm-3"><strong>number</strong></div><div class="col-sm-5">Integer; how many messages to skip when fetching (descending order by created).</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>?before=</code></div><div class="col-sm-3"><strong>date</strong></div><div class="col-sm-5">Fetch messages that were created no later than this date.</div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
     &quot;tags&quot;: [
@@ -466,15 +466,143 @@ just an _id field:</p>
         }
     ],
     &quot;description&quot;: {
-        &quot;full&quot;: &quot;&lt;p&gt;GET /messages&lt;/p&gt;\n&lt;p&gt;Fetch messages. Requires one or more querystring params to determine what you need.&lt;/p&gt;\n&lt;p&gt;Always sorts &lt;em&gt;descending by &lt;code&gt;created&lt;/code&gt;&lt;/em&gt; (most recent are last).&lt;/p&gt;\n&lt;p&gt;The following properties are &lt;strong&gt;populated&lt;/strong&gt; with the objects, instead of being\njust an _id field:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;from&lt;/li&gt;\n&lt;li&gt;to&lt;/li&gt;\n&lt;li&gt;group&lt;/li&gt;\n&lt;/ul&gt;\n&quot;,
+        &quot;full&quot;: &quot;&lt;p&gt;GET /messages&lt;/p&gt;\n&lt;p&gt;Fetch messages. Requires one or more querystring params to determine what you need.&lt;/p&gt;\n&lt;p&gt;Always sorts &lt;em&gt;descending by &lt;code&gt;created&lt;/code&gt;&lt;/em&gt; (most recent are last).&lt;/p&gt;\n&lt;p&gt;The following properties are &lt;strong&gt;populated&lt;/strong&gt; with the objects, instead of being\njust an _id field:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;code&gt;message.from&lt;/code&gt;&lt;/li&gt;\n&lt;li&gt;&lt;code&gt;message.to&lt;/code&gt;&lt;/li&gt;\n&lt;li&gt;&lt;code&gt;message.group&lt;/code&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&quot;,
         &quot;summary&quot;: &quot;&lt;p&gt;GET /messages&lt;/p&gt;\n&quot;,
-        &quot;body&quot;: &quot;&lt;p&gt;Fetch messages. Requires one or more querystring params to determine what you need.&lt;/p&gt;\n&lt;p&gt;Always sorts &lt;em&gt;descending by &lt;code&gt;created&lt;/code&gt;&lt;/em&gt; (most recent are last).&lt;/p&gt;\n&lt;p&gt;The following properties are &lt;strong&gt;populated&lt;/strong&gt; with the objects, instead of being\njust an _id field:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;from&lt;/li&gt;\n&lt;li&gt;to&lt;/li&gt;\n&lt;li&gt;group&lt;/li&gt;\n&lt;/ul&gt;\n&quot;
+        &quot;body&quot;: &quot;&lt;p&gt;Fetch messages. Requires one or more querystring params to determine what you need.&lt;/p&gt;\n&lt;p&gt;Always sorts &lt;em&gt;descending by &lt;code&gt;created&lt;/code&gt;&lt;/em&gt; (most recent are last).&lt;/p&gt;\n&lt;p&gt;The following properties are &lt;strong&gt;populated&lt;/strong&gt; with the objects, instead of being\njust an _id field:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;code&gt;message.from&lt;/code&gt;&lt;/li&gt;\n&lt;li&gt;&lt;code&gt;message.to&lt;/code&gt;&lt;/li&gt;\n&lt;li&gt;&lt;code&gt;message.group&lt;/code&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&quot;
     },
     &quot;isPrivate&quot;: false,
     &quot;fires&quot;: [],
     &quot;returns&quot;: &quot;Array of Messages&quot;,
     &quot;ignore&quot;: false,
-    &quot;code&quot;: &quot;router.get('/messages', middleware.isAuthorized, function (req, res, next) {\n\n    // Build a message query.\n    // Always sorted descending by created.\n\n    var DEFAULT_LIMIT = 50;\n\n    var query = req.db.Message.find().sort('-created');\n\n    // specific message _id list\n    if (req.query.ids) {\n        query = query.where('_id').in(req.query.ids.split(','));\n    }\n\n    // messages for a group\n    if (req.query.group) {\n        query = query.where('group', req.query.group);\n    }\n\n    // messages between two accounts\n    if (req.query.account) {\n        query = query.or([\n            { to: req.query.account,   from: req.user._id },\n            { from: req.query.account, to: req.user._id }\n        ]);\n    }\n\n    // limit\n    if (req.query.limit) {\n        query = query.limit(req.query.limit);\n    }\n    else {\n        query = query.limit(DEFAULT_LIMIT);\n    }\n\n    // skip\n    if (req.params.skip) {\n        query = query.skip(req.query.skip);\n    }\n\n    if (req.query.before) {\n        query = query.where('created').lt(req.query.before);\n    }\n\n    query\n    .populate('from to group')\n    .exec(function (err, messages) {\n        if (err) {\n            return next(err);\n        }\n        res.send(messages);\n    });\n\n});\n\nrouter.post('/messages', middleware.isAuthorized, function (req, res, next) {\n    if (req.body.content &amp;&amp; req.body.content.length &gt; 4096) {\n        var err = new Error('Message is too long. Consider breaking it into smaller chunks.');\n        err.status = 400;\n        return next(err);\n    }\n    new req.db.Message({\n        from: req.user._id,\n        to: req.body.to,\n        group: req.body.group,\n        content: req.body.content,\n        file: req.body.file\n    }).save(function (err, message) {\n        if (err) {\n            return next(err);\n        }\n        res.send(message);\n\n        var content;\n        try {\n            content = JSON.parse(req.body.content);\n        }\n        catch (ex) {\n            return;\n        }\n\n        // send offline notification email\n        if (req.body.recipientOffline) {\n            if (req.body.file) {\n                return;\n            }\n            req.db.Account.findById(req.body.to).exec(function (err, account) {\n                if (err) {\n                    req.log.error(err);\n                }\n                if (!account) {\n                    return;\n                }\n                if (!account.settings.offlineNotifications) {\n                    return;\n                }\n\n                var emailContent = {\n                    from: config.email.from,\n                    replyTo: req.user.email,\n                    to: account.email,\n                    subject: '[' + config.name + '] '\n                        + req.user.display + ' sent you a message while you were offline',\n                    text: req.user.display + ' said:\\n\\n' + content.text\n                        + '\\n---\\nUnsubscribe from these messages in the '\n                        + config.name + ' settings. '\n                        + config.baseURL\n                };\n\n                if (account.settings.htmlEmails) {\n                    emailContent.html = '&lt;em&gt;' + req.user.display + '&lt;/em&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;'\n                        + content.text\n                        + '&lt;br /&gt;---&lt;br /&gt;&lt;a href=\&quot;' + config.baseURL + '\&quot;&gt;'\n                        + 'Unsubscribe from these messages in the '\n                        + config.name + ' settings&lt;/a&gt;';\n                }\n\n                req.email.sendMail(emailContent, function (err) {\n                    if (err) {\n                        req.log.error(err);\n                        return;\n                    }\n                    req.log.info('offline conversation email sent', req.user.email, account.email);\n                });\n            });\n        }\n\n        // send offline mention email, but only for groups.\n        if (req.body.group &amp;&amp; req.body.offlineMentions) {\n            var mentions = req.body.offlineMentions instanceof Array ? req.body.offlineMentions : req.body.offlineMentions.split(',');\n\n            req.db.Account.find().where('_id').in(mentions).exec(function (err, accounts) {\n                if (err) {\n                    req.log.error(err);\n                    return;\n                }\n\n                accounts.forEach(function sendNotifEmail(account) {\n                    if (!account) {\n                        return;\n                    }\n\n                    var emailContent = {\n                        from: config.email.from,\n                        replyTo: req.user.email,\n                        to: account.email,\n                        subject: '[' + config.name + '] '\n                            + req.user.display + ' mentioned you in ' + req.body.group,\n                        text: req.user.display + ' said:\\n\\n' + content.text\n                            + '\\n---\\n'\n                            + config.name + '   '\n                            + config.baseURL\n                    };\n\n                    if (account.settings.htmlEmails) {\n                        emailContent.html = '&lt;em&gt;' + req.user.display + '&lt;/em&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;'\n                            + content.text\n                            + '&lt;br /&gt;---&lt;br /&gt;&lt;a href=\&quot;' + config.baseURL + '\&quot;&gt;'\n                            + config.name + '&lt;/a&gt;';\n                    }\n\n                    req.email.sendMail(emailContent, function (err) {\n                        if (err) {\n                            req.log.error(err);\n                            return;\n                        }\n                        req.log.info('offline mention email sent', req.user.email, account.email);\n                    });\n                });\n            });\n        }\n\n\n    });\n});\n\nrouter.post('/files', middleware.isAuthorized, function (req, res, next) {\n    var contentType = req.body.contentType || 'text/plain';\n\n    new req.db.File({\n        content: req.body.content,\n        contentType: contentType,\n        name: req.body.name,\n        owner: req.user._id\n    }).save(function (err, file) {\n        if (err) {\n            return next(err);\n        }\n        res.send(file);\n    });\n});\n\n// this is /api/files/:id\n// get the actual file at /files/:id\nrouter.get('/files/:id', middleware.isAuthorized, function (req, res, next) {\n    req.db.File.findById(req.params.id, function (err, file) {\n        if (err) {\n            return next(err);\n        }\n        if (!file) {\n            return res.status(404).send({ error: 'Not found'});\n        }\n        res.send(file);\n    });\n});\n\nmodule.exports = router;&quot;,
+    &quot;code&quot;: &quot;router.get('/messages', middleware.isAuthorized, function (req, res, next) {\n\n    // Build a message query.\n    // Always sorted descending by created.\n\n    var DEFAULT_LIMIT = 50;\n\n    var query = req.db.Message.find().sort('-created');\n\n    // specific message _id list\n    if (req.query.ids) {\n        query = query.where('_id').in(req.query.ids.split(','));\n    }\n\n    // messages for a group\n    if (req.query.group) {\n        query = query.where('group', req.query.group);\n    }\n\n    // messages between two accounts\n    if (req.query.account) {\n        query = query.or([\n            { to: req.query.account,   from: req.user._id },\n            { from: req.query.account, to: req.user._id }\n        ]);\n    }\n\n    // limit\n    if (req.query.limit) {\n        query = query.limit(req.query.limit);\n    }\n    else {\n        query = query.limit(DEFAULT_LIMIT);\n    }\n\n    // skip\n    if (req.params.skip) {\n        query = query.skip(req.query.skip);\n    }\n\n    if (req.query.before) {\n        query = query.where('created').lt(req.query.before);\n    }\n\n    query\n    .populate('from to group')\n    .exec(function (err, messages) {\n        if (err) {\n            return next(err);\n        }\n        res.send(messages);\n    });\n\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-POST--messages--p--" class="comment"><h3><a href="#-p-POST--messages--p--" class="bold"><p>POST /messages</p>
+</a></h3><div><p>Create a message which persists it to the server.</p>
+<p>Does not send it through Respoke as a web socket. That is done by the client.</p>
+</div><p><strong>returns&nbsp;<code>object Message</code></strong></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>to</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Optional Account._id for a private message.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>group</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Optional Group._id for a group message.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>content</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">The message text.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>file</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Optional File._id that is considered related to this message.</div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;to&quot;,
+            &quot;description&quot;: &quot;Optional Account._id for a private message.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;group&quot;,
+            &quot;description&quot;: &quot;Optional Group._id for a group message.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;content&quot;,
+            &quot;description&quot;: &quot;The message text.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;file&quot;,
+            &quot;description&quot;: &quot;Optional File._id that is considered related to this message.&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;POST /messages&lt;/p&gt;\n&lt;p&gt;Create a message which persists it to the server.&lt;/p&gt;\n&lt;p&gt;Does not send it through Respoke as a web socket. That is done by the client.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;POST /messages&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Create a message which persists it to the server.&lt;/p&gt;\n&lt;p&gt;Does not send it through Respoke as a web socket. That is done by the client.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object Message&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.post('/messages', middleware.isAuthorized, function (req, res, next) {\n    if (req.body.content &amp;&amp; req.body.content.length &gt; 4096) {\n        var err = new Error('Message is too long. Consider breaking it into smaller chunks.');\n        err.status = 400;\n        return next(err);\n    }\n    new req.db.Message({\n        from: req.user._id,\n        to: req.body.to,\n        group: req.body.group,\n        content: req.body.content,\n        file: req.body.file\n    }).save(function (err, message) {\n        if (err) return next(err);\n\n        //\n        // Response to client is here.\n        //\n        res.send(message);\n\n\n        var content;\n        try {\n            content = JSON.parse(req.body.content);\n        }\n        catch (ex) {\n            return;\n        }\n\n        // send offline notification email\n        if (req.body.recipientOffline) {\n            if (req.body.file) {\n                return;\n            }\n            req.db.Account.findById(req.body.to).exec(function (err, account) {\n                if (err) {\n                    req.log.error(err);\n                }\n                if (!account) {\n                    return;\n                }\n                if (!account.settings.offlineNotifications) {\n                    return;\n                }\n\n                var emailContent = {\n                    from: config.email.from,\n                    replyTo: req.user.email,\n                    to: account.email,\n                    subject: '[' + config.name + '] '\n                        + req.user.display + ' sent you a message while you were offline',\n                    text: req.user.display + ' said:\\n\\n' + content.text\n                        + '\\n---\\nUnsubscribe from these messages in the '\n                        + config.name + ' settings. '\n                        + config.baseURL\n                };\n\n                if (account.settings.htmlEmails) {\n                    emailContent.html = '&lt;em&gt;' + req.user.display + '&lt;/em&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;'\n                        + content.text\n                        + '&lt;br /&gt;---&lt;br /&gt;&lt;a href=\&quot;' + config.baseURL + '\&quot;&gt;'\n                        + 'Unsubscribe from these messages in the '\n                        + config.name + ' settings&lt;/a&gt;';\n                }\n\n                req.email.sendMail(emailContent, function (err) {\n                    if (err) {\n                        req.log.error(err);\n                        return;\n                    }\n                    req.log.info('offline conversation email sent', req.user.email, account.email);\n                });\n            });\n        }\n\n        // send offline mention email, but only for groups.\n        if (req.body.group &amp;&amp; req.body.offlineMentions) {\n            var mentions = req.body.offlineMentions instanceof Array ? req.body.offlineMentions : req.body.offlineMentions.split(',');\n\n            req.db.Account.find().where('_id').in(mentions).exec(function (err, accounts) {\n                if (err) {\n                    req.log.error(err);\n                    return;\n                }\n\n                accounts.forEach(function sendNotifEmail(account) {\n                    if (!account) {\n                        return;\n                    }\n\n                    var emailContent = {\n                        from: config.email.from,\n                        replyTo: req.user.email,\n                        to: account.email,\n                        subject: '[' + config.name + '] '\n                            + req.user.display + ' mentioned you in ' + req.body.group,\n                        text: req.user.display + ' said:\\n\\n' + content.text\n                            + '\\n---\\n'\n                            + config.name + '   '\n                            + config.baseURL\n                    };\n\n                    if (account.settings.htmlEmails) {\n                        emailContent.html = '&lt;em&gt;' + req.user.display + '&lt;/em&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;'\n                            + content.text\n                            + '&lt;br /&gt;---&lt;br /&gt;&lt;a href=\&quot;' + config.baseURL + '\&quot;&gt;'\n                            + config.name + '&lt;/a&gt;';\n                    }\n\n                    req.email.sendMail(emailContent, function (err) {\n                        if (err) {\n                            req.log.error(err);\n                            return;\n                        }\n                        req.log.info('offline mention email sent', req.user.email, account.email);\n                    });\n                });\n            });\n        }\n\n\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-POST--files--p--" class="comment"><h3><a href="#-p-POST--files--p--" class="bold"><p>POST /files</p>
+</a></h3><div><p>Upload a file.</p>
+</div><p><strong>returns&nbsp;<code>object File (model - not actual file)</code></strong></p><br><h4>Arguments</h4><div class="row hidden-xs param"><div class="col-sm-4">Name</div><div class="col-sm-3">Type</div><div class="col-sm-5"></div></div><div class="row param"><div class="col-sm-4"><code>content</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">The file as Base64 encoded string.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>contentType</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">MIME type of the file.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>owner</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">The Account._id of the logged in user uploading the file.</div></div><br class="visible-xs"><div class="row param"><div class="col-sm-4"><code>name</code></div><div class="col-sm-3"><strong>string</strong></div><div class="col-sm-5">Optional file name.</div></div><br class="visible-xs"><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;content&quot;,
+            &quot;description&quot;: &quot;The file as Base64 encoded string.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;contentType&quot;,
+            &quot;description&quot;: &quot;MIME type of the file.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;owner&quot;,
+            &quot;description&quot;: &quot;The Account._id of the logged in user uploading the file.&quot;
+        },
+        {
+            &quot;type&quot;: &quot;arg&quot;,
+            &quot;types&quot;: [
+                &quot;string&quot;
+            ],
+            &quot;name&quot;: &quot;name&quot;,
+            &quot;description&quot;: &quot;Optional file name.&quot;
+        }
+    ],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;POST /files&lt;/p&gt;\n&lt;p&gt;Upload a file.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;POST /files&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Upload a file.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object File (model - not actual file)&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.post('/files', middleware.isAuthorized, function (req, res, next) {\n    var contentType = req.body.contentType || 'text/plain';\n\n    new req.db.File({\n        content: req.body.content,\n        contentType: contentType,\n        name: req.body.name,\n        owner: req.user._id\n    }).save(function (err, file) {\n        if (err) {\n            return next(err);\n        }\n        res.send(file);\n    });\n});&quot;,
+    &quot;ctx&quot;: {
+        &quot;file&quot;: {
+            &quot;input&quot;: &quot;routes/api.js&quot;,
+            &quot;output&quot;: &quot;docs/routes/api.js.json&quot;
+        }
+    }
+}</code></pre></div><br><div id="-p-GET--files---id--p--" class="comment"><h3><a href="#-p-GET--files---id--p--" class="bold"><p>GET /files/:_id</p>
+</a></h3><div><p>Fetch an entire File document.</p>
+<p>Get <em>only</em> the file by doing <code>GET /files/:_id</code>.</p>
+</div><p><strong>returns&nbsp;<code>object File</code></strong></p><br><a href="javascript:void(0)" onclick="this.nextSibling.style.display = this.nextSibling.style.display == 'block' ? 'none' : 'block'">JSON</a><pre style="display:none"><code>{
+    &quot;tags&quot;: [],
+    &quot;description&quot;: {
+        &quot;full&quot;: &quot;&lt;p&gt;GET /files/:_id&lt;/p&gt;\n&lt;p&gt;Fetch an entire File document.&lt;/p&gt;\n&lt;p&gt;Get &lt;em&gt;only&lt;/em&gt; the file by doing &lt;code&gt;GET /files/:_id&lt;/code&gt;.&lt;/p&gt;\n&quot;,
+        &quot;summary&quot;: &quot;&lt;p&gt;GET /files/:_id&lt;/p&gt;\n&quot;,
+        &quot;body&quot;: &quot;&lt;p&gt;Fetch an entire File document.&lt;/p&gt;\n&lt;p&gt;Get &lt;em&gt;only&lt;/em&gt; the file by doing &lt;code&gt;GET /files/:_id&lt;/code&gt;.&lt;/p&gt;\n&quot;
+    },
+    &quot;isPrivate&quot;: false,
+    &quot;fires&quot;: [],
+    &quot;returns&quot;: &quot;object File&quot;,
+    &quot;ignore&quot;: false,
+    &quot;code&quot;: &quot;router.get('/files/:_id', middleware.isAuthorized, function (req, res, next) {\n    req.db.File.findById(req.params._id, function (err, file) {\n        if (err) {\n            return next(err);\n        }\n        if (!file) {\n            return res.status(404).send({ error: 'Not found'});\n        }\n        res.send(file);\n    });\n});\n\nmodule.exports = router;&quot;,
     &quot;ctx&quot;: {
         &quot;file&quot;: {
             &quot;input&quot;: &quot;routes/api.js&quot;,

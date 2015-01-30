@@ -663,6 +663,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 
 /**
  * POST /messages
+ * 
  * Create a message which persists it to the server.
  *
  * Does not send it through Respoke as a web socket. That is done by the client.
@@ -797,6 +798,17 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
+/**
+ * POST /files
+ *
+ * Upload a file.
+ *
+ * @arg string content  The file as Base64 encoded string.
+ * @arg string contentType  MIME type of the file.
+ * @arg string owner  The Account._id of the logged in user uploading the file.
+ * @arg string name  Optional file name.
+ * @returns object File (model - not actual file)
+ */
 router.post('/files', middleware.isAuthorized, function (req, res, next) {
     var contentType = req.body.contentType || 'text/plain';
 
@@ -813,10 +825,16 @@ router.post('/files', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
-// this is /api/files/:id
-// get the actual file at /files/:id
-router.get('/files/:id', middleware.isAuthorized, function (req, res, next) {
-    req.db.File.findById(req.params.id, function (err, file) {
+/**
+ * GET /files/:_id
+ *
+ * Fetch an entire File document.
+ *
+ * Get _only_ the file by doing `GET /files/:_id`.
+ * @returns object File
+ */
+router.get('/files/:_id', middleware.isAuthorized, function (req, res, next) {
+    req.db.File.findById(req.params._id, function (err, file) {
         if (err) {
             return next(err);
         }
