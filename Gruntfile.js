@@ -25,7 +25,7 @@ exports = module.exports = function (grunt) {
                 template: '' // optional, to allow generation of html
             },
             files: {
-                src: ['routes/**/*.js'],
+                src: ['routes/**/*'],
                 dest: 'docs/'
             }
         },

@@ -469,12 +469,11 @@ router.post('/groups', middleware.isAuthorized, function (req, res, next) {
     });
 });
 /**
- * POST /groups
+ * DELETE /groups
  *
- * Create a new group. Forces you to be the owner.
+ * Remove a group by _id if you own it.
  *
- * @fires newgroup
- * @arg string _id  The group name.
+ * @fires removegroup
  * @returns object Group
  */
 router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) {
@@ -663,7 +662,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 
 /**
  * POST /messages
- * 
+ *
  * Create a message which persists it to the server.
  *
  * Does not send it through Respoke as a web socket. That is done by the client.

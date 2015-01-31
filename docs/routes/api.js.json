@@ -363,24 +363,15 @@
         }
     },
     {
-        "tags": [
-            {
-                "type": "arg",
-                "types": [
-                    "string"
-                ],
-                "name": "_id",
-                "description": "The group name."
-            }
-        ],
+        "tags": [],
         "description": {
-            "full": "<p>POST /groups</p>\n<p>Create a new group. Forces you to be the owner.</p>\n",
-            "summary": "<p>POST /groups</p>\n",
-            "body": "<p>Create a new group. Forces you to be the owner.</p>\n"
+            "full": "<p>DELETE /groups</p>\n<p>Remove a group by _id if you own it.</p>\n",
+            "summary": "<p>DELETE /groups</p>\n",
+            "body": "<p>Remove a group by _id if you own it.</p>\n"
         },
         "isPrivate": false,
         "fires": [
-            "newgroup"
+            "removegroup"
         ],
         "returns": "object Group",
         "ignore": false,

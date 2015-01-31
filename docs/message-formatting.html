@@ -1,0 +1,40 @@
+<!DOCTYPE html><html><head><title>routes/message-formatting.md - </title><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="https://highlightjs.org/static/styles/github.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script><script src="https://highlightjs.org/static/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body><div class="container"><span class="help-inline"><a href="message-formatting.html">message-formatting.html</a></span>&nbsp;&nbsp;<span class="help-inline"><a href="api.html">api.html</a></span>&nbsp;&nbsp;<span class="help-inline"><a href="auth.html">auth.html</a></span>&nbsp;&nbsp;<hr><h1 id="apollo-message-formats">Apollo message formats</h1>
+<p>Message contents are <em>stringified JSON</em>.</p>
+<h3 id="normal-message">Normal message</h3>
+<p>The same format is used for group and private messages. It expects stringified JSON
+with a key <code>&quot;text&quot;</code>.</p>
+<pre><code class="lang-json">{
+    &quot;message&quot;: &quot;{ text: \&quot;Hi there!\&quot; }&quot;
+
+    /* other fields are required by Respoke */
+}
+</code></pre>
+<h3 id="meta-messages">Meta messages</h3>
+<p>System level messages come over the system group <code>&quot;apollo-system-messages&quot;</code>. The system
+group is technically configurable.</p>
+<h4 id="-is-typing-">&quot;is typing&quot;</h4>
+<pre><code class="lang-json">{
+    &quot;message&quot;: &quot;\&quot;meta\&quot;: { \&quot;type\&quot;: \&quot;chatstate\&quot;, \&quot;value\&quot;:\&quot;composing\&quot; }&quot;
+}
+</code></pre>
+<h4 id="user-account-was-created">User account was created</h4>
+<pre><code class="lang-json">{
+    &quot;message&quot;: &quot;\&quot;meta\&quot;: { \&quot;type\&quot;: \&quot;newaccount\&quot;, \&quot;value\&quot;:\&quot;account_id\&quot; }&quot;
+}
+</code></pre>
+<h4 id="user-account-was-deleted">User account was deleted</h4>
+<pre><code class="lang-json">{
+    &quot;message&quot;: &quot;\&quot;meta\&quot;: { \&quot;type\&quot;: \&quot;removeaccount\&quot;, \&quot;value\&quot;:\&quot;account_id\&quot; }&quot;
+}
+</code></pre>
+<h4 id="group-was-created">Group was created</h4>
+<pre><code class="lang-json">{
+    &quot;message&quot;: &quot;\&quot;meta\&quot;: { \&quot;type\&quot;: \&quot;newgroup\&quot;, \&quot;value\&quot;:\&quot;group_id\&quot; }&quot;
+}
+</code></pre>
+<h4 id="group-was-deleted">Group was deleted</h4>
+<pre><code class="lang-json">{
+    &quot;message&quot;: &quot;\&quot;meta\&quot;: { \&quot;type\&quot;: \&quot;removegroup\&quot;, \&quot;value\&quot;:\&quot;group_id\&quot; }&quot;
+}
+</code></pre>
+</div></body><br><br><br><br><br><br><br></html>
