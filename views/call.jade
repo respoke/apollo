@@ -6,18 +6,18 @@ extends layout
 
 block content
     #video-call-container(ng-controller="PrivateCallController" ng-cloak)
-        h3.chat-title(ng-show="errorMessage") {{ errorMessage }}
-            | &nbsp;&nbsp;
-            i.fa.fa-remove.clickable(ng-click="errorMessage = ''")
-        
+        .chat-title.alert.alert-salmon(ng-show="errorMessage")
+            h3 {{ errorMessage }}
+                button.btn.btn-salmon.btn-xs.pull-right(ng-click="errorMessage = ''"): i.fa.fa-remove
         if (config.respoke.screenshareExtensionLink)
-            .alert.alert-salmon.chat-title(ng-show="showPromptInstall")
+            .alert.alert-salmon.chat-title(ng-init="showPromptInstall = false" ng-show="showPromptInstall")
+                button.btn.btn-salmon.btn-xs.pull-right(ng-click="showPromptInstall = false"): i.fa.fa-remove
                 h3: a(href=config.respoke.screenshareExtensionLink target="_blank")
-                    | Hey. <br /> You'll have to install a plugin before you can share your screen. &raquo;
-                | &nbsp;&nbsp;
-                i.fa.fa-remove.clickable(ng-click="showPromptInstall = false")
+                    | Hey. <br /> You'll have to install a plugin
+                    em  then refresh
+                    |  before you can share your screen. &raquo;
 
-        #respokeLocalVideo.animated.fadeIn.slower(ap-draggable)
+        #respokeLocalVideo.animated.fadeIn.slower(ap-draggable ng-show="activeCall")
             .btn-group
                 //- Toggle my audio
                 button#toggle-audio.btn.btn-xs(
@@ -38,20 +38,23 @@ block content
                 //- Share my screen
                 if (config.respoke.screenshareExtensionLink)
                     
-                    button.btn.btn-xs(
+                    button.btn.btn-xs.btn-salmon(
                         ng-if="screenshareAvailable() && !isScreensharing"
                         ng-click="screenshare()"
+                        ng-disabled="tryingToScreenshare"
                     )
                         i.fa.fa-desktop
                     
                     //- Stop screensharing
-                    button.btn.btn-xs(
+                    button.btn.btn-xs.btn-salmon(
                         ng-if="screenshareAvailable() && isScreensharing"
                         ng-click="stopScreenshare()"
+                        ng-disabled="tryingToScreenshare"
                     )
-                        i.fa.fa-stop
+                        i.fa.fa-cog.fa-spin(ng-show="tryingToScreenshare")
+                        i.fa.fa-stop(ng-show="!tryingToScreenshare")
                 
-        #respokeRemoteVideo.animated.fadeIn.slower
+        #respokeRemoteVideo.animated.fadeIn.slower(ng-show="activeCall")
             
             
 

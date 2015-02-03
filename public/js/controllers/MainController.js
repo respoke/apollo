@@ -525,18 +525,18 @@ exports = module.exports = [
             $scope.callIsRinging = false;
         };
 
-        var cleanupCall = function () {
+        function cleanupCall() {
             stopRinging();
             $timeout(function () {
                 $scope.activeCall = null;
             });
-        };
-        var onCallConnect = function (evt) {
+        }
+        function onCallConnect(evt) {
             $log.debug('call connected', evt);
-            
+
             if ($scope.activeCall && evt.target.incomingMedia.hasScreenShare()) {
                 $log.debug('call is screenshare');
-                $window.activeScreenshare = evt.target;
+                $window.activeRemoteScreenshare = evt.target;
                 return;
             }
 
@@ -547,7 +547,7 @@ exports = module.exports = [
             if ($scope.activeCall.incomingMedia.hasVideo()) {
                 $window.open('/private', '_blank');
             }
-        };
+        }
         var audioCallConstraints = {
             constraints: {audio: true, video: false},
             onConnect: onCallConnect
@@ -572,11 +572,12 @@ exports = module.exports = [
         };
 
         var onCallReceived = function (evt) {
-            $log.debug('call incoming', evt);
             // when we are the caller, no need to display the incoming call
             if (evt.call.caller) {
+                $log.debug('ignoring call incoming from self', evt);
                 return;
             }
+            $log.debug('call incoming', evt);
             // in nodewebkit, open a special window inside the app
             if (window.nwDispatcher) {
                 showWin();
@@ -599,13 +600,11 @@ exports = module.exports = [
                 return;
             }
 
-            // Assume that you can only add a screenshare during an existing video call.
-            // There are many ways to implement it, and that's what we decided for the
-            // first crack at screensharing.
+            // For now, you can only add a screenshare during an existing video call.
             if (hasScreenShare) {
-                // TODO: notify and do screenshare
-                $window.activeScreenshare = evt.call;
-                $window.activeScreenshare.answer(receiveScreenshareConstraints);
+                $window.activeRemoteScreenshare = evt.call;
+                // Auto-answer a screenshare
+                $window.activeRemoteScreenshare.answer(receiveScreenshareConstraints);
                 return;
             }
 
