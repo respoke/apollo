@@ -1,159 +1,158 @@
-div(ng-controller="SettingsController")
-    br
-    br
-    .row
-        .col-xs-1.col-xs-offset-1
-            i.fa.fa-2x.fa-user.salmon
-        .col-xs-4
-            //- Sign out
-            p: button.btn.btn-default.btn-sm(
-                ng-click="logout()"
-            ) Sign out
-            
-
-    br
-    br
-    .row
-        .col-xs-1.col-xs-offset-1
-            i.fa.fa-2x.fa-paint-brush.salmon
-        .col-xs-4: p
-            select.form-control(
-                ng-change="changeTheme(theme)"
-                ng-model="theme"
-                ng-init=("theme = account.settings.theme; themes = " + JSON.stringify(themes).replace(/\"/g, "'"))
-                ng-options=("t for t in themes")
-            )
-            
-
-    br
-    br
-    
-    .row
-        .col-xs-1.col-xs-offset-1: i.fa.fa-edit.fa-2x.salmon
-        .col-xs-4: p: strong Display name
-    .row
-        .col-xs-2
-        .col-xs-4: p
-            input.form-control.input-sm(type="text" ng-init="newDisplayName = account.display + ''"
-                ng-model="newDisplayName"
-                ap-enter="setDisplayName(newDisplayName)"
-            )
-        .col-xs-4
-            span.help-inline(ng-show="newDisplayName !== account.display") Hit enter to save
-    .row
-        .col-xs-2
-        .col-xs-4: p: strong
-            a(href="https://gravatar.com" target="_blank") Change profile image&nbsp;
-    br
-    .row
-        .col-xs-1.col-xs-offset-1: i.fa.fa-lock.fa-2x.salmon
-        .col-xs-4: p: strong Password
-    .row
-        .col-xs-2
-        .col-xs-4: p: button.btn.btn-default.btn-sm(ng-click="forgot(account.email)") Request reset
-    
-    
-    br
-    br
-    br
-    
-    .row
-        .col-xs-1.col-xs-offset-1: i.fa.fa-bell.fa-2x.salmon
-        .col-xs-4: p: strong Notifications
-    br
-    .row
-        .col-xs-1.col-xs-offset-1
-            ap-toggle-setting(
-                key="groupDesktopNotifications"
-                initial="account.settings.groupDesktopNotifications"
-            )
-        .col-xs-4: p Group message notifications
-        .col-xs-1
-            ap-toggle-setting(
-                key="groupMessageSounds"
-                initial="account.settings.groupMessageSounds"
-            )
-        .col-xs-4: p Group message sounds
-            
-    br    
-    .row
-        .col-xs-1.col-xs-offset-1
-            ap-toggle-setting(
-                key="privateDesktopNotifications"
-                initial="account.settings.privateDesktopNotifications"
-            )
-        .col-xs-4: p Private message notifications
-        .col-xs-1
-            ap-toggle-setting(
-                key="privateMessageSounds"
-                initial="account.settings.privateMessageSounds"
-            )
-        .col-xs-5: p Private message sounds
-    br
-    .row
-        .col-xs-1.col-xs-offset-1
-            ap-toggle-setting(
-                key="notifyOnMention"
-                initial="account.settings.notifyOnMention"
-            )
-        .col-xs-4: p Notify me when @mentioned
-        .col-xs-1
-            ap-toggle-setting(
-                key="htmlEmails"
-                initial="account.settings.htmlEmails"
-            )
-        .col-xs-5: p Allow HTML in emails
-    br
-    .row
-        .col-xs-1.col-xs-offset-1
-            ap-toggle-setting(
-                key="offlineNotifications"
-                initial="account.settings.offlineNotifications"
-            )
-        .col-xs-4: p Offline notification emails
+br
+br
+.row
+    .col-xs-1.col-xs-offset-1
+        i.fa.fa-2x.fa-user.salmon
+    .col-xs-4
+        //- Sign out
+        p: button.btn.btn-default.btn-sm(
+            ng-click="logout()"
+        ) Sign out
         
+
+br
+br
+.row
+    .col-xs-1.col-xs-offset-1
+        i.fa.fa-2x.fa-paint-brush.salmon
+    .col-xs-4: p
+        select.form-control(
+            ng-change="changeTheme(theme)"
+            ng-model="theme"
+            ng-init=("theme = account.settings.theme; themes = " + JSON.stringify(themes).replace(/\"/g, "'"))
+            ng-options=("t for t in themes")
+        )
+        
+
+br
+br
+
+.row
+    .col-xs-1.col-xs-offset-1: i.fa.fa-edit.fa-2x.salmon
+    .col-xs-4: p: strong Display name
+.row
+    .col-xs-2
+    .col-xs-4: p
+        input.form-control.input-sm(type="text" ng-init="newDisplayName = account.display + ''"
+            ng-model="newDisplayName"
+            ap-enter="setDisplayName(newDisplayName)"
+        )
+    .col-xs-4
+        span.help-inline(ng-show="newDisplayName !== account.display") Hit enter to save
+.row
+    .col-xs-2
+    .col-xs-4: p: strong
+        a(href="https://gravatar.com" target="_blank") Change profile image&nbsp;
+br
+.row
+    .col-xs-1.col-xs-offset-1: i.fa.fa-lock.fa-2x.salmon
+    .col-xs-4: p: strong Password
+.row
+    .col-xs-2
+    .col-xs-4: p: button.btn.btn-default.btn-sm(ng-click="forgot(account.email)") Request reset
+
+
+br
+br
+br
+
+.row
+    .col-xs-1.col-xs-offset-1: i.fa.fa-bell.fa-2x.salmon
+    .col-xs-4: p: strong Notifications
+br
+.row
+    .col-xs-1.col-xs-offset-1
+        ap-toggle-setting(
+            key="groupDesktopNotifications"
+            initial="account.settings.groupDesktopNotifications"
+        )
+    .col-xs-4: p Group message notifications
+    .col-xs-1
+        ap-toggle-setting(
+            key="groupMessageSounds"
+            initial="account.settings.groupMessageSounds"
+        )
+    .col-xs-4: p Group message sounds
+        
+br    
+.row
+    .col-xs-1.col-xs-offset-1
+        ap-toggle-setting(
+            key="privateDesktopNotifications"
+            initial="account.settings.privateDesktopNotifications"
+        )
+    .col-xs-4: p Private message notifications
+    .col-xs-1
+        ap-toggle-setting(
+            key="privateMessageSounds"
+            initial="account.settings.privateMessageSounds"
+        )
+    .col-xs-5: p Private message sounds
+br
+.row
+    .col-xs-1.col-xs-offset-1
+        ap-toggle-setting(
+            key="notifyOnMention"
+            initial="account.settings.notifyOnMention"
+        )
+    .col-xs-4: p Notify me when @mentioned
+    .col-xs-1
+        ap-toggle-setting(
+            key="htmlEmails"
+            initial="account.settings.htmlEmails"
+        )
+    .col-xs-5: p Allow HTML in emails
+br
+.row
+    .col-xs-1.col-xs-offset-1
+        ap-toggle-setting(
+            key="offlineNotifications"
+            initial="account.settings.offlineNotifications"
+        )
+    .col-xs-4: p Offline notification emails
     
-    br
-    br
-    br
-    .row
-        .col-xs-1.col-xs-offset-1
-            i.fa.fa-2x.fa-group.salmon
-        .col-xs-4: p
-            strong Owned Groups
-    .row
-        .col-xs-10.col-xs-offset-2
-            p(ng-show="ownedGroups && !ownedGroups.length"): em You do not own any groups.
-            table.table
-                tr(ng-repeat="group in ownedGroups" ng-init="showConf = false")
-                    td.col-sm-7 {{ group._id }}
-                    td.col-sm-5
-                        button.btn.btn-default.btn-xs(
-                            ng-click="showConf = true" ng-show="!showConf"
-                        ) Remove
-                        p(ng-show="showConf")
-                            | Removing a group will remove all files and messages, as well as the group.
-                            |  This action cannot be undone.
-                            br
-                            button.btn.btn-default.btn-xs(ng-click="showConf = false") Cancel
-                            button.btn.btn-danger.btn-xs(ng-click="removeGroup(group._id, $index)") DELETE
-    
-    
-    br
-    br
-    .row
-        .col-xs-1.col-xs-offset-1
-            i.fa.fa-2x.fa-life-ring.salmon
-        .col-xs-4
-            p: strong Help
+
+br
+br
+br
+.row
+    .col-xs-1.col-xs-offset-1
+        i.fa.fa-2x.fa-group.salmon
+    .col-xs-4: p
+        strong Owned Groups
+.row
+    .col-xs-10.col-xs-offset-2
+        p(ng-show="ownedGroups && !ownedGroups.length"): em You do not own any groups.
+        table.table
+            tr(ng-repeat="group in ownedGroups" ng-init="showConf = false")
+                td.col-sm-7 {{ group._id }}
+                td.col-sm-5
+                    button.btn.btn-default.btn-xs(
+                        ng-click="showConf = true" ng-show="!showConf"
+                    ) Remove
+                    p(ng-show="showConf")
+                        | Removing a group will remove all files and messages, as well as the group.
+                        |  This action cannot be undone.
+                        br
+                        button.btn.btn-default.btn-xs(ng-click="showConf = false") Cancel
+                        button.btn.btn-danger.btn-xs(ng-click="removeGroup(group._id, $index)") DELETE
+
+
+br
+br
+.row
+    .col-xs-1.col-xs-offset-1
+        i.fa.fa-2x.fa-life-ring.salmon
+    .col-xs-4
+        p: strong Help
+        
+        p= config.email.from
             
-            p= config.email.from
-                
-            //- Help
-            p: strong: a(
-                href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
-                target="_blank"
-            ) Markdown text input guide
-    br
-    br
-    br
+        //- Help
+        p: strong: a(
+            href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"
+            target="_blank"
+        ) Markdown text input guide
+br
+br
+br

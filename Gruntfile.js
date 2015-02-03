@@ -14,9 +14,22 @@ exports = module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-node-webkit-builder');
+    grunt.loadNpmTasks('jsdoxy');
 
 
     grunt.initConfig({
+        jsdoxy: {
+            options: {
+                jsonOutput: 'jsdoxy-output.json', // default, not optional
+                outputPrivate: false, // default indicating whether to output private **classes**
+                template: '' // optional, to allow generation of html
+            },
+            files: {
+                src: ['routes/**/*'],
+                dest: 'docs/'
+            }
+        },
+
         copy: {
             nwk: {
                 files: {

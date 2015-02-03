@@ -8,11 +8,22 @@
  * For all details and documentation:  https://www.respoke.io
  */
 var express = require('express');
+
+/**
+ * Router attached at `/api`.
+ * @class api
+ */
 var router = express.Router();
 var config = require('../config');
 var middleware = require('../lib/middleware');
 var async = require('async');
 
+/**
+ * GET /me
+ *
+ * Get my Account. Also good for checking if you are logged in.
+ * @returns object Account || null
+ */
 router.get('/me', function (req, res, next) {
     if (!req.user) {
         return res.send(req.user);
@@ -25,6 +36,17 @@ router.get('/me', function (req, res, next) {
     });
 });
 
+/**
+ * PATCH /me
+ *
+ * Update my own account. All body properties are optional.
+ *
+ * @arg string password
+ * @arg string display
+ * @arg string email
+ * @arg object settings
+ * @returns object Account
+ */
 router.patch('/me', middleware.isAuthorized, function (req, res, next) {
     var updateFields = {};
     ['password', 'display', 'email', 'settings'].forEach(function (field) {
@@ -54,6 +76,13 @@ router.patch('/me', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
+/**
+ * PUT /forgot/:emailOrId
+ *
+ * Forgot password.
+ *
+ * @returns object { message: "" }
+ */
 router.put('/forgot/:emailOrId', function (req, res, next) {
     if (!req.params.emailOrId) {
         return res.send(400, { error: "Missing identifier for password reset. Need email or account ID." });
@@ -103,6 +132,14 @@ router.put('/forgot/:emailOrId', function (req, res, next) {
     });
 });
 
+/**
+ * PUT /password-reset/:_id/:conf
+ *
+ * Reset password using confirmation token.
+ *
+ * @arg string password
+ * @returns object Account
+ */
 router.put('/password-reset/:_id/:conf', function (req, res, next) {
     req.db.Account
     .findOne({ _id: req.params._id, conf: req.params.conf })
@@ -147,6 +184,12 @@ router.put('/password-reset/:_id/:conf', function (req, res, next) {
     });
 });
 
+/**
+ * GET /accounts
+ *
+ * List all accounts.
+ * @returns Array of Accounts
+ */
 router.get('/accounts', middleware.isAuthorized, function (req, res, next) {
     var query = req.db.Account.find().select('+conf').lean();
 
@@ -175,6 +218,13 @@ router.get('/accounts', middleware.isAuthorized, function (req, res, next) {
     }
 });
 
+/**
+ * GET /accounts/:id
+ *
+ * Fetch a specific account.
+ *
+ * @returns object Account
+ */
 router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
     req.db.Account.findById(req.params.id).select('+conf').exec(function (err, account) {
         if (err) {
@@ -187,6 +237,16 @@ router.get('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
+/**
+ * DELETE /account/:id
+ *
+ * #### TODO: rework this
+ *
+ * Remove an account. Does not delete all of their messages/files so may cause breakage or
+ * orphan data.
+ *
+ * @returns object { message: "" }
+ */
 router.delete('/accounts/:id', middleware.isAuthorized, function (req, res, next) {
     req.db.Account.remove({ _id: req.params.id }).exec(function (err) {
         if (err) {
@@ -212,6 +272,18 @@ router.delete('/accounts/:id', middleware.isAuthorized, function (req, res, next
     req.db.File.remove({ owner: req.params.id });
 });
 
+/**
+ * POST /accounts
+ *
+ * Create a new local account and kick off confirmation by email (if required by configuration).
+ *
+ * @fires newaccount
+ * @arg string _id  The username and unique identifier and endpoint.
+ * @arg string email
+ * @arg string display  The display name for this user.
+ * @arg string password
+ * @returns object Account, { error: "" }
+ */
 router.post('/accounts', function (req, res, next) {
     if (!config.localSignupEnabled) {
         return res.status(403).send({
@@ -299,6 +371,15 @@ router.post('/accounts', function (req, res, next) {
     });
 });
 
+/**
+ * GET /groups
+ *
+ * List the groups this person can see. (currently all groups!)
+ *
+ * @arg string ?ids= Optional comma separated list of ids only you are wanting to list.
+ * @arg string ?owner= Optional Account._id to limit only to that user's groups.
+ * @returns Array of Groups
+ */
 router.get('/groups', middleware.isAuthorized, function (req, res, next) {
     if (req.query.ids) {
         req.db.Group.find()
@@ -321,18 +402,34 @@ router.get('/groups', middleware.isAuthorized, function (req, res, next) {
     }
 });
 
-router.get('/groups/:id', middleware.isAuthorized, function (req, res, next) {
-    req.db.Group.findById(req.params.id, function (err, group) {
+/**
+ * GET /groups/:id
+ *
+ * Get a specific group object by `_id`.
+ *
+ * @returns object Group  ||  404 { error: '' }
+ */
+router.get('/groups/:_id', middleware.isAuthorized, function (req, res, next) {
+    req.db.Group.findById(req.params._id, function (err, group) {
         if (err) {
             return next(err);
         }
         if (!group) {
-            return res.status(404).send({ error: 'Group not found by id ' + req.params.id });
+            return res.status(404).send({ error: 'Group not found by id ' + req.params._id });
         }
         res.send(group);
     });
 });
 
+/**
+ * POST /groups
+ *
+ * Create a new group. Forces you to be the owner.
+ *
+ * @fires newgroup
+ * @arg string _id  The group name.
+ * @returns object Group
+ */
 router.post('/groups', middleware.isAuthorized, function (req, res, next) {
     req.db.Group.findById(req.body._id).exec(function (err, existingGroup) {
         if (err) {
@@ -371,6 +468,14 @@ router.post('/groups', middleware.isAuthorized, function (req, res, next) {
         });
     });
 });
+/**
+ * DELETE /groups
+ *
+ * Remove a group by _id if you own it.
+ *
+ * @fires removegroup
+ * @returns object Group
+ */
 router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) {
     req.db.Group.findById(req.params.id, function (err, group) {
         if (err) {
@@ -436,31 +541,39 @@ router.delete('/groups/:id', middleware.isAuthorized, function (req, res, next) 
     });
 });
 
-// change ownership of a group
-router.patch('/groups/:id/:account', middleware.isAuthorized, function (req, res, next) {
+/**
+ * PATCH /groups/:_id/owner/:accountId
+ *
+ * Change ownership of a group (param `_id`).
+ *
+ * New owner is the `Account._id` in URL param `accountId`.
+ *
+ * @returns object Group
+ */
+router.patch('/groups/:_id/owner/:accountId', middleware.isAuthorized, function (req, res, next) {
     req.db.Group
-    .findById(req.params.id)
+    .findById(req.params._id)
     .populate('owner')
     .exec(function (err, group) {
         if (err) {
             return next(err);
         }
         if (!group) {
-            return res.status(404).send({ error: 'Group ' + req.params.id + ' was not found.' });
+            return res.status(404).send({ error: 'Group ' + req.params._id + ' was not found.' });
         }
         if (group.owner._id.toString() !== req.user._id.toString()) {
             return res.status(401).send({
-                error: 'Group ' + req.params.id + ' is owned by ' + group.owner.display + '.'
+                error: 'Group ' + req.params._id + ' is owned by ' + group.owner.display + '.'
             });
         }
-        req.db.Account.findById(req.params.account, function (err, account) {
+        req.db.Account.findById(req.params.accountId, function (err, account) {
             if (err) {
                 return next(err);
             }
             if (!account) {
-                return res.status(404).send({ error: "Account " + req.params.account + " does not exist."});
+                return res.status(404).send({ error: "Account " + req.params.accountId + " does not exist."});
             }
-            group.owner = req.params.account;
+            group.owner = req.params.accountId;
             group.save(function (err, group) {
                 if (err) {
                     return next(err);
@@ -471,10 +584,33 @@ router.patch('/groups/:id/:account', middleware.isAuthorized, function (req, res
     });
 });
 
+/**
+ * GET /messages
+ *
+ * Fetch messages. Requires one or more querystring params to determine what you need.
+ *
+ * Always sorts *descending by `created`* (most recent are last).
+ *
+ * The following properties are **populated** with the objects, instead of being
+ * just an _id field:
+ * * `message.from`
+ * * `message.to`
+ * * `message.group`
+ *
+ * @arg string ?ids=  Comma separated list of `Message._id`s.
+ * @arg string ?group=  `Message.group` of the messages.
+ * @arg string ?account=  Messages between the logged in user and another account.
+ * @arg number ?limit=50  Integer; how many messages to fetch.
+ * @arg number ?skip=0  Integer; how many messages to skip when fetching (descending order by created).
+ * @arg date ?before=  Fetch messages that were created no later than this date.
+ * @returns Array of Messages
+ */
 router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 
     // Build a message query.
     // Always sorted descending by created.
+
+    var DEFAULT_LIMIT = 50;
 
     var query = req.db.Message.find().sort('-created');
 
@@ -501,7 +637,7 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
         query = query.limit(req.query.limit);
     }
     else {
-        query = query.limit(50);
+        query = query.limit(DEFAULT_LIMIT);
     }
 
     // skip
@@ -524,6 +660,19 @@ router.get('/messages', middleware.isAuthorized, function (req, res, next) {
 
 });
 
+/**
+ * POST /messages
+ *
+ * Create a message which persists it to the server.
+ *
+ * Does not send it through Respoke as a web socket. That is done by the client.
+ *
+ * @arg string to  Optional Account._id for a private message.
+ * @arg string group  Optional Group._id for a group message.
+ * @arg string content  The message text.
+ * @arg string file  Optional File._id that is considered related to this message.
+ * @returns object Message
+ */
 router.post('/messages', middleware.isAuthorized, function (req, res, next) {
     if (req.body.content && req.body.content.length > 4096) {
         var err = new Error('Message is too long. Consider breaking it into smaller chunks.');
@@ -537,10 +686,13 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
         content: req.body.content,
         file: req.body.file
     }).save(function (err, message) {
-        if (err) {
-            return next(err);
-        }
+        if (err) return next(err);
+
+        //
+        // Response to client is here.
+        //
         res.send(message);
+
 
         var content;
         try {
@@ -645,6 +797,17 @@ router.post('/messages', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
+/**
+ * POST /files
+ *
+ * Upload a file.
+ *
+ * @arg string content  The file as Base64 encoded string.
+ * @arg string contentType  MIME type of the file.
+ * @arg string owner  The Account._id of the logged in user uploading the file.
+ * @arg string name  Optional file name.
+ * @returns object File (model - not actual file)
+ */
 router.post('/files', middleware.isAuthorized, function (req, res, next) {
     var contentType = req.body.contentType || 'text/plain';
 
@@ -661,10 +824,16 @@ router.post('/files', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
-// this is /api/files/:id
-// get the actual file at /files/:id
-router.get('/files/:id', middleware.isAuthorized, function (req, res, next) {
-    req.db.File.findById(req.params.id, function (err, file) {
+/**
+ * GET /files/:_id
+ *
+ * Fetch an entire File document.
+ *
+ * Get _only_ the file by doing `GET /files/:_id`.
+ * @returns object File
+ */
+router.get('/files/:_id', middleware.isAuthorized, function (req, res, next) {
+    req.db.File.findById(req.params._id, function (err, file) {
         if (err) {
             return next(err);
         }

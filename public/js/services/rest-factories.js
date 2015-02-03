@@ -196,7 +196,7 @@ exports = module.exports = function bindRestFactories(app) {
                     message.content = JSON.stringify(message.content);
                     var errTooLarge = new Error('Message is too long. Consider breaking it into smaller chunks.');
                     if (message.content.length > 4096) {
-                        return callback(errorTooLarge);
+                        return callback(errTooLarge);
                     }
 
                     if (message.group) {

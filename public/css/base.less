@@ -10,6 +10,12 @@
 @import 'bootstrap.less';
 @import 'animate.less';
 
+@color-away: #FC605B;
+@color-busy: #FDBE41;
+@color-available: #34C849;
+@color-unavailable: #E0E0E0;
+
+
 /* used various places */
 .salmon { color: @primary; }
 
@@ -26,6 +32,8 @@
 .form-control:-ms-input-placeholder {
    color: @text;
 }
+
+.noradius { border-radius: 0 !important; }
 
 .welcome {
     /* Placeholder text. Yeah. */
@@ -65,6 +73,7 @@
 .scrollable {
     overflow-y: auto;
     height: 100%;
+    overflow-x: hidden;
 }
 .img-thumbnail {
     padding: 0;
@@ -310,6 +319,7 @@ textarea {
 
         #chat-header {
             position: fixed;
+            z-index: 1000;
             top: 0;
             right: 0;
             left: 0;
@@ -646,20 +656,20 @@ textarea {
                     vertical-align: middle;
                 }
                 .away {
-                    color: red;
-                    text-shadow: 0 0 1px #BA0000;
+                    color: @color-away;
+                    text-shadow: 0 0 1px darken(@color-away, 25%);
                 }
                 .busy {
-                    color: #FFA500;
-                    text-shadow: 0 0 1px #E2A638;
+                    color: @color-busy;
+                    text-shadow: 0 0 1px darken(@color-busy, 25%);
                 }
                 .available {
-                    color: #74FC77;
-                    text-shadow: 0 0 1px #27B600;
+                    color: @color-available;
+                    text-shadow: 0 0 1px darken(@color-available, 25%);
                 }
                 .unavailable {
-                    color: #e0e0e0;
-                    text-shadow: 0 0 1px #767676;
+                    color: @color-unavailable;
+                    text-shadow: 0 0 1px darken(@color-unavailable, 25%);
                 }
             }
             .dropdown > .dropdown-menu {
@@ -691,10 +701,19 @@ textarea {
 }
 
 #video-call-container {
-    #chat-title {
+    .chat-title {
+        color: @text;
+        position: absolute;
         padding-left: 20px;
-        opacity: .4;
-        z-index: 75;
+        z-index: 10000;
+        width: 100%;
+        left: 0;
+        right: 0;
+
+        a, a:visited, a:hover {
+            color: white;
+            text-decoration: none;
+        }
     }
     .panel.right.full {
         right: 0;
@@ -729,17 +748,6 @@ textarea {
         button#toggle-video {
             width: 27px;
             height: 27px;
-
-            &.btn-default {
-                .fa-video-camera {
-                    position: absolute;
-                    right: 3px;
-                    top: 2px;
-                }
-                .fa-ban {
-                    margin-left: -10px;
-                }
-            }
         }
     }
     #respokeLocalVideo, #respokeRemoteVideo {
@@ -816,9 +824,9 @@ table a:not(.btn), .table a:not(.btn) {
         .list-group-item {
             padding: 5px 13px;
             font-weight: 600;
-            background: @text;
-            color: @background;
-            border: 1px solid darken(@background, 5%);
+            background: @panelLeft;
+            color: @text;
+            border: 1px solid darken(@panelLeft, 5%);
         }
         .list-group-item.active {
             background: @selectedBackground;

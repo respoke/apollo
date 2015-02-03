@@ -98,6 +98,18 @@ If you would like to build the desktop app, proceed with the following steps.
 
 ---
 
+## Screensharing - local setup
+
+1. You need the Respoke chrome extension setup.
+1. It only works over `https`.
+1. Using a tunnel like ngrok helps. Make sure you add it to the extension manifest.
+
+## Documentation
+
+Run `grunt jsdoxy`.
+
+Output goes to `.docs/`.
+
 ## License
 
 AGPL v3

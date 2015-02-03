@@ -62,7 +62,8 @@ config.email = {
 config.respoke = {
     appId: "",
     appSecret: "",
-    roleId: ""
+    roleId: "",
+    screenshareExtensionLink: ""
 };
 
 // Email

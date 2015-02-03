@@ -29,8 +29,11 @@ exports = module.exports = [
     'scrollChatToBottom',
     'notify',
     'mentionRenderer',
-
-    function (
+    /**
+     * The controller for logged-in user stuff. Governs the logged-in UI, pieces of
+     * chat, incoming and outgoing calls, and event listeners.
+     */
+    function MainController(
         $log,
         $rootScope,
         $scope,
@@ -433,7 +436,7 @@ exports = module.exports = [
 
         });
 
-        $scope.createGroup = function (groupName) {
+        $scope.createGroup = function createGroup(groupName) {
             Group.create({
                 _id: groupName
             }, function (err, group) {
@@ -447,7 +450,7 @@ exports = module.exports = [
             });
         };
 
-        $scope.switchChat = function (id) {
+        $scope.switchChat = function switchChat(id) {
             $log.debug('switchChat', id);
             if (id === $rootScope.account._id) {
                 $log.debug('not switching to chat because it is self');
@@ -480,7 +483,7 @@ exports = module.exports = [
             }, 450);
         };
 
-        $scope.fetchChat = function (item) {
+        $scope.fetchChat = function fetchChat(item) {
             var qs;
             if (item.display) {
                 qs = '?account=' + item._id;
@@ -504,7 +507,7 @@ exports = module.exports = [
             });
         };
 
-        var stopRinging = function () {
+        var stopRinging = function stopRinging() {
             $rootScope.audio.callIncoming.pause();
             $rootScope.audio.callIncoming.loop = false;
             $rootScope.audio.callIncoming.currentTime = 0;
@@ -525,14 +528,20 @@ exports = module.exports = [
             $scope.callIsRinging = false;
         };
 
-        var cleanupCall = function () {
+        function cleanupCall() {
             stopRinging();
             $timeout(function () {
                 $scope.activeCall = null;
             });
-        };
-        var onCallConnect = function (evt) {
+        }
+        function onCallConnect(evt) {
             $log.debug('call connected', evt);
+
+            if ($scope.activeCall && evt.target.incomingMedia.hasScreenShare()) {
+                $log.debug('call is screenshare');
+                $window.activeRemoteScreenshare = evt.target;
+                return;
+            }
 
             $window.activeCall = $scope.activeCall;
             $window.activeCall.chat = $rootScope.recents[$scope.activeCall.remoteEndpoint.id];
@@ -541,7 +550,7 @@ exports = module.exports = [
             if ($scope.activeCall.incomingMedia.hasVideo()) {
                 $window.open('/private', '_blank');
             }
-        };
+        }
         var audioCallConstraints = {
             constraints: {audio: true, video: false},
             onConnect: onCallConnect
@@ -550,20 +559,37 @@ exports = module.exports = [
             constraints: {audio: true, video: true},
             onConnect: onCallConnect
         };
+        var receiveScreenshareConstraints = {
+            constraints: {audio: false, video: false},
+            onConnect: function (evt) {
+                $log.debug('receive screenshare - onConnect', evt);
+                $rootScope.client.fire('screenshare-added');
+            },
+            onHangup: function (evt) {
+                $log.debug('receive screenshare - onHangup', evt);
+                $rootScope.client.fire('screenshare-removed');
+            },
+            onError: function (evt) {
+                $log.error('receive screenshare - onError', evt);
+            }
+        };
 
         var onCallReceived = function (evt) {
-            $log.debug('call incoming', evt);
             // when we are the caller, no need to display the incoming call
             if (evt.call.caller) {
+                $log.debug('ignoring call incoming from self', evt);
                 return;
             }
-            // nodewebkit
+            $log.debug('call incoming', evt);
+            // in nodewebkit, open a special window inside the app
             if (window.nwDispatcher) {
                 showWin();
             }
 
-            // only allow one call at a time.
-            if ($scope.activeCall) {
+            // only allow one call at a time, unless you're already on a call and
+            // adding a screenshare
+            var hasScreenShare = evt.call.incomingMedia.hasScreenShare();
+            if ($scope.activeCall && !hasScreenShare) {
                 $rootScope.notifications.push(
                     $rootScope.recents[evt.endpoint.id].display
                     + ' tried to call you.'
@@ -574,6 +600,14 @@ exports = module.exports = [
                 evt.call.hangup();
                 stopRinging();
                 $scope.$apply();
+                return;
+            }
+
+            // For now, you can only add a screenshare during an existing video call.
+            if (hasScreenShare) {
+                $window.activeRemoteScreenshare = evt.call;
+                // Auto-answer a screenshare
+                $window.activeRemoteScreenshare.answer(receiveScreenshareConstraints);
                 return;
             }
 

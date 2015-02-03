@@ -39,7 +39,7 @@ var clientConfig;
         console.warn(errors, '\n');
     }
 })();
-
+config.respoke.screenshareExtensionLink = config.respoke.screenshareExtensionLink ||  'https://chrome.google.com/webstore/detail/apollo-screensharing-by-r/noadkfcnaibmpopkkifjangclhfgpcoo';
 
 // Logging
 var logfilePath = config.logfilePath || __dirname + "/apollo.log";
@@ -96,16 +96,23 @@ var middleware = require('./lib/middleware');
 
 // Chat style themes
 
-var themes = [];
-(function () {
-    var files = fs.readdirSync(__dirname + '/public/css/themes');
-    files.forEach(function (f) {
-        var parts = f.split('.');
-        var ext = parts[1];
-        if (ext === 'less') themes.push(parts[0]);
-    });
-    logger.warn('loaded themes', themes);
-})();
+var themes;
+if (process.env.NODE_ENV !== 'production') {
+    themes = [];
+    (function () {
+        var files = fs.readdirSync(__dirname + '/public/css/themes');
+        files.forEach(function (f) {
+            var parts = f.split('.');
+            var ext = parts[1];
+            if (ext === 'less') {
+                themes.push(parts[0]);
+            }
+        });
+    })();
+} else {
+    themes = ['light', 'dark'];
+}
+logger.info('loaded themes', themes);
 
 // Email sending service
 var mailTransport = nodemailer.createTransport(config.smtp);
@@ -177,11 +184,18 @@ app.use(jadeStatic({
         themes: themes
     }
 }));
-
+// serve the docs if not production mode
+if (process.env.NODE_ENV !== 'production') {
+    app.use('/docs', express.static(path.join(__dirname, 'docs')));
+}
 
 // Attaching app locals and utils to request
 app.use(function (req, res, next) {
+    // Uncomment the next two lines to allow external API.
     // res.set('Access-Control-Allow-Origin', '*');
+    // res.set('Access-Control-Allow-Headers', 'HEAD, OPTIONS, GET, POST, DELETE, PUT, PATCH');
+
+
     res.set('X-Powered-By', '100-duck-sized-horses');
     res.locals = req.locals || {};
     res.locals.config = config;

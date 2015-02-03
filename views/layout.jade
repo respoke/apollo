@@ -47,3 +47,13 @@ html
         
         //- any scripts to run at the very end of page load
         block js
+            
+        script(async).
+            (function() {
+                var s = document.createElement("script");
+                s.type = "text/javascript";
+                s.async = true;
+                s.src = '//api.usersnap.com/load/' + 'aa485ba8-88b6-40bb-8acb-42d74897aee9.js';
+                var x = document.getElementsByTagName('script')[0];
+                x.parentNode.insertBefore(s, x);
+            })();

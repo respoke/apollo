@@ -8,17 +8,40 @@
  * For all details and documentation:  https://www.respoke.io
  */
 var express = require('express');
+/**
+ * Router attached at `/auth`.
+ * @class auth
+ */
 var router = express.Router();
 var passport = require('passport');
 var middleware = require('../lib/middleware');
 var config = require('../config');
 
+/**
+ * DELETE /session
+ *
+ * Log out
+ * @returns object { message: '' }
+ */
 router.delete('/session', function (req, res) {
     req.logout();
     res.send({ message: 'Logged out' });
 });
 
-// Respoke token brokered authentication
+/**
+ * GET /tokens
+ *
+ * Fetch a Respoke token brokered authentication. Endpoint ID is automatically assigned
+ * as the logged in user `Account._id`.
+ *
+ * @returns object {
+ *      token: '',
+ *      appId: '',
+ *      baseURL: '',
+ *      systemGroupId: '',
+ *      systemEndpointId: ''
+ *  }
+ */
 router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
     var authSettings = {
         endpointId: req.user._id,
@@ -47,7 +70,14 @@ router.get('/tokens', middleware.isAuthorized, function (req, res, next) {
     });
 });
 
-// Local login
+/**
+ * POST /local
+ *
+ * Local login.
+ * @arg string email  Account._id or email address
+ * @arg string password
+ * @returns object Account
+ */
 router.post('/local', function (req, res, next) {
     if (typeof req.body.email !== 'string') {
         return res.status(400).send({ message: 'Missing email or username.'});
@@ -87,8 +117,14 @@ router.post('/local', function (req, res, next) {
     });
 });
 
-// Redirect the user to Google for authentication.  When complete, Google
-// will redirect the user back to the application at /auth/google/callback
+/**
+ * GET /google
+ *
+ * Typically you would visit this page from a web browser.
+ *
+ * Redirect the user to Google for authentication.  When complete, Google
+ * will redirect the user back to the application at `/auth/google/callback`.
+ */
 router.get(
     '/google',
     passport.authenticate('google', {

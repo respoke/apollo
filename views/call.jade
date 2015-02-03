@@ -1,10 +1,23 @@
 extends layout
 
-block content
-    #video-call-container(ng-controller="PrivateCallController")
-        h3#chat-title(ng-show="errorMessage") {{ errorMessage }}
+//- Screensharing features are enabled only when the option
+//- config.respoke.screenshareExtensionLink
+//- is enabled
 
-        #respokeLocalVideo.animated.fadeIn.slower(ap-draggable)
+block content
+    #video-call-container(ng-controller="PrivateCallController" ng-cloak)
+        .chat-title.alert.alert-salmon(ng-show="errorMessage")
+            h3 {{ errorMessage }}
+                button.btn.btn-salmon.btn-xs.pull-right(ng-click="errorMessage = ''"): i.fa.fa-remove
+        if (config.respoke.screenshareExtensionLink)
+            .alert.alert-salmon.chat-title(ng-init="showPromptInstall = false" ng-show="showPromptInstall")
+                button.btn.btn-salmon.btn-xs.pull-right(ng-click="showPromptInstall = false"): i.fa.fa-remove
+                h3: a(href=config.respoke.screenshareExtensionLink target="_blank")
+                    | Hey. <br /> You'll have to install a plugin
+                    em  then refresh
+                    |  before you can share your screen. &raquo;
+
+        #respokeLocalVideo.animated.fadeIn.slower(ap-draggable ng-show="activeCall")
             .btn-group
                 //- Toggle my audio
                 button#toggle-audio.btn.btn-xs(
@@ -20,22 +33,28 @@ block content
                     ng-class="{ 'btn-salmon-inverse': !activeCall.outgoingMedia.isVideoMuted(), 'btn-default': activeCall.outgoingMedia.isVideoMuted() }"
                 )
                     i.fa.fa-video-camera.fa-lg(ng-show="activeCall.outgoingMedia.isVideoMuted()")
-                    i.fa.fa-ban.fa-lg(ng-show="!activeCall.outgoingMedia.isVideoMuted()"
-                    )
+                    i.fa.fa-video-camera.fa-lg(ng-show="!activeCall.outgoingMedia.isVideoMuted()")
                 
                 //- Share my screen
-                button.btn.btn-xs(
-                    ng-show="isScreensharing"
-                )
-                    i.fa.fa-desktop
+                if (config.respoke.screenshareExtensionLink)
+                    
+                    button.btn.btn-xs.btn-salmon(
+                        ng-if="screenshareAvailable() && !isScreensharing"
+                        ng-click="screenshare()"
+                        ng-disabled="tryingToScreenshare"
+                    )
+                        i.fa.fa-desktop
+                    
+                    //- Stop screensharing
+                    button.btn.btn-xs.btn-salmon(
+                        ng-if="screenshareAvailable() && isScreensharing"
+                        ng-click="stopScreenshare()"
+                        ng-disabled="tryingToScreenshare"
+                    )
+                        i.fa.fa-cog.fa-spin(ng-show="tryingToScreenshare")
+                        i.fa.fa-stop(ng-show="!tryingToScreenshare")
                 
-                //- Stop screensharing
-                button.btn.btn-xs(
-                    ng-show="isScreensharing"
-                )
-                    i.fa.fa-stop
-                
-        #respokeRemoteVideo.animated.fadeIn.slower
+        #respokeRemoteVideo.animated.fadeIn.slower(ng-show="activeCall")
             
             
 
@@ -58,6 +77,6 @@ block content
                     ng-click="activeCall.incomingMedia.isVideoMuted() ? activeCall.incomingMedia.unmuteVideo() : activeCall.incomingMedia.muteVideo()"
                     ng-class="{ 'btn-salmon-inverse': !activeCall.incomingMedia.isVideoMuted(), 'btn-default': activeCall.incomingMedia.isVideoMuted() }"
                 )
-                    i.fa.fa-play.fa-lg(ng-show="activeCall.incomingMedia.isVideoMuted()")
-                    i.fa.fa-pause.fa-lg(ng-show="!activeCall.incomingMedia.isVideoMuted()")
+                    i.fa.fa-video-camera.fa-lg(ng-show="activeCall.incomingMedia.isVideoMuted()")
+                    i.fa.fa-video-camera.fa-lg(ng-show="!activeCall.incomingMedia.isVideoMuted()")
                 

@@ -8,25 +8,25 @@
  * For all details and documentation:  https://www.respoke.io
  */
 
-/* Apollo Dusk Theme */
+@blueback: rgb(234, 238, 255);
+@greentext: rgb(102, 138, 26);
 
-@salmon: rgb(252, 108, 94);
-@yellow: rgb(254, 203, 8);
+@salmon: rgb(211, 0, 2);
 
-@panelLeft: rgba(29, 30, 32, 0.8);
+@panelLeft: white;
 
 @primary: @salmon;
 
-@text: rgb(255, 255, 255);
-@textInput: #555555;
-@fadedText: #969696;
+@text: @greentext;
+@fadedText: lighten(@text, 10%);
+@textInput: @greentext;
 
-@link: @yellow;
+@link: @salmon;
 
-@background: rgb(40, 55, 79);
+@background: @blueback;
 
-@selectedBackground: @salmon;
-@selectedText: @text;
+@selectedBackground: @greentext;
+@selectedText: white;
 
 /**
  * Now load the rest of the stuff.
