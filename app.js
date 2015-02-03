@@ -104,7 +104,9 @@ if (process.env.NODE_ENV !== 'production') {
         files.forEach(function (f) {
             var parts = f.split('.');
             var ext = parts[1];
-            if (ext === 'less') themes.push(parts[0]);
+            if (ext === 'less') {
+                themes.push(parts[0]);
+            }
         });
     })();
 } else {
@@ -189,7 +191,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Attaching app locals and utils to request
 app.use(function (req, res, next) {
+    // Uncomment the next two lines to allow external API.
     // res.set('Access-Control-Allow-Origin', '*');
+    // res.set('Access-Control-Allow-Headers', 'HEAD, OPTIONS, GET, POST, DELETE, PUT, PATCH');
+
+
     res.set('X-Powered-By', '100-duck-sized-horses');
     res.locals = req.locals || {};
     res.locals.config = config;

@@ -29,8 +29,11 @@ exports = module.exports = [
     'scrollChatToBottom',
     'notify',
     'mentionRenderer',
-
-    function (
+    /**
+     * The controller for logged-in user stuff. Governs the logged-in UI, pieces of
+     * chat, incoming and outgoing calls, and event listeners.
+     */
+    function MainController(
         $log,
         $rootScope,
         $scope,
@@ -433,7 +436,7 @@ exports = module.exports = [
 
         });
 
-        $scope.createGroup = function (groupName) {
+        $scope.createGroup = function createGroup(groupName) {
             Group.create({
                 _id: groupName
             }, function (err, group) {
@@ -447,7 +450,7 @@ exports = module.exports = [
             });
         };
 
-        $scope.switchChat = function (id) {
+        $scope.switchChat = function switchChat(id) {
             $log.debug('switchChat', id);
             if (id === $rootScope.account._id) {
                 $log.debug('not switching to chat because it is self');
@@ -480,7 +483,7 @@ exports = module.exports = [
             }, 450);
         };
 
-        $scope.fetchChat = function (item) {
+        $scope.fetchChat = function fetchChat(item) {
             var qs;
             if (item.display) {
                 qs = '?account=' + item._id;
@@ -504,7 +507,7 @@ exports = module.exports = [
             });
         };
 
-        var stopRinging = function () {
+        var stopRinging = function stopRinging() {
             $rootScope.audio.callIncoming.pause();
             $rootScope.audio.callIncoming.loop = false;
             $rootScope.audio.callIncoming.currentTime = 0;

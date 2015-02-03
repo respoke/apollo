@@ -25,7 +25,7 @@
  * THE SOFTWARE.
  */
 'use strict';
-exports = module.exports = function (angular) {
+exports = module.exports = function mentio(angular) {
 
     angular.module('mentio', [])
         .directive('mentio', ['mentioUtil', '$document', '$compile', '$log', '$timeout',
@@ -936,7 +936,7 @@ exports = module.exports = function (angular) {
                 var selected = sel.anchorNode;
                 var path = [];
                 var offset;
-                if (selected != null) {
+                if (selected !== null) {
                     var i;
                     var ce = selected.contentEditable;
                     while (selected !== null && ce !== 'true') {
@@ -1051,7 +1051,7 @@ exports = module.exports = function (angular) {
 
                 } else {
                     var selectedElem = getWindowSelection(ctx).anchorNode;
-                    if (selectedElem != null) {
+                    if (selectedElem !== null) {
                         var workingNodeContent = selectedElem.textContent;
                         var selectStartOffset = getWindowSelection(ctx).getRangeAt(0).startOffset;
                         if (selectStartOffset >= 0) {
@@ -1170,8 +1170,9 @@ exports = module.exports = function (angular) {
 
                 if (isFirefox) {
                     style.width = (parseInt(computed.width) - 2) + 'px';
-                    if (element.scrollHeight > parseInt(computed.height))
+                    if (element.scrollHeight > parseInt(computed.height)) {
                         style.overflowY = 'scroll';
+                    }
                 } else {
                     style.overflow = 'hidden';
                 }

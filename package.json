@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js | bunyan -o short",
-    "jshint": "node_modules/.bin/jshint app.js models.js lib/*.js public/js/**/*.js --exclude=public/js/parsers/marked.js"
+    "jshint": "node_modules/.bin/jshint app.js models.js lib/*.js public/js/**/*.js"
   },
   "license": "AGPL-3.0",
   "dependencies": {

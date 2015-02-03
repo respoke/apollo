@@ -21,8 +21,20 @@ exports = module.exports = [
     'respoke',
     'scrollChatToBottom',
 
-    function ($log, $location, $window, $rootScope, $scope, $timeout, Account, Group, respoke, scrollChatToBottom) {
+    function GlobalController($log,
+        $location,
+        $window,
+        $rootScope,
+        $scope,
+        $timeout,
+        Account,
+        Group,
+        respoke,
+        scrollChatToBottom
+    ) {
+        // Output all of the Respoke logs
         respoke.log.setLevel('debug');
+
         $rootScope.justLoggedIn = false;
         $rootScope.justLoggedOut = false;
         $scope.authFailureMessage = $location.search().authFailure;
@@ -35,6 +47,19 @@ exports = module.exports = [
         $rootScope.systemGroupId = '';
         $rootScope.systemEndpointId = '';
 
+        var checkingConnectedTimeout;
+
+        function alwaysCheckConnected() {
+            // $log.debug('alwaysCheckConnected');
+            if (!$rootScope.client.isConnected()) {
+                if (!$scope.tokenRefreshInterval) {
+                    $scope.respokeConnect();
+                }
+            }
+            checkingConnectedTimeout = $timeout(alwaysCheckConnected, 1000 * 15);
+        }
+
+        // Audio notifications
         $rootScope.audio = {
             callIncoming: new Audio('/audio/call-incoming.ogg'),
             callOutgoing: new Audio('/audio/call-outgoing.ogg'),
@@ -69,7 +94,7 @@ exports = module.exports = [
             }
         };
         $rootScope.ownedGroups = null;
-        $rootScope.loadGroups = function () {
+        $rootScope.loadGroups = function loadGroups() {
             Group.getByOwner($rootScope.account._id, function (err, groups) {
                 if (err) {
                     $rootScope.notification.push(err);
@@ -79,32 +104,26 @@ exports = module.exports = [
             });
         };
 
+        // Automatically keep trying to connect to Respoke
+        function refreshAfterWaiting() {
+            $scope.tokenRefreshInterval = Math.min($scope.tokenRefreshInterval * 2, 1000*60);
+            $scope.nextRetry = +new Date() + $scope.tokenRefreshInterval;
+            $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
+        }
+
         // "recents" are the sidebar items
         $rootScope.recents = $window.recents = {};
         $rootScope.notifications = [];
         $rootScope.account = {};
         $rootScope.client = $window.client = respoke.createClient();
-        $rootScope.client.listen('connect', function () {
-            $log.debug('connected');
-            $rootScope.notifications = [];
-            $rootScope.$apply();
 
-            $rootScope.client.join({
-                id: $rootScope.systemGroupId,
-                onSuccess: function (evt) {
-                    $log.debug('joined ' + $rootScope.systemGroupId);
-                },
-                onError: function (evt) {
-                    $log.debug('FAIL joining ' + $rootScope.systemGroupId, evt);
-                }
-            });
-
-        });
-
-        $scope.loadAccount = function (callback) {
-            Account.getMe(function (err, account) {
+        $scope.loadAccount = function loadAccount(callback) {
+            Account.getMe(function onAfterGetMe(err, account) {
                 if (err) {
-                    $log.error('getMe', err);
+                    $log.error('getMe not successful', err);
+                    if (!$rootScope.client.isConnected()) {
+                        refreshAfterWaiting();
+                    }
                     return;
                 }
                 $log.debug('getMe', account);
@@ -119,42 +138,70 @@ exports = module.exports = [
             });
         };
 
+        // when signing in, hold the properties here
         $scope.signin = {
             email: "",
             password: ""
         };
+        // when signing up, hold the properties here
         $scope.signup = {
             email: "",
             password: ""
         };
+        // when confirming account, hold the properties here
         $scope.confirming = {
             _id: "",
             conf: ""
         };
-        $scope.resetPass;
+        // when resetting password, hold the properties here
+        $scope.resetPass = {
+            password: "",
+            passwordConf: ""
+        };
 
+        // Listen for respoke connection
+        $rootScope.client.listen('connect', function onAfterRespokeConnect() {
+            $log.debug('connected to respoke');
+            $rootScope.notifications = [];
+            // kick this off here
+            if (!checkingConnectedTimeout) {
+                checkingConnectedTimeout = alwaysCheckConnected();
+            }
+            $rootScope.$apply();
+
+            // Join the system group to get meta messages
+            $rootScope.client.join({
+                id: $rootScope.systemGroupId,
+                onSuccess: function onSystemGroupConnectSuccess(evt) {
+                    $log.debug('joined ' + $rootScope.systemGroupId);
+                },
+                onError: function onSystemGroupConnectFail(evt) {
+                    $log.debug('FAIL joining ' + $rootScope.systemGroupId, evt);
+                }
+            });
+
+        });
+
+        // Make the connection to Respoke
         $scope.respokeConnect = function () {
-            $log.debug('respokeConnect');
             if ($rootScope.doNotConnectRespoke) {
                 return;
             }
-            Account.getToken(function (err, respokeAuth) {
+            $log.debug('respokeConnect initiated');
+            $rootScope.notifications = [];
+            Account.getToken(function afterGotRespokeToken(err, respokeAuth) {
                 if (err) {
                     $log.error('failed attempt to get token', err);
                     $rootScope.notifications.push(err);
                     if (!$scope.tokenRefreshInterval) {
                         $scope.tokenRefreshInterval = 1000;
                     }
-                    $scope.tokenRefreshInterval = Math.min($scope.tokenRefreshInterval * 2, 1000*60);
-                    $scope.nextRetry = +new Date() + $scope.tokenRefreshInterval;
-                    $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
+                    refreshAfterWaiting();
                     return;
                 }
                 if (!respokeAuth.token) {
                     $log.error('token request to server did not return token', respokeAuth);
-                    $scope.tokenRefreshInterval = Math.min($scope.tokenRefreshInterval * 2, 1000*60);
-                    $timeout($scope.respokeConnect, $scope.tokenRefreshInterval);
-                    $scope.nextRetry = +new Date() + $scope.tokenRefreshInterval;
+                    refreshAfterWaiting();
                     return;
                 }
                 $scope.tokenRefreshInterval = 0;
@@ -196,12 +243,12 @@ exports = module.exports = [
         $rootScope.setPresence = function (strPresence) {
             $rootScope.client.setPresence({ presence: strPresence });
             $rootScope.recents[$rootScope.account._id].presence = '';
-            $timeout(function () {
+            $timeout(function afterSetOwnPresence() {
                 $rootScope.recents[$rootScope.account._id].presence = strPresence;
             });
         };
 
-        $scope.setDisplayName = function (name) {
+        $scope.setDisplayName = function setDisplayName(name) {
             $log.debug('setDisplayName', name);
             Account.update({ display: name }, function (err, acct) {
                 if (err) {
@@ -212,7 +259,7 @@ exports = module.exports = [
             });
         };
 
-        $scope.login = function () {
+        $scope.login = function login() {
 
             if (!$scope.signin.email) {
                 $rootScope.notifications.push("Missing email / username");
@@ -229,7 +276,7 @@ exports = module.exports = [
             Account.login({
                 email: $scope.signin.email,
                 password: $scope.signin.password
-            }, function (err, data) {
+            }, function afterLoggedIn(err, data) {
                 if (err) {
                     $rootScope.justLoggedIn = false;
                     $rootScope.notifications.push(err);
@@ -239,9 +286,9 @@ exports = module.exports = [
             });
         };
 
-        $scope.logout = function () {
+        $scope.logout = function logout() {
             $rootScope.justLoggedOut = true;
-            $timeout(function () {
+            $timeout(function refreshAfterLogoutAnimation() {
                 Account.logout(function (err) {
                     if (err) {
                         $rootScope.justLoggedOut = false;
@@ -253,7 +300,7 @@ exports = module.exports = [
             }, 500); // let animations finish
         };
 
-        $scope.register = function () {
+        $scope.register = function register() {
             $rootScope.notifications = [];
             Account.create($scope.signup, function (err, account) {
                 $log.debug(err, account);
@@ -271,7 +318,7 @@ exports = module.exports = [
             });
         };
 
-        $scope.forgot = function (email) {
+        $scope.forgot = function forgot(email) {
             if (!email) {
                 $rootScope.notifications.push("Put in your email first");
                 return;
