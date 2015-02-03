@@ -12,15 +12,14 @@ exports = module.exports = [
     '$log',
     '$rootScope',
     '$scope',
-    '$window',
 
     'respokeVideo',
     'moment',
     'scrollChatToBottom',
 
-    function ($log, $rootScope, $scope, $window, respokeVideo, moment, scrollChatToBottom) {
+    function ($log, $rootScope, $scope, respokeVideo, moment, scrollChatToBottom) {
 
-        if (!$window.opener || !$window.opener.activeCall) {
+        if (!window.opener || !window.opener.activeCall) {
             $scope.errorMessage = "The call has ended.";
             return;
         }
@@ -29,10 +28,10 @@ exports = module.exports = [
 
         $scope.isScreensharing = false;
         $scope.needsChromeExtension = function () {
-            return $window.respoke.needsChromeExtension;
+            return window.respoke.needsChromeExtension;
         };
         $scope.hasChromeExtension = function () {
-            return $window.respoke.hasChromeExtension;
+            return window.respoke.hasChromeExtension;
         };
         $scope.screenshareAvailable = function () {
             return $scope.needsChromeExtension() || $scope.hasChromeExtension();
@@ -42,15 +41,15 @@ exports = module.exports = [
         // prevent global scope from creating a second connection to respoke
         $rootScope.doNotConnectRespoke = true;
 
-        $scope.$window = $window;
-        $rootScope.client = $window.opener.client;
-        $rootScope.recents = $window.opener.recents;
+        $scope.window = window;
+        $rootScope.client = window.opener.client;
+        $rootScope.recents = window.opener.recents;
 
         $scope.errorMessage = "";
         $scope.moment = moment;
         $scope.showFullChat = true;
 
-        $scope.activeCall = $window.opener.activeCall;
+        $scope.activeCall = window.opener.activeCall;
         $scope.selectedChat = $scope.activeCall.chat;
 
         var cleanUpCall = function (evt) {
@@ -75,8 +74,8 @@ exports = module.exports = [
             if ($scope.activeCall.hangup) {
                 $scope.activeCall.hangup();
             }
-            $window.opener.activeCall = null;
-            $window.close();
+            window.opener.activeCall = null;
+            window.close();
         };
 
         $scope.screenshare = function () {
@@ -89,7 +88,7 @@ exports = module.exports = [
 
         var doScreenshare = function () {
             $scope.isScreensharing = true;
-            $window.opener.activeScreenshare = $scope.activeCall.remoteEndpoint.startScreenShare({
+            window.opener.activeScreenshare = $scope.activeCall.remoteEndpoint.startScreenShare({
                 onConnect: function (evt) {
                     $log.debug('doScreenshare onConnect', evt);
                     respokeVideo.setLocalVideo(evt.target.outgoingMedia.stream);
@@ -106,22 +105,22 @@ exports = module.exports = [
                     $scope.$apply();
                 }
             });
-            $log.debug('starting screenshare', $window.opener.activeScreenshare);
+            $log.debug('starting screenshare', window.opener.activeScreenshare);
         };
 
         $scope.stopScreenshare = function () {
             // end screenshare call
             $scope.isScreensharing = false;
             // reset local screen display
-            $window.opener.activeScreenshare.hangup();
+            window.opener.activeScreenshare.hangup();
             respokeVideo.setLocalVideo($scope.activeCall.outgoingMedia.stream);
         };
 
-        $window.opener.client.listen('screenshare-added', function () {
+        window.opener.client.listen('screenshare-added', function () {
             $log.debug('screenshare-added');
-            respokeVideo.setRemoteVideo($window.opener.activeScreenshare.incomingMedia.stream);
+            respokeVideo.setRemoteVideo(window.opener.activeScreenshare.incomingMedia.stream);
         });
-        $window.opener.client.listen('screenshare-removed', function () {
+        window.opener.client.listen('screenshare-removed', function () {
             $log.debug('screenshare-removed');
             respokeVideo.setRemoteVideo($scope.activeCall.incomingMedia.stream);
         });
